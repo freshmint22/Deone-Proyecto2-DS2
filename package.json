@@ -1,0 +1,11 @@
+{
+  "name": "deone-monorepo",
+  "private": true,
+  "scripts": {
+    "start-backend": "node backend/server.js",
+    "dev-backend": "cd backend && npm run dev",
+    "test-backend": "cd backend && npm test",
+    "install-backend": "cd backend && npm install",
+    "install-frontend": "cd frontend && npm install"
+  }
+}

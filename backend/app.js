@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import exampleRoutes from './routes/exampleRoutes.js';
+import itemRoutes from './routes/item.routes.js';
+import userRoutes from './routes/user.routes.js';
 
 dotenv.config();
 
@@ -14,8 +15,10 @@ app.get('/', (req, res) => {
   res.send('Servidor backend DeOne funcionando 🚀');
 });
 
-// Mount example routes
-app.use('/api/examples', exampleRoutes);
+// Mount item routes
+app.use('/api/items', itemRoutes);
+// Mount user routes
+app.use('/api/users', userRoutes);
 
 // Connect to MongoDB if MONGO_URI is provided
 if (process.env.MONGO_URI) {

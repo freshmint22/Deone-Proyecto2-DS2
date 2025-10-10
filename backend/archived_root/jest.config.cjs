@@ -3,8 +3,3 @@ module.exports = {
   transform: {},
   testMatch: ['**/tests/**/*.test.js'],
 };
-module.exports = {
-  testEnvironment: 'node',
-  transform: {},
-  testMatch: ['**/tests/**/*.js?(x)']
-};
