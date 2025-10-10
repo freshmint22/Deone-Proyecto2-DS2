@@ -1,10 +1,8 @@
 name: Backend CI - Tests
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  push: {}
+  pull_request: {}
 
 jobs:
   test-backend:
@@ -19,6 +17,12 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+
+      - name: Print Node and npm versions
+        run: |
+          node --version
+          npm --version
+        working-directory: backend
 
       - name: Install backend dependencies
         working-directory: backend
