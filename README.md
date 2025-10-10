@@ -1,4 +1,4 @@
-# Raíz mínima: usa `backend/` para el servidor y `frontend/` para el cliente.
+Usa `backend/` para el servidor y `frontend/` para el cliente.
 #+ Backend: ver `backend/README.md` para instrucciones.
 # DeOne Proyecto2 DS2 (backend skeleton)
 
