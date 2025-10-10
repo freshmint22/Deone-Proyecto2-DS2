@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import itemRoutes from './routes/item.routes.js';
 import userRoutes from './routes/user.routes.js';
+import authRoutes from './routes/authRoutes.js';
 
 dotenv.config();
 
@@ -19,6 +20,8 @@ app.get('/', (req, res) => {
 app.use('/api/items', itemRoutes);
 // Mount user routes
 app.use('/api/users', userRoutes);
+// Mount auth routes
+app.use('/api/auth', authRoutes);
 
 // Connect to MongoDB if MONGO_URI is provided
 if (process.env.MONGO_URI) {
