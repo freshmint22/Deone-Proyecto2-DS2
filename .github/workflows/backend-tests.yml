@@ -33,4 +33,5 @@ jobs:
         working-directory: backend
         env:
           CI: true
+          JWT_SECRET: test_secret_for_ci
         run: npm test
