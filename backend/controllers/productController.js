@@ -1,7 +1,7 @@
-const Product = require('../models/Product');
+import Product from '../models/Product.js';
 
 // Devuelve todos los productos
-async function getAllProducts(req, res) {
+export async function getAllProducts(req, res) {
   try {
     const products = await Product.find().lean();
     return res.status(200).json({ success: true, data: products });
@@ -11,6 +11,6 @@ async function getAllProducts(req, res) {
   }
 }
 
-module.exports = {
+export default {
   getAllProducts,
 };
