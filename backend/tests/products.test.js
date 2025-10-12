@@ -48,4 +48,39 @@ describe('GET /api/products', () => {
     expect(Array.isArray(res.body.data)).toBe(true);
     expect(res.body.data.length).toBe(0);
   });
+
+  it('filters products by name (partial, case-insensitive)', async () => {
+    await Product.create([
+      { nombre: 'Camiseta DeOne', precio: 15, categoria: 'Ropa' },
+      { nombre: 'Gorra DeOne', precio: 12, categoria: 'Accesorios' }
+    ]);
+
+    const res = await request(app).get('/api/products').query({ name: 'camis' });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.length).toBe(1);
+    expect(res.body.data[0].nombre).toMatch(/Camiseta/i);
+  });
+
+  it('filters products by category (partial, case-insensitive)', async () => {
+    await Product.create([
+      { nombre: 'Mug', precio: 8, categoria: 'Hogar' },
+      { nombre: 'Plato', precio: 5, categoria: 'Hogar - Cocina' }
+    ]);
+
+    const res = await request(app).get('/api/products').query({ category: 'hogar' });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.length).toBe(2);
+  });
+
+  it('applies both name and category filters together', async () => {
+    await Product.create([
+      { nombre: 'Camiseta Azul', precio: 10, categoria: 'Ropa' },
+      { nombre: 'Camiseta Roja', precio: 11, categoria: 'Ropa' },
+      { nombre: 'Gorra Roja', precio: 9, categoria: 'Accesorios' }
+    ]);
+
+    const res = await request(app).get('/api/products').query({ name: 'camiseta', category: 'ropa' });
+    expect(res.statusCode).toBe(200);
+    expect(res.body.data.length).toBe(2);
+  });
 });
