@@ -39,6 +39,28 @@ Base path: `/api/auth`
     - 400 Bad Request: missing fields
     - 401 Unauthorized: invalid credentials
 
+  - Ejemplo (Respuesta exitosa 200):
+    {
+      "message": "Inicio de sesión exitoso",
+      "user": { "_id": "<id>", "name": "Test User", "email": "test.user@correounivalle.edu.co", "role": "estudiante" },
+      "token": "<jwt>"
+    }
+
+  - Notas:
+    - El endpoint espera un JSON con `email` y `password`.
+    - Devuelve un JWT en la propiedad `token`. Incluye ese token en el header `Authorization: Bearer <token>` para acceder a rutas protegidas.
+    - Respuestas de error habituales:
+      - 400: Petición mal formada (campos faltantes).
+      - 401: Credenciales inválidas (email no encontrado o contraseña incorrecta).
+      - 500: Error del servidor (revisar logs).
+
+  - Ejemplo usando PowerShell / curl (después de levantar el servidor):
+
+```powershell
+# Login (debe devolver 200 con token)
+curl -Method POST -Uri http://localhost:3000/api/auth/login -Body (ConvertTo-Json @{ email='manual.user@correounivalle.edu.co'; password='password123' }) -ContentType 'application/json'
+```
+
 ## Environment variables
 
 - `PORT` — optional, default used in code
