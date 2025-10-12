@@ -40,64 +40,120 @@ Base path: `/api/auth`
     - 401 Unauthorized: invalid credentials
 
   - Ejemplo (Respuesta exitosa 200):
-    {
-      "message": "Inicio de sesión exitoso",
-      "user": { "_id": "<id>", "name": "Test User", "email": "test.user@correounivalle.edu.co", "role": "estudiante" },
-      "token": "<jwt>"
-    }
+    # Backend — DeOne (Proyecto 2, DS2)
 
-  - Notas:
-    - El endpoint espera un JSON con `email` y `password`.
-    - Devuelve un JWT en la propiedad `token`. Incluye ese token en el header `Authorization: Bearer <token>` para acceder a rutas protegidas.
-    - Respuestas de error habituales:
-      - 400: Petición mal formada (campos faltantes).
-      - 401: Credenciales inválidas (email no encontrado o contraseña incorrecta).
-      - 500: Error del servidor (revisar logs).
+    Documento en español con instrucciones para ejecutar, probar y usar los endpoints principales del backend.
 
-  - Ejemplo usando PowerShell / curl (después de levantar el servidor):
+    Contenido
+    - Propósito
+    - Requisitos y variables de entorno
+    - Instalación y scripts
+    - Endpoints principales
+      - Autenticación (registro / login)
+      - Catálogo (GET /api/products)
+    - Seed (carga inicial de productos)
+    - Pruebas (Jest + mongodb-memory-server)
+    - Notas y recomendaciones
 
-```powershell
-# Login (debe devolver 200 con token)
-curl -Method POST -Uri http://localhost:3000/api/auth/login -Body (ConvertTo-Json @{ email='manual.user@correounivalle.edu.co'; password='password123' }) -ContentType 'application/json'
-```
+    ## Propósito
 
-## Environment variables
+    Este backend expone endpoints para gestionar autenticación de usuarios (registro/login) y un catálogo simple de productos. Está orientado a las historias de usuario del proyecto y a pruebas automáticas.
 
-- `PORT` — optional, default used in code
-- `MONGO_URI` — MongoDB connection string (in production). Tests use in-memory MongoDB.
-- `JWT_SECRET` — secret used to sign tokens. When not provided, a default is used for tests only.
+    ## Requisitos y variables de entorno
 
-## Run locally
+    - Node.js 18+ recomendado
+    - Variables de entorno en `.env` (usar `.env.example` como plantilla):
+      - `PORT` (opcional) — puerto donde corre la API (por defecto en el código si no está definido).
+      - `MONGO_URI` — connection string de MongoDB (en producción). Para pruebas locales se usa MongoDB en memoria.
+      - `JWT_SECRET` — secreto para firmar JWT (en CI se provee una variable). Si no está definido, los tests usan un valor por defecto interno.
 
-1. Install dependencies:
-   - cd backend
-   - npm install
+    ## Instalación y scripts
 
-2. Start server (development):
-   - npm run dev
+    1) Instalar dependencias:
 
-3. Run tests:
-   - npm test
+    ```powershell
+    cd backend
+    npm install
+    ```
 
-The project uses `mongodb-memory-server` for integration tests, so you do not need a running MongoDB instance when running tests.
+    2) Scripts útiles en `backend/package.json`:
 
-## Manual smoke test (PowerShell / curl)
+    - `npm run dev` — iniciar en modo desarrollo (nodemon)
+    - `npm start` — iniciar (node server.js)
+    - `npm test` — ejecutar tests con Jest
+    - `npm run seed` — ejecutar script de carga inicial de productos
 
-Start the server locally (`npm run dev`) and then in another terminal run (PowerShell example):
+    ## Endpoints principales
 
-```powershell
-# Register (should return 201 and token)
-curl -Method POST -Uri http://localhost:3000/api/auth/register -Body (ConvertTo-Json @{ name='Test User'; email='manual.user@correounivalle.edu.co'; password='password123' }) -ContentType 'application/json'
+    Base path: `/api`
 
-# Login (should return 200 and token)
-curl -Method POST -Uri http://localhost:3000/api/auth/login -Body (ConvertTo-Json @{ email='manual.user@correounivalle.edu.co'; password='password123' }) -ContentType 'application/json'
-```
+    1) Autenticación — `/api/auth`
 
-## Notes
+    - POST `/api/auth/register`
+      - Descripción: Registrar un nuevo usuario. Solo se permiten correos institucionales `@correounivalle.edu.co`.
+      - Body JSON: `{ name, email, password, role? }` (role puede ser `estudiante`, `comercio`, `admin` — por defecto `estudiante`).
+      - Respuestas: `201` con `{ message, user, token }` o errores `400/409/500` según el caso.
 
-- Tests currently pass locally (see `tests/auth.test.js`). If CI fails, check the workflow and `package-lock.json` file (we added it to support `npm ci`).
-- If you need me to add examples to the root `README.md` or expand the API docs (OpenAPI/Swagger), tell me and I can add it.
-# Backend - DeOne Proyecto2 DS2
+    - POST `/api/auth/login`
+      - Descripción: Inicio de sesión con `email` y `password`.
+      - Body JSON: `{ email, password }`.
+      - Respuestas: `200` con `{ message, user, token }` o `400/401/500`.
+      - Nota: incluir el token en `Authorization: Bearer <token>` para rutas protegidas.
+
+    2) Catálogo — `/api/products`
+
+    - GET `/api/products`
+      - Descripción: Devuelve la lista de productos. Soporta búsqueda y filtrado por query params.
+      - Query params:
+        - `name` (opcional): búsqueda parcial y case-insensitive sobre `nombre`.
+        - `category` (opcional): búsqueda parcial y case-insensitive sobre `categoria`.
+      - Ejemplos:
+        - Obtener todos: `GET /api/products`
+        - Filtrar por nombre: `GET /api/products?name=camis`
+        - Filtrar por categoría: `GET /api/products?category=ropa`
+        - Ambos filtros: `GET /api/products?name=camiseta&category=ropa`
+      - Respuesta (200): `{ success: true, data: [ ...products ] }`.
+      - Errores habituales: `500` (problema interno / DB).
+
+      - Observaciones: la búsqueda usa regex parcial case-insensitive. Para colecciones grandes considera agregar paginación (`limit`/`page`) e índices en MongoDB para `nombre` y `categoria`.
+
+    ## Seed (carga inicial)
+
+    Hay un script de seed para insertar productos de ejemplo:
+
+    ```powershell
+    cd backend
+    npm run seed
+    ```
+
+    El script utiliza `MONGO_URI` para conectarse. Antes de ejecutarlo asegúrate de que la variable esté configurada.
+
+    ## Pruebas
+
+    La suite de tests usa Jest y `mongodb-memory-server` para aislar la base de datos en memoria.
+
+    - Ejecutar tests:
+
+    ```powershell
+    cd backend
+    npm test
+    ```
+
+    - Los tests cubren:
+      - Registro/login (integración)
+      - Middleware de autenticación
+      - Endpoints del catálogo (GET /api/products) incluyendo filtrado por `name`/`category`.
+
+    ## Notas y recomendaciones
+
+    - CI: Asegúrate de que en los workflows de GitHub Actions exista la variable `JWT_SECRET` y se use `npm ci` con `package-lock.json` para reproducibilidad.
+    - Seguridad: valida y limita los parámetros de query si expones expresiones regulares a usuarios (para evitar ataques de regex o abusos). Se recomienda `express-validator` o sanitización adicional.
+    - Rendimiento: añade paginación y/o índices para campos de búsqueda si esperas que la colección crezca.
+    - Documentación adicional: si quieres, puedo generar un archivo OpenAPI/Swagger con la especificación de estos endpoints.
+
+    ---
+
+    Si quieres, ordeno y añado ejemplos concretos (requests/responses) para cada endpoint o genero un `openapi.yaml`. ¿Qué prefieres? 
 
 Instrucciones para correr el backend localmente.
 
