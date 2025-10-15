@@ -49,6 +49,41 @@ export async function createOrder(req, res) {
   }
 }
 
+// Actualiza el estado de una orden
+export async function updateOrderStatus(req, res) {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
+      return res.status(400).json({ success: false, message: 'ID de orden inválido' });
+    }
+
+    const allowedStatuses = ['pendiente', 'en_preparacion', 'entregado', 'cancelado'];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ success: false, message: 'Estado inválido' });
+    }
+
+    const order = await Order.findById(id);
+    if (!order) {
+      return res.status(404).json({ success: false, message: 'Orden no encontrada' });
+    }
+
+    order.status = status;
+    await order.save();
+
+    // notify merchant via sockets
+    if (order.merchantId) {
+      notificationService.emitOrderStatusUpdated(order.merchantId, order);
+    }
+
+    return res.status(200).json({ success: true, data: order });
+  } catch (error) {
+    console.error('Error actualizando estado de orden:', error);
+    return res.status(500).json({ success: false, message: 'Error del servidor' });
+  }
+}
+
 export default {
   createOrder
 };

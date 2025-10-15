@@ -13,7 +13,7 @@ const orderSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   items: { type: [orderItemSchema], required: true },
   total: { type: Number, required: true, min: 0 },
-  status: { type: String, enum: ['pending', 'confirmed', 'shipped', 'cancelled'], default: 'pending' },
+  status: { type: String, enum: ['pendiente', 'en_preparacion', 'entregado', 'cancelado'], default: 'pendiente' },
   merchantId: { type: Schema.Types.ObjectId, ref: 'User' } // opcional: referencia al comercio
 }, { timestamps: true });
 
