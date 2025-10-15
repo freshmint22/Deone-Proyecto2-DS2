@@ -5,6 +5,7 @@ import itemRoutes from './routes/item.routes.js';
 import userRoutes from './routes/user.routes.js';
 import authRoutes from './routes/authRoutes.js';
 import productRoutes from './routes/product.routes.js';
+import orderRoutes from './routes/order.routes.js';
 
 dotenv.config();
 
@@ -24,6 +25,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 // Mount product routes
 app.use('/api/products', productRoutes);
+// Mount order routes
+app.use('/api/orders', orderRoutes);
 
 // MongoDB connection handled by server.js using backend/config/db.connectDB
 
