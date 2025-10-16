@@ -82,6 +82,21 @@ Notas de desarrollo:
 - `getProducts()` apunta por defecto a `http://localhost:3000/products` o usa `VITE_API_URL`.
 - Para pruebas de integración, mockear el endpoint o usar un fixture de datos.
 
+HU6 - Actualización de estado del pedido (Frontend)
+-------------------------------------------------
+
+Implementación:
+- Página: `src/pages/OrderTracker.jsx` permite introducir un ID de pedido y ver su estado actual.
+- Componente: `src/components/OrderProgress.jsx` muestra pasos y barra de progreso (recibido -> en preparación -> listo para entrega).
+- API: `src/services/api.js` incluye `getOrder(id)` y `updateOrderStatus(id,status)` (PATCH `/api/orders/:id/status`).
+- Socket: `OrderTracker` se suscribe al evento `orderStatusUpdated` para actualizar la UI en tiempo real.
+- Tests: `frontend/tests/orderStatus.test.jsx` mockea el API y el socket para simular actualizaciones.
+
+Notas de desarrollo:
+- Asegúrate de que el backend emite `orderStatusUpdated` con payload que contenga `id` y `status`.
+- Para permitir que los comercios actualicen el estado desde el panel, crea acciones en el backend que emitan este evento a los clientes interesados.
+
+
 HU5 - Notificación de nuevos pedidos (Frontend)
 ----------------------------------------------
 

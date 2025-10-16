@@ -24,3 +24,21 @@ export async function getOrders(){
   if(!res.ok) throw new Error(json?.message || 'Error obteniendo pedidos');
   return json;
 }
+
+export async function getOrder(id){
+  const res = await fetch(`${API_BASE}/api/orders/${id}`);
+  const json = await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(json?.message || 'Error obteniendo pedido');
+  return json;
+}
+
+export async function updateOrderStatus(id,status){
+  const res = await fetch(`${API_BASE}/api/orders/${id}/status`,{
+    method:'PATCH',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({status})
+  });
+  const json = await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(json?.message || 'Error actualizando estado');
+  return json;
+}
