@@ -82,5 +82,20 @@ Notas de desarrollo:
 - `getProducts()` apunta por defecto a `http://localhost:3000/products` o usa `VITE_API_URL`.
 - Para pruebas de integración, mockear el endpoint o usar un fixture de datos.
 
+HU4 - Carrito y confirmación de pedidos (Frontend)
+--------------------------------------------------
+
+Implementación:
+- Contexto: `src/context/CartContext.jsx` con `addItem`, `removeItem`, `updateQty`, `clear`, y persistencia en `localStorage` (`deone_cart`).
+- Componente: `src/components/Cart.jsx` para ver y editar los items del carrito (cantidad, eliminar, vaciar).
+- Checkout: `src/pages/Checkout.jsx` muestra resumen del pedido y confirma con `POST /api/orders` usando `src/services/api.js::createOrder`.
+- Confirmación: se muestra alerta visual (componente `Alert.jsx`) con el resultado y el carrito se limpia en éxito.
+- Tests: `frontend/tests/cart.test.jsx` mockea `createOrder` y verifica que el pedido se crea y el carrito queda vacío.
+
+Notas de desarrollo:
+- En producción considerar enviar token de autenticación en la petición de creación de orden (Authorization header) y usar cookies httpOnly si procede.
+- Para flujos de entrega/estado, el backend debe exponer endpoints para actualizar y listar pedidos.
+
+
 
 
