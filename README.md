@@ -1,6 +1,6 @@
 Usa `backend/` para el servidor y `frontend/` para el cliente.
 #+ Backend: ver `backend/README.md` para instrucciones.
-# DeOne Proyecto2 DS2 (backend skeleton)
+# DeOne Proyecto2 DS2
 
 Este repositorio contiene el esqueleto del backend con estructura y archivos para implementar autenticación, items, pruebas y CI.
 
