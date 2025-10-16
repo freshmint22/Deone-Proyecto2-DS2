@@ -31,7 +31,67 @@ export async function createOrder(req, res) {
       return { product: p._id, quantity: qty, price, subtotal };
     });
 
-    const order = await Order.create({ user: userId, items: orderItems, total, merchantId });
+    // Some MongoDB test servers (like mongodb-memory-server) don't support transactions.
+    // Try to start a session+transaction and if it fails, fall back to a non-transactional flow.
+    let session = null;
+    let usingTransaction = false;
+    let order;
+    try {
+      try {
+        // Avoid transactions in test environment (mongodb-memory-server doesn't support them)
+        if (process.env.NODE_ENV !== 'test') {
+          session = await Order.db.startSession();
+          session.startTransaction();
+          usingTransaction = true;
+        } else {
+          usingTransaction = false;
+        }
+      } catch (txErr) {
+        // If transactions are not supported (common in in-memory servers), log and continue without tx
+        console.warn('Transactions not available, proceeding without transaction for order creation:', txErr.message);
+        if (session) {
+          try { session.endSession(); } catch (e) {}
+          session = null;
+        }
+        usingTransaction = false;
+      }
+
+      // decrement stock
+      for (const oi of orderItems) {
+        const query = Product.findById(oi.product);
+        if (usingTransaction && session) query.session(session);
+        const p = await query.exec();
+        if (!p) throw new Error('Producto no encontrado');
+        if (p.stock < oi.quantity) throw new Error('Stock insuficiente');
+        p.stock -= oi.quantity;
+        if (usingTransaction && session) {
+          await p.save({ session });
+        } else {
+          await p.save();
+        }
+        if (p.stock < 5 && merchantId) {
+          notificationService.emitLowStock(merchantId, p);
+        }
+      }
+
+      if (usingTransaction && session) {
+        const created = await Order.create([ { user: userId, items: orderItems, total, merchantId } ], { session });
+        order = created[0];
+        await session.commitTransaction();
+        session.endSession();
+      } else {
+        order = await Order.create({ user: userId, items: orderItems, total, merchantId });
+      }
+    } catch (err) {
+      try {
+        if (usingTransaction && session) await session.abortTransaction();
+      } catch (abortErr) {
+        // ignore
+      }
+      try { if (session) session.endSession(); } catch (e) {}
+      console.error(err);
+      return res.status(400).json({ success: false, message: err.message });
+    }
 
     // Emit notification to merchant (if any)
     try {
@@ -75,6 +135,10 @@ export async function updateOrderStatus(req, res) {
     // notify merchant via sockets
     if (order.merchantId) {
       notificationService.emitOrderStatusUpdated(order.merchantId, order);
+    }
+    // notify user
+    if (order.user) {
+      notificationService.notifyUserOrderStatus(order.user, order);
     }
 
     return res.status(200).json({ success: true, data: order });

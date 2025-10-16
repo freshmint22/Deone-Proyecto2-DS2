@@ -151,6 +151,32 @@ Base path: `/api/auth`
     - Rendimiento: añade paginación y/o índices para campos de búsqueda si esperas que la colección crezca.
     - Documentación adicional: si quieres, puedo generar un archivo OpenAPI/Swagger con la especificación de estos endpoints.
 
+    ## Endpoints añadidos (resumen rápido)
+
+    - Productos (admin/comercio):
+      - POST `/api/products/admin` — crear producto (auth comercio/admin)
+      - PUT `/api/products/admin/:id` — actualizar producto (auth comercio/admin)
+      - DELETE `/api/products/admin/:id` — eliminar producto (auth comercio/admin)
+
+    - Carrito (persistido):
+      - GET `/api/cart?userId=<id>` — obtener carrito
+      - POST `/api/cart` — actualizar carrito (body { userId, items })
+      - DELETE `/api/cart` — borrar carrito
+
+    - Pedidos:
+      - POST `/api/orders` — crear orden (ya existente): valida stock, decrementa stock, notifica comercio
+      - PATCH `/api/orders/:id/status` — actualizar estado (auth comercio/admin)
+      - POST `/api/orders/:id/confirm` — confirmar / simular pago (pendiente de implementación completa)
+
+    - Auth / Contraseña:
+      - POST `/api/auth/forgot` — solicitar token de recuperación (simulado)
+      - POST `/api/auth/reset` — resetear contraseña con token
+
+    - Reports:
+      - GET `/api/reports/sales?merchantId=<id>` — ventas agregadas por producto (agregación)
+
+    Estas rutas son básicas y están pensadas para servir como punto de partida. Si quieres, puedo añadir ejemplos de request/response y validación adicional con `express-validator`.
+
     ---
 
     Si quieres, ordeno y añado ejemplos concretos (requests/responses) para cada endpoint o genero un `openapi.yaml`. ¿Qué prefieres? 

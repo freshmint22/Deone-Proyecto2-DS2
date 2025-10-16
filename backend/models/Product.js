@@ -9,6 +9,12 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  stock: {
+    type: Number,
+    required: true,
+    default: 10,
+    min: 0
+  },
   imagen: {
     type: String,
     required: false
@@ -24,6 +30,9 @@ const productSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
+
+// useful indexes for search
+productSchema.index({ nombre: 'text', categoria: 1 });
 
 const Product = mongoose.model('Product', productSchema);
 

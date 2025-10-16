@@ -10,21 +10,24 @@ const sampleProducts = [
     precio: 19.99,
     imagen: 'https://example.com/images/camiseta.jpg',
     descripcion: 'Camiseta cómoda y ligera con logo DeOne.',
-    categoria: 'Ropa'
+    categoria: 'Ropa',
+    stock: 20
   },
   {
     nombre: 'Gorra DeOne',
     precio: 14.5,
     imagen: 'https://example.com/images/gorra.jpg',
     descripcion: 'Gorra ajustable con bordado del logo.',
-    categoria: 'Accesorios'
+    categoria: 'Accesorios',
+    stock: 15
   },
   {
     nombre: 'Mug DeOne',
     precio: 9.99,
     imagen: 'https://example.com/images/mug.jpg',
     descripcion: 'Taza cerámica para tu café de la mañana.',
-    categoria: 'Hogar'
+    categoria: 'Hogar',
+    stock: 30
   }
 ];
 
