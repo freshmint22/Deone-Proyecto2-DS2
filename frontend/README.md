@@ -68,4 +68,19 @@ Notas de desarrollo:
 - Tests básicos en `frontend/tests/login.test.jsx`.
 - El token se guarda en `localStorage` como `deone_token`. Ajustar según políticas de seguridad (cookie httpOnly para producción).
 
+HU3 - Catálogo de productos (Frontend)
+-------------------------------------
+
+Implementación:
+- Página: `src/pages/Catalog.jsx` que consume `src/services/api.js` (`getProducts()`) para obtener productos desde `GET /api/products`.
+- Componentes: `src/components/ProductList.jsx` y `src/components/ProductCard.jsx` para render en grid responsivo.
+- UI: búsqueda por nombre, filtro por categoría y filtro por precio máximo. Botón para limpiar filtros.
+- Responsividad: `ProductList` usa CSS grid con `auto-fill` y `minmax` para adaptarse a pantallas.
+- Tests: `frontend/tests/catalog.test.jsx` con mock de `fetch` para comprobar render y filtrado.
+
+Notas de desarrollo:
+- `getProducts()` apunta por defecto a `http://localhost:3000/products` o usa `VITE_API_URL`.
+- Para pruebas de integración, mockear el endpoint o usar un fixture de datos.
+
+
 

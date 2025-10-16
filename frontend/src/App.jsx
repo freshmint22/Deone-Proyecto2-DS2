@@ -1,6 +1,7 @@
 import React, {useState, useContext} from 'react';
 import Home from './pages/Home';
 import Register from './pages/Register';
+import Catalog from './pages/Catalog';
 import Login from './pages/Login';
 import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
@@ -18,6 +19,7 @@ export default function App(){
         <div>
           <button onClick={()=>navigate('home')} style={{marginRight:8}}>Inicio</button>
           <button onClick={()=>navigate('register')}>Registro estudiante</button>
+          <button onClick={()=>navigate('catalog')} style={{marginLeft:8}}>Catálogo</button>
         </div>
         <div style={{marginLeft:'auto'}}>
           {!token && <button onClick={()=>navigate('login')}>Ingresar</button>}
@@ -26,7 +28,8 @@ export default function App(){
       </nav>
       <div>
         {route === 'home' && <Home />}
-        {route === 'register' && <Register />}
+  {route === 'register' && <Register />}
+  {route === 'catalog' && <Catalog />}
         {route === 'login' && <Login />}
         {route === 'profile' && (
           <PrivateRoute>
