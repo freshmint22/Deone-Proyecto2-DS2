@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
-import { register, login } from '../controllers/userController.js';
+import { register } from '../controllers/registerController.js';
+import { login } from '../controllers/loginController.js';
 import validateRequest from '../middlewares/validateRequest.js';
 
 const router = Router();
