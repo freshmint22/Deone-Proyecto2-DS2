@@ -82,6 +82,28 @@ Notas de desarrollo:
 - `getProducts()` apunta por defecto a `http://localhost:3000/products` o usa `VITE_API_URL`.
 - Para pruebas de integración, mockear el endpoint o usar un fixture de datos.
 
+HU5 - Notificación de nuevos pedidos (Frontend)
+----------------------------------------------
+
+Implementación:
+- Cliente socket: `src/services/socket.js` usa import dinámico de `socket.io-client` (evita romper si la dependencia no está instalada).
+- Componente: `src/components/NotificationBell.jsx` muestra un contador y alertas/toasts cuando llegan nuevos pedidos (`new_order`).
+- Página: `src/pages/Orders.jsx` lista pedidos y se actualiza en tiempo real al recibir `new_order`.
+- API: `src/services/api.js::getOrders()` para obtener pedidos iniciales.
+
+Configuración y dependencias:
+- Instala `socket.io-client` en el frontend para habilitar la conexión:
+  ```powershell
+  cd frontend
+  npm install socket.io-client
+  ```
+- Configura `VITE_SOCKET_URL` para apuntar al servidor de sockets si es distinto del backend.
+
+Notas de desarrollo:
+- En entornos donde no se instala `socket.io-client`, el cliente no fallará gracias al import dinámico, pero no recibirá notificaciones en tiempo real.
+- Tests: `frontend/tests/notifications.test.jsx` mockea el servicio de socket.
+
+
 HU4 - Carrito y confirmación de pedidos (Frontend)
 --------------------------------------------------
 
