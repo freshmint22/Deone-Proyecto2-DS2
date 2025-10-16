@@ -54,3 +54,18 @@ Notas de desarrollo:
 - Para ejecutar el frontend se sugiere usar Vite; instalar dependencias con `npm install` dentro de `frontend/`.
 - Variables de entorno: `VITE_API_URL` para apuntar al backend.
 
+HU2 - Login de usuario (Frontend)
+--------------------------------
+
+Flujo de autenticación:
+- Página: `src/pages/Login.jsx` con formulario email + contraseña.
+- Servicio: `src/services/auth.js` expone `login(payload)` que POST a `/api/auth/login` y devuelve `{token, user}`.
+- Contexto: `src/context/AuthContext.jsx` maneja el token en memoria y lo persiste en `localStorage` (`deone_token`).
+- Protecciones: `src/components/PrivateRoute.jsx` permite renderizar contenido sólo si existe `token`.
+- Logout: limpiar token en contexto y `localStorage`.
+
+Notas de desarrollo:
+- Tests básicos en `frontend/tests/login.test.jsx`.
+- El token se guarda en `localStorage` como `deone_token`. Ajustar según políticas de seguridad (cookie httpOnly para producción).
+
+
