@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Cart from './components/Cart';
 import Checkout from './pages/Checkout';
 import Header from './components/Header';
+import Orders from './pages/Orders';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthContext } from './context/AuthContext';
 
@@ -24,6 +25,7 @@ export default function App(){
           <button onClick={()=>navigate('catalog')} style={{marginLeft:8}}>Catálogo</button>
           <button onClick={()=>navigate('cart')} style={{marginLeft:8}}>Carrito</button>
           <button onClick={()=>navigate('checkout')} style={{marginLeft:8}}>Checkout</button>
+          <button onClick={()=>navigate('orders')} style={{marginLeft:8}}>Pedidos</button>
         </div>
         <div style={{marginLeft:'auto'}}>
           {!token && <button onClick={()=>navigate('login')}>Ingresar</button>}
@@ -43,8 +45,9 @@ export default function App(){
             </div>
           </PrivateRoute>
         )}
-        {route === 'cart' && <Cart />}
-        {route === 'checkout' && <Checkout />}
+  {route === 'cart' && <Cart />}
+  {route === 'checkout' && <Checkout />}
+  {route === 'orders' && <Orders />}
       </div>
     </div>
   );
