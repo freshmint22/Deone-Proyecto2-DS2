@@ -17,3 +17,10 @@ export async function createOrder(payload){
   if(!res.ok) throw new Error(json?.message || 'Error creando pedido');
   return json;
 }
+
+export async function getOrders(){
+  const res = await fetch(`${API_BASE}/api/orders`);
+  const json = await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(json?.message || 'Error obteniendo pedidos');
+  return json;
+}
