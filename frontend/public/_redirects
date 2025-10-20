@@ -1,0 +1,5 @@
+/*    /index.html   200
+
+# Optional: redirect root to /app if you intentionally host under /app
+# Uncomment the following line if you deploy the site under the /app path on Netlify
+# /   /app/   200

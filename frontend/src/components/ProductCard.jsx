@@ -11,7 +11,25 @@ export default function ProductCard({product}){
   const name = product.nombre || product.name || 'Sin nombre';
   const price = product.precio != null ? product.precio : product.price || 0;
   const category = product.categoria || product.category || '';
-  const image = product.imagen || product.image || '/placeholder.png';
+  function getImageSrc(p){
+    const raw = p?.imagen || p?.image || '';
+    if(!raw) return '/placeholder.png';
+    // if already an absolute URL or data URL that looks valid, return as is
+    try{
+      if(raw.startsWith('data:')){
+        // basic validation: should contain base64 marker
+        if(raw.includes('base64,')) return raw;
+        return '/placeholder.png';
+      }
+      // allow http(s) and root-relative paths
+      if(raw.startsWith('http') || raw.startsWith('//') || raw.startsWith('/')) return raw;
+      // otherwise treat as relative path and prefix with / (served from public)
+      return '/' + raw;
+    }catch(e){
+      return '/placeholder.png';
+    }
+  }
+  const image = getImageSrc(product);
 
   return (
     <>
