@@ -10,6 +10,7 @@ export default function Home({ navigateLocal }){
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [debugResult, setDebugResult] = useState(null);
   const [showCart, setShowCart] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -26,6 +27,18 @@ export default function Home({ navigateLocal }){
       setProducts(data || []);
     }catch(err){ setError(err.message || 'Error cargando productos'); }
     finally{ setLoading(false); }
+  }
+
+  // Diagnostic: perform a raw fetch and show status+body (helps identify CORS/network issues)
+  async function checkApi(){
+    setDebugResult('probando...');
+    try{
+      const res = await fetch(`${API_BASE}/api/products`);
+      const text = await res.text().catch(()=>'');
+      setDebugResult(`status: ${res.status}\n${text.slice(0,2000)}`);
+    }catch(e){
+      setDebugResult(String(e.message || e));
+    }
   }
 
   const categories = Array.from(new Set(products.map(p=> p.categoria || p.category).filter(Boolean)));
@@ -61,7 +74,8 @@ export default function Home({ navigateLocal }){
       {loading && <div>Cargando productos...</div>}
       {error && <div style={{color:'red'}}>{error}</div>}
       {/* Diagnostic: show which API endpoint the frontend is trying to use */}
-      <div style={{marginTop:8,fontSize:12,color:'#666'}}>API: {API_BASE}</div>
+      <div style={{marginTop:8,fontSize:12,color:'#666'}}>API: {API_BASE} <button className="btn ghost" onClick={checkApi} style={{marginLeft:8}}>Comprobar API</button></div>
+      {debugResult && <pre style={{whiteSpace:'pre-wrap',background:'#111',color:'#fff',padding:8,borderRadius:6,marginTop:8,overflowX:'auto'}}>{debugResult}</pre>}
       {!loading && !error && <ProductList products={filtered} />}
 
   <div style={{height:84}} />
