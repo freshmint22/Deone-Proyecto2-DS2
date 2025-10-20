@@ -43,6 +43,11 @@ body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, Hel
 
 .modal-content input{width:100%}
 
+/* filter button */
+.filter-btn{background:transparent;border:1px solid #ddd;padding:6px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.filter-menu{position:absolute;right:0;top:44px;background:var(--card-bg);border:1px solid #e6e6e6;padding:8px;border-radius:8px;display:flex;flex-direction:column;gap:6px;z-index:3000}
+.filter-menu .pill{display:block;text-align:left}
+
 /* Top navigation pills */
 .topnav{padding:10px 12px;background:#fff;border-bottom:1px solid #eee;display:flex;gap:8px;align-items:center}
 .pill{background:transparent;border:1px solid #d0d0d0;padding:6px 10px;border-radius:999px;font-size:14px;cursor:pointer}

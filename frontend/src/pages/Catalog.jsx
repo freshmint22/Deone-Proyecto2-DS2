@@ -36,7 +36,7 @@ export default function Catalog(){
       <div style={{display:'flex',gap:8,flexWrap:'wrap',marginBottom:12}}>
         <input placeholder="Buscar por nombre" value={query} onChange={e=>setQuery(e.target.value)} />
         <select value={category} onChange={e=>setCategory(e.target.value)}>
-          <option value="">Todas las categorías</option>
+            <option value="">Todo</option>
           {categories.map(c=> <option key={c} value={c}>{c}</option>)}
         </select>
         <input placeholder="Precio máximo" value={maxPrice} onChange={e=>setMaxPrice(e.target.value)} style={{width:120}} />

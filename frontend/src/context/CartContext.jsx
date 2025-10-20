@@ -11,9 +11,14 @@ export function CartProvider({children}){
 
   function addItem(product, qty=1){
     setItems(prev=>{
-      const found = prev.find(p=>p.id === product.id || p._id === product._id);
-      if(found){ return prev.map(p=> p.id===found.id ? {...p,qty:p.qty+qty} : p); }
-      return [...prev,{...product,qty}];
+      // create a stable cart id from available identifiers (id, _id, sku, nombre, name)
+      const cartId = product.id ?? product._id ?? product.sku ?? product.nombre ?? product.name ?? Math.random().toString(36).slice(2,9);
+      const found = prev.find(p=> (p.id || p._id) === cartId);
+      if(found){
+        return prev.map(p=> ((p.id||p._id)===cartId ? {...p, qty:(p.qty||0)+qty} : p));
+      }
+      // store the cartId in the `id` field so other code (remove/update) can reference it
+      return [...prev, {...product, qty, id: cartId}];
     });
   }
 

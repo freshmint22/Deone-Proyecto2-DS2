@@ -54,10 +54,7 @@ export default function Home({ navigateLocal }){
         <h3>Productos</h3>
         <div style={{display:'flex',gap:8,alignItems:'center'}}>
           {/* Search input moved to bottom-nav as a magnifier button */}
-          <select value={category} onChange={e=>setCategory(e.target.value)}>
-            <option value="">Todas las categorías</option>
-            {categories.map(c=> <option key={c} value={c}>{c}</option>)}
-          </select>
+          <FilterButton categories={categories} category={category} setCategory={setCategory} />
         </div>
       </div>
 
@@ -137,6 +134,30 @@ function BottomNav({ onOpenCart, onOpenMenu, onOpenSearch }){
       <button aria-label="buscar" className="icon-btn" onClick={onOpenSearch}><SearchIcon /></button>
       <button aria-label="carrito" className="icon-btn" onClick={onOpenCart}><CartIcon /></button>
       <button aria-label="menu" className="icon-btn" onClick={onOpenMenu}><MenuIcon /></button>
+    </div>
+  );
+}
+
+function FilterButton({ categories, category, setCategory }){
+  const [open, setOpen] = React.useState(false);
+  return (
+    <div style={{position:'relative'}}>
+      <button className="filter-btn" onClick={()=>setOpen(v=>!v)} aria-expanded={open}>
+        {/* icon: three bars descending */}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 6h18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M6 12h12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+          <path d="M10 18h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        </svg>
+      </button>
+      {open && (
+        <div className="filter-menu">
+          <button className={`pill ${category===''? 'active':''}`} onClick={()=>{ setCategory(''); setOpen(false); }}>Todo</button>
+          {categories.map(c=> (
+            <button key={c} className={`pill ${category===c? 'active':''}`} onClick={()=>{ setCategory(c); setOpen(false); }}>{c}</button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
