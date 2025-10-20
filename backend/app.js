@@ -7,6 +7,7 @@ import authRoutes from './routes/authRoutes.js';
 import passwordRoutes from './routes/password.routes.js';
 import productRoutes from './routes/product.routes.js';
 import productAdminRoutes from './routes/product.admin.routes.js';
+import debugRoutes from './routes/debug.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import reportRoutes from './routes/report.routes.js';
 import orderRoutes from './routes/order.routes.js';
@@ -39,6 +40,8 @@ app.use('/api/products/admin', productAdminRoutes);
 app.use('/api/cart', cartRoutes);
 // Reports
 app.use('/api/reports', reportRoutes);
+// Debug endpoints (protected by SEED_SECRET)
+app.use('/api/debug', debugRoutes);
 // Mount order routes
 app.use('/api/orders', orderRoutes);
 
