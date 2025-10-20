@@ -14,7 +14,9 @@ import orderRoutes from './routes/order.routes.js';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+// Allow CORS for the frontend origin provided via env (set this to your Vercel URL in Render)
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || '*';
+app.use(cors({ origin: FRONTEND_ORIGIN }));
 app.use(express.json());
 
 app.get('/', (req, res) => {

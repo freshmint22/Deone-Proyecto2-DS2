@@ -15,9 +15,10 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/deone';
 connectDB(MONGO_URI).catch(err => console.error(err));
 
 const httpServer = createServer(app);
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || '*';
 const io = new Server(httpServer, {
 	cors: {
-		origin: '*'
+		origin: FRONTEND_ORIGIN
 	}
 });
 

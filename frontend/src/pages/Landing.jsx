@@ -54,7 +54,12 @@ export default function Landing({onLogin, onRegister}){
         </div>
 
         <div style={{width:380}}>
-          <img src="/promo.png" alt="promo" style={{width:'100%',borderRadius:8}} />
+          {/* Use an embedded data URL to guarantee the promo image renders even if the public file is inaccessible or corrupted */}
+          {(() => {
+            const promoBase64 = "iVBORw0KGgoAAAANSUhEUgAAAZAAAAGQCAIAAAD+7X6eAAAAGXRFWHRTb2Z0d2FyZQBQYWludC5ORVQgdjMuNS4xM5u2YQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAABr0lEQVR4nO3QwQkAIBAEwZf/pd0iQmD3E8hY3Qv0zK7f4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8IN8wxzz5I7XfLAQAAAAAAAAAAwP8B+FM5r3bX+YFAAAAAAAAAPgH8U5f3u0b1cAAAAAAAAAAAB4B/FOX97tG9XAAAAAAAAAAAAeAfxTl/e7RvVwAAAAAAAAAAAHgH8U5f3u0b1cAAAAAAAAAAAB4B/FOX97tG9XAAAAAAAAAAAAeAfxTl/e7RvVwAAAAAAAAAAAHgH8U5f3u0b1cAAAAAAAAAAAB4B/FOX97tG9XAAAAAAAAAAAAeAfxTl/e7RvVwAAAAAAAAD8D3wA7r3t8Z2r1WwAAAABJRU5ErkJggg==";
+            const src = `data:image/png;base64,${promoBase64}`;
+            return <img src={src} alt="promo" style={{width:'100%',borderRadius:8}} />;
+          })()}
         </div>
       </div>
     </div>

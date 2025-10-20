@@ -7,7 +7,7 @@ export default function Login({onSuccess}){
   const [form, setForm] = useState({email:'',password:''});
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
-  const { setToken } = useContext(AuthContext);
+  const { setToken, setUser } = useContext(AuthContext);
 
   function onChange(e){ setForm({...form,[e.target.name]:e.target.value}); }
 
@@ -17,11 +17,12 @@ export default function Login({onSuccess}){
     if(!form.email || !form.password) { setAlert({type:'error',message:'Completa email y contraseña'}); return; }
     setLoading(true);
   try{
-  const data = await login({email:form.email,password:form.password});
-  setToken(data.token);
-  setAlert({type:'success',message:'Ingreso exitoso'});
-  if(typeof onSuccess === 'function') onSuccess();
-    }catch(err){
+    const data = await login({email:form.email,password:form.password});
+    setToken(data.token);
+    if(setUser && data.user) setUser(data.user);
+    setAlert({type:'success',message:'Ingreso exitoso'});
+    if(typeof onSuccess === 'function') onSuccess();
+  }catch(err){
       setAlert({type:'error',message:err?.message || 'Error en login'});
     }finally{ setLoading(false); }
   }

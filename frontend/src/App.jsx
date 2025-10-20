@@ -8,6 +8,7 @@ import Checkout from './pages/Checkout';
 import Header from './components/Header';
 import Orders from './pages/Orders';
 import OrderTracker from './pages/OrderTracker';
+import Profile from './pages/Profile';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthContext } from './context/AuthContext';
 import Landing from './pages/Landing';
@@ -41,10 +42,7 @@ function MainApp(){
         {route === 'login' && <Login onSuccess={()=>navigateLocal('home')} />}
         {route === 'profile' && (
           <PrivateRoute>
-            <div className="content">
-              <h3>Perfil (Privado)</h3>
-              <p>Información del usuario autenticado.</p>
-            </div>
+            <Profile />
           </PrivateRoute>
         )}
         {route === 'cart' && <Cart />}
