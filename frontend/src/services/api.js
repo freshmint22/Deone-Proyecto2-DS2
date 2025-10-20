@@ -5,7 +5,7 @@
 const RUNTIME_FALLBACK = (typeof window !== 'undefined' && window.location) ?
   (window.location.hostname === 'localhost' ? 'http://localhost:4000' : window.location.origin) :
   'http://localhost:4000';
-const API_BASE = import.meta.env.VITE_API_URL || RUNTIME_FALLBACK;
+export const API_BASE = import.meta.env.VITE_API_URL || RUNTIME_FALLBACK;
 
 async function safeFetch(url, opts){
   try{

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ProductList from '../components/ProductList';
-import { getProducts } from '../services/api';
+import { getProducts, API_BASE } from '../services/api';
 import Cart from '../components/Cart';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
@@ -60,6 +60,8 @@ export default function Home({ navigateLocal }){
 
       {loading && <div>Cargando productos...</div>}
       {error && <div style={{color:'red'}}>{error}</div>}
+      {/* Diagnostic: show which API endpoint the frontend is trying to use */}
+      <div style={{marginTop:8,fontSize:12,color:'#666'}}>API: {API_BASE}</div>
       {!loading && !error && <ProductList products={filtered} />}
 
   <div style={{height:84}} />
