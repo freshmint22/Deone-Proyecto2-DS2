@@ -11,31 +11,17 @@ export default function ProductCard({product}){
   const name = product.nombre || product.name || 'Sin nombre';
   const price = product.precio != null ? product.precio : product.price || 0;
   const category = product.categoria || product.category || '';
+  // remove image access to avoid loading external or malformed images
   function getImageSrc(p){
-    const raw = p?.imagen || p?.image || '';
-    if(!raw) return '/placeholder.png';
-    // if already an absolute URL or data URL that looks valid, return as is
-    try{
-      if(raw.startsWith('data:')){
-        // basic validation: should contain base64 marker
-        if(raw.includes('base64,')) return raw;
-        return '/placeholder.png';
-      }
-      // allow http(s) and root-relative paths
-      if(raw.startsWith('http') || raw.startsWith('//') || raw.startsWith('/')) return raw;
-      // otherwise treat as relative path and prefix with / (served from public)
-      return '/' + raw;
-    }catch(e){
-      return '/placeholder.png';
-    }
+    return '';
   }
-  const image = getImageSrc(product);
+  const image = '';
 
   return (
     <>
     <div className="card">
       <div className="media" onClick={()=>setPreview(true)} style={{cursor:'pointer'}}>
-        <img src={image} alt={name} style={{maxHeight:'100%',maxWidth:'100%'}} />
+        <div style={{width:'100%',height:120,display:'flex',alignItems:'center',justifyContent:'center',background:'#f2f2f2',borderRadius:6,color:'#666'}}>Imagen no disponible</div>
       </div>
       <h4>{name}</h4>
       <div className="meta">{category}</div>
@@ -49,7 +35,7 @@ export default function ProductCard({product}){
         <div className="modal-content" style={{width:'min(640px,96%)'}}>
           <div style={{display:'flex',gap:12}}>
             <div style={{flex:'0 0 280px'}}>
-              <img src={image} alt={name} style={{width:'100%',borderRadius:8}} />
+              <div style={{width:'100%',height:200,display:'flex',alignItems:'center',justifyContent:'center',background:'#f2f2f2',borderRadius:8,color:'#666'}}>Imagen no disponible</div>
             </div>
             <div style={{flex:1}}>
               <h3>{name}</h3>
