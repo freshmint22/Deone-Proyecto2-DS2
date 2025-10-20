@@ -26,11 +26,11 @@ export default function OrderTracker(){
   }
 
   return (
-    <div style={{padding:20}}>
+    <div className="content">
       <h2>Seguimiento de pedido</h2>
       <div style={{marginBottom:12}}>
         <input placeholder="ID de pedido" value={orderId} onChange={e=>setOrderId(e.target.value)} />
-        <button onClick={fetchOrder} style={{marginLeft:8}}>Buscar</button>
+        <button onClick={fetchOrder} className="btn" style={{marginLeft:8}}>Buscar</button>
       </div>
       {error && <Alert type="error" message={error} />}
       {order && (

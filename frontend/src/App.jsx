@@ -1,7 +1,7 @@
 import React, {useState, useContext} from 'react';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Register from './pages/Register';
-import Catalog from './pages/Catalog';
 import Login from './pages/Login';
 import Cart from './components/Cart';
 import Checkout from './pages/Checkout';
@@ -10,48 +10,67 @@ import Orders from './pages/Orders';
 import OrderTracker from './pages/OrderTracker';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthContext } from './context/AuthContext';
+import Landing from './pages/Landing';
+import ForgotPassword from './pages/ForgotPassword';
 
-export default function App(){
+function MainApp(){
+  const navigate = useNavigate();
   const [route, setRoute] = useState('home');
-  function navigate(r){ setRoute(r); }
   const { token, logout } = useContext(AuthContext);
+  function navigateLocal(r){ setRoute(r); }
 
   return (
     <div>
       <Header />
-      <nav style={{padding:8,background:'#fafafa',borderBottom:'1px solid #eee',display:'flex',alignItems:'center',gap:8}}>
-        <div>
-          <button onClick={()=>navigate('home')} style={{marginRight:8}}>Inicio</button>
-          <button onClick={()=>navigate('register')}>Registro estudiante</button>
-          <button onClick={()=>navigate('catalog')} style={{marginLeft:8}}>Catálogo</button>
-          <button onClick={()=>navigate('cart')} style={{marginLeft:8}}>Carrito</button>
-          <button onClick={()=>navigate('checkout')} style={{marginLeft:8}}>Checkout</button>
-          <button onClick={()=>navigate('orders')} style={{marginLeft:8}}>Pedidos</button>
-          <button onClick={()=>navigate('tracker')} style={{marginLeft:8}}>Seguimiento</button>
-        </div>
-        <div style={{marginLeft:'auto'}}>
-          {!token && <button onClick={()=>navigate('login')}>Ingresar</button>}
-          {token && <><button onClick={()=>navigate('profile')}>Perfil</button><button onClick={logout} style={{marginLeft:8}}>Salir</button></>}
+      <nav className="topnav">
+        <div style={{display:'flex',gap:8,alignItems:'center'}}>
+          {/* Breadcrumb only (Home is clickable) */}
+          <div style={{marginLeft:12,color:'#666',fontSize:14}}>
+            {route==='home' && <button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button>}
+            {route==='cart' && <span><button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button> <span className="breadcrumb-crumb">/ Carrito</span></span>}
+            {route==='checkout' && <span><button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button> <span className="breadcrumb-crumb">/ Carrito / Pagar</span></span>}
+            {route==='orders' && <span><button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button> <span className="breadcrumb-crumb">/ Pedidos</span></span>}
+            {route==='tracker' && <span><button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button> <span className="breadcrumb-crumb">/ Seguimiento</span></span>}
+            {route==='profile' && <span><button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button> <span className="breadcrumb-crumb">/ Perfil</span></span>}
+          </div>
         </div>
       </nav>
       <div>
-        {route === 'home' && <Home />}
-  {route === 'register' && <Register />}
-  {route === 'catalog' && <Catalog />}
-        {route === 'login' && <Login />}
+  {route === 'home' && <Home navigateLocal={navigateLocal} />}
+  {/* Register is handled at top-level route (/register). */}
+        {route === 'login' && <Login onSuccess={()=>navigateLocal('home')} />}
         {route === 'profile' && (
           <PrivateRoute>
-            <div style={{padding:20}}>
+            <div className="content">
               <h3>Perfil (Privado)</h3>
               <p>Información del usuario autenticado.</p>
             </div>
           </PrivateRoute>
         )}
-  {route === 'cart' && <Cart />}
-  {route === 'checkout' && <Checkout />}
-  {route === 'orders' && <Orders />}
-  {route === 'tracker' && <OrderTracker />}
+        {route === 'cart' && <Cart />}
+        {route === 'checkout' && <Checkout />}
+        {route === 'orders' && <Orders />}
+        {route === 'tracker' && <OrderTracker />}
       </div>
     </div>
-  );
+  )
+}
+
+export default function App(){
+  return (
+    <BrowserRouter>
+      <Routes>
+  <Route path="/" element={<Landing />} />
+  <Route path="/login" element={<LoginWrapper />} />
+  <Route path="/register" element={<Register />} />
+  <Route path="/forgot" element={<ForgotPassword />} />
+        <Route path="/app/*" element={<MainApp />} />
+      </Routes>
+    </BrowserRouter>
+  )
+}
+
+function LoginWrapper(){
+  const navigate = useNavigate();
+  return <Login onSuccess={()=>navigate('/app')} />
 }

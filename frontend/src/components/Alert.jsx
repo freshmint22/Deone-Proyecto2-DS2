@@ -6,7 +6,7 @@ export default function Alert({type='info',message,onClose}){
   return (
     <div style={{background:bg,color:color,padding:12,borderRadius:6,marginBottom:12,display:'flex',justifyContent:'space-between',alignItems:'center'}} role="alert">
       <div>{message}</div>
-      {onClose && <button onClick={onClose} style={{marginLeft:12}}>Cerrar</button>}
+  {onClose && <button onClick={onClose} className="btn ghost" style={{marginLeft:12}}>Cerrar</button>}
     </div>
   );
 }

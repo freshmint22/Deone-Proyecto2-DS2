@@ -21,7 +21,11 @@ export function CartProvider({children}){
   function updateQty(id, qty){ setItems(prev=> prev.map(p=> (p.id||p._id) === id ? {...p,qty} : p)); }
   function clear(){ setItems([]); }
 
-  const total = items.reduce((s,p)=> s + (p.price||0) * (p.qty||0), 0);
+  const total = items.reduce((s,p)=> {
+    const price = p.precio != null ? p.precio : (p.price != null ? p.price : 0);
+    const qty = p.qty || 0;
+    return s + price * qty;
+  }, 0);
 
   return (
     <CartContext.Provider value={{items,addItem,removeItem,updateQty,clear,total}}>

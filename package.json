@@ -1,9 +1,14 @@
 {
   "name": "deone-monorepo",
   "private": true,
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
   "scripts": {
     "start-backend": "node backend/server.js",
     "dev-backend": "cd backend && npm run dev",
+    "dev-frontend": "cd frontend && npm run start",
+    "dev": "concurrently \"npm run dev-backend\" \"npm run dev-frontend\"",
     "test-backend": "cd backend && npm test",
     "install-backend": "cd backend && npm install",
     "install-frontend": "cd frontend && npm install"

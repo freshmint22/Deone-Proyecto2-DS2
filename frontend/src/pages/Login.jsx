@@ -3,7 +3,7 @@ import { login } from '../services/auth';
 import Alert from '../components/Alert';
 import { AuthContext } from '../context/AuthContext';
 
-export default function Login(){
+export default function Login({onSuccess}){
   const [form, setForm] = useState({email:'',password:''});
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
@@ -16,10 +16,11 @@ export default function Login(){
     setAlert(null);
     if(!form.email || !form.password) { setAlert({type:'error',message:'Completa email y contraseña'}); return; }
     setLoading(true);
-    try{
-      const data = await login({email:form.email,password:form.password});
-      setToken(data.token);
-      setAlert({type:'success',message:'Ingreso exitoso'});
+  try{
+  const data = await login({email:form.email,password:form.password});
+  setToken(data.token);
+  setAlert({type:'success',message:'Ingreso exitoso'});
+  if(typeof onSuccess === 'function') onSuccess();
     }catch(err){
       setAlert({type:'error',message:err?.message || 'Error en login'});
     }finally{ setLoading(false); }

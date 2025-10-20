@@ -3,11 +3,16 @@ import NotificationBell from './NotificationBell';
 
 export default function Header(){
   return (
-    <header style={{padding:16,background:'#fff',borderBottom:'1px solid #eee',display:'flex',alignItems:'center'}}>
-      <h2 style={{margin:0}}>Deone</h2>
-      <div style={{marginLeft:'auto'}}>
+    <>
+      <div className="topbar">
+        <div className="logo">Deone</div>
+        <div className="search">
+          <input placeholder="Buscar productos" aria-label="search" />
+        </div>
         <NotificationBell />
       </div>
-    </header>
+      {/* simple spacer so content isn't hidden under fixed bottom nav */}
+      <div style={{height:8}} />
+    </>
   );
 }

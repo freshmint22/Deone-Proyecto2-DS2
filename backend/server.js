@@ -9,9 +9,10 @@ dotenv.config();
 
 const PORT = process.env.PORT || 4000;
 
-if (process.env.MONGO_URI) {
-	connectDB(process.env.MONGO_URI).catch(err => console.error(err));
-}
+// Ensure we attempt to connect to a MongoDB instance. If MONGO_URI is not set
+// fall back to the local development database used elsewhere in scripts.
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/deone';
+connectDB(MONGO_URI).catch(err => console.error(err));
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {

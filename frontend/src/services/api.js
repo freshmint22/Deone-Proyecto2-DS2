@@ -1,10 +1,12 @@
 // Servicio básico para llamadas al backend
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
 export async function getProducts(){
-  const res = await fetch(`${API_BASE}/products`);
-  if(!res.ok) throw new Error('Error al obtener productos');
-  return res.json();
+  const res = await fetch(`${API_BASE}/api/products`);
+  const json = await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(json?.message || 'Error al obtener productos');
+  // backend returns { success: true, data: [...] }
+  return json?.data || [];
 }
 
 export async function createOrder(payload){

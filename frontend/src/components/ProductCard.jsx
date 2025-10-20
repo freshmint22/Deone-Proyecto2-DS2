@@ -1,14 +1,51 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { CartContext } from '../context/CartContext';
+
+function formatCOP(value){
+  return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value);
+}
 
 export default function ProductCard({product}){
+  const { addItem } = useContext(CartContext);
+  const [preview, setPreview] = useState(false);
+  const name = product.nombre || product.name || 'Sin nombre';
+  const price = product.precio != null ? product.precio : product.price || 0;
+  const category = product.categoria || product.category || '';
+  const image = product.imagen || product.image || '/placeholder.png';
+
   return (
-    <div style={{border:'1px solid #eee',borderRadius:6,padding:12,background:'#fff'}}>
-      <div style={{height:120,background:'#f4f4f4',display:'flex',alignItems:'center',justifyContent:'center',marginBottom:8}}>
-        <img src={product.image || '/placeholder.png'} alt={product.name} style={{maxHeight:'100%',maxWidth:'100%'}} />
+    <>
+    <div className="card">
+      <div className="media" onClick={()=>setPreview(true)} style={{cursor:'pointer'}}>
+        <img src={image} alt={name} style={{maxHeight:'100%',maxWidth:'100%'}} />
       </div>
-      <h4 style={{margin:'4px 0'}}>{product.name}</h4>
-      <div style={{color:'#666',fontSize:14}}>{product.category}</div>
-      <div style={{marginTop:8,fontWeight:700}}>${product.price}</div>
+      <h4>{name}</h4>
+      <div className="meta">{category}</div>
+      <div className="price">{formatCOP(price)}</div>
+      <div style={{marginTop:8}}>
+        <button className="btn btn-cart" onClick={()=>addItem(product,1)}>Agregar al carrito</button>
+      </div>
     </div>
+    {preview && (
+      <div className="modal-overlay">
+        <div className="modal-content" style={{width:'min(640px,96%)'}}>
+          <div style={{display:'flex',gap:12}}>
+            <div style={{flex:'0 0 280px'}}>
+              <img src={image} alt={name} style={{width:'100%',borderRadius:8}} />
+            </div>
+            <div style={{flex:1}}>
+              <h3>{name}</h3>
+              <div style={{color:'#666'}}>{category}</div>
+              <p style={{marginTop:12}}>Precio: <strong>{formatCOP(price)}</strong></p>
+              <div style={{marginTop:16,display:'flex',gap:8}}>
+                <button className="btn btn-cart" onClick={()=>{ addItem(product,1); setPreview(false); }}>Agregar al carrito</button>
+                <button className="btn ghost" onClick={()=>setPreview(false)}>Cerrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }

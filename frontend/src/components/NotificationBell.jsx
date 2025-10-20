@@ -24,8 +24,9 @@ export default function NotificationBell(){
 
   return (
     <div style={{position:'relative',display:'inline-block'}}>
-      <button aria-label="notificaciones" style={{position:'relative'}}>
-        🔔 {count>0 && <span style={{background:'#e00',color:'#fff',borderRadius:999,padding:'2px 6px',marginLeft:6}}>{count}</span>}
+      <button aria-label="notificaciones" className="notif-btn">
+        🔔
+        {count>0 && <span className="notif-badge">{count}</span>}
       </button>
       {latest && <div style={{position:'absolute',right:0,top:'110%',zIndex:20}}>
         <Alert type="info" message={`Nuevo pedido: ${latest.id || latest._id || ''}`} onClose={()=>setLatest(null)} />

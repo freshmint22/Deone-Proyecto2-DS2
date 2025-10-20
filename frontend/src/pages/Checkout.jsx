@@ -20,6 +20,10 @@ export default function Checkout(){
     finally{ setLoading(false); }
   }
 
+  function formatCOP(value){
+    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value);
+  }
+
   return (
     <div style={{padding:20}}>
       <h2>Confirmar pedido</h2>
@@ -27,13 +31,16 @@ export default function Checkout(){
       <div>
         {items.length === 0 ? <div>Carrito vacío</div> : (
           <div>
-            {items.map(i=> (
+            {items.map(i=> {
+              const name = i.nombre || i.name || 'Sin nombre';
+              const price = i.precio != null ? i.precio : i.price || 0;
+              return (
               <div key={i.id||i._id} style={{display:'flex',justifyContent:'space-between',padding:8,borderBottom:'1px solid #eee'}}>
-                <div>{i.name} x {i.qty}</div>
-                <div>${(i.price||0) * (i.qty||0)}</div>
+                <div>{name} x {i.qty}</div>
+                <div>{formatCOP(price * (i.qty||0))}</div>
               </div>
-            ))}
-            <div style={{marginTop:12,fontWeight:700}}>Total: ${total}</div>
+            )})}
+            <div style={{marginTop:12,fontWeight:700}}>Total: {formatCOP(total)}</div>
             <div style={{marginTop:12}}>
               <button onClick={onConfirm} disabled={loading}>{loading? 'Procesando...' : 'Confirmar pedido'}</button>
             </div>

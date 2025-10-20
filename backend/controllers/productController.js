@@ -20,6 +20,7 @@ export async function getAllProducts(req, res) {
     return res.status(200).json({ success: true, data: products });
   } catch (error) {
     console.error('Error obteniendo productos:', error);
+    console.error(error.stack);
     return res.status(500).json({ success: false, message: 'Error del servidor' });
   }
 }
