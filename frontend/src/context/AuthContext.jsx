@@ -31,7 +31,16 @@ export function AuthProvider({children}){
 
   function setToken(t){ setTokenState(t); }
   function setUser(u){ setUserState(u); }
-  function logout(){ setTokenState(null); setUserState(null); serviceLogout(); }
+  function logout(){
+    setTokenState(null);
+    setUserState(null);
+    try{ serviceLogout(); }catch(e){ /* ignore logout service errors */ }
+    // Redirect to login page after clearing auth state
+    if(typeof window !== 'undefined'){
+      // use location.assign to keep back history behavior consistent
+      window.location.assign('/login');
+    }
+  }
 
   return (
     <AuthContext.Provider value={{token,user,setToken,setUser,logout}}>
