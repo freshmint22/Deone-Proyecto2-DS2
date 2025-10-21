@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+import { API_BASE } from './api';
 
 export async function register(payload){
   const res = await fetch(`${API_BASE}/api/auth/register`,{

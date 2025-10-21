@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import Alert from '../components/Alert';
+import { API_BASE } from '../services/api';
 
 // We'll call backend /api/auth/forgot via fetch helper
 export default function ForgotPassword(){
@@ -13,7 +14,7 @@ export default function ForgotPassword(){
     if(!email) { setAlert({type:'error',message:'Ingresa tu email'}); return; }
     setLoading(true);
     try{
-      const res = await fetch((import.meta.env.VITE_API_URL||'http://localhost:4000') + '/api/auth/forgot',{
+  const res = await fetch(`${API_BASE}/api/auth/forgot`,{
         method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})
       });
       const json = await res.json().catch(()=>({}));
