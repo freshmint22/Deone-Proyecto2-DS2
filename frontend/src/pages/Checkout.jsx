@@ -1,10 +1,12 @@
 import React, {useContext, useState} from 'react';
 import { CartContext } from '../context/CartContext';
+import { AuthContext } from '../context/AuthContext';
 import { createOrder } from '../services/api';
 import Alert from '../components/Alert';
 
 export default function Checkout(){
   const { items, total, clear } = useContext(CartContext);
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
 
@@ -12,7 +14,11 @@ export default function Checkout(){
     if(items.length === 0){ setAlert({type:'error',message:'Carrito vacío'}); return; }
     setLoading(true); setAlert(null);
     try{
-      const payload = { items: items.map(i=>({productId: i.id||i._id, quantity: i.qty})), total };
+      const payload = {
+        userId: user?.id || user?._id || null,
+        items: items.map(i=>({productId: i.id||i._id, quantity: i.qty})),
+        total
+      };
       const res = await createOrder(payload);
       setAlert({type:'success',message:'Pedido creado correctamente. ID: ' + (res.id || res._id || '')});
       clear();
