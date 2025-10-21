@@ -15,11 +15,15 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/deone';
 connectDB(MONGO_URI).catch(err => console.error(err));
 
 const httpServer = createServer(app);
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || '*';
+// reuse same env parsing: allow comma-separated FRONTEND_ORIGINS or single FRONTEND_ORIGIN
+const rawOrigins = process.env.FRONTEND_ORIGINS || process.env.FRONTEND_ORIGIN || '*';
+let socketOrigins = rawOrigins;
+if (rawOrigins !== '*') {
+  socketOrigins = rawOrigins.split(',').map(s => s.trim()).filter(Boolean);
+  if (socketOrigins.length === 1) socketOrigins = socketOrigins[0];
+}
 const io = new Server(httpServer, {
-	cors: {
-		origin: FRONTEND_ORIGIN
-	}
+  cors: { origin: socketOrigins, credentials: true }
 });
 
 // expose io to the rest of the app
