@@ -2,8 +2,10 @@
 // Prefer build-time VITE_API_URL, otherwise try a runtime fallback:
 // - if running on localhost, default to http://localhost:4000
 // - otherwise try window.location.origin (useful when backend is proxied)
+// Default to the deployed backend on Render when not on localhost and VITE_API_URL is undefined
+const RENDER_BACKEND = 'https://deone-proyecto2-ds2.onrender.com';
 const RUNTIME_FALLBACK = (typeof window !== 'undefined' && window.location) ?
-  (window.location.hostname === 'localhost' ? 'http://localhost:4000' : window.location.origin) :
+  (window.location.hostname === 'localhost' ? 'http://localhost:4000' : RENDER_BACKEND) :
   'http://localhost:4000';
 export const API_BASE = import.meta.env.VITE_API_URL || RUNTIME_FALLBACK;
 
