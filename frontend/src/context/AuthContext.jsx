@@ -35,10 +35,20 @@ export function AuthProvider({children}){
     setTokenState(null);
     setUserState(null);
     try{ serviceLogout(); }catch(e){ /* ignore logout service errors */ }
-    // Redirect to login page after clearing auth state
+    // Redirect to login page after clearing auth state.
+    // Prefer SPA navigation by using history.pushState + dispatching popstate so react-router picks it up.
+    if(typeof window !== 'undefined' && window.history && typeof window.history.pushState === 'function'){
+      try{
+        window.history.pushState(null, '', '/login');
+        // notify routers listening to popstate
+        window.dispatchEvent(new PopStateEvent('popstate'));
+        return;
+      }catch(e){
+        // fallthrough to assign
+      }
+    }
     if(typeof window !== 'undefined'){
-      // use location.assign to keep back history behavior consistent
-      window.location.assign('/login');
+      try{ window.location.assign('/login'); }catch(e){ window.location.href = '/login'; }
     }
   }
 
