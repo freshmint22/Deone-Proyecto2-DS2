@@ -28,6 +28,15 @@ if (rawOrigins !== '*') {
 app.use(cors({ origin: corsOrigins, credentials: true }));
 app.use(express.json());
 
+// Log allowed origins at startup (helpful to verify in Render logs)
+try{
+  // normalize for logging
+  const logOrigins = Array.isArray(corsOrigins) ? corsOrigins : [corsOrigins];
+  console.log('🌐 Allowed origins:', logOrigins);
+}catch(e){
+  console.log('🌐 Allowed origins: *');
+}
+
 app.get('/', (req, res) => {
   res.send('Servidor backend DeOne funcionando 🚀');
 });
