@@ -1,18 +1,104 @@
-/* Login page styles - dark theme aligned with project palette */
 :root{
-  --login-card-width: 420px;
+  /* Ensure login always has the landing/dark palette even if landing.css isn't loaded */
+  --landing-bg: #1A1A1A;
+  --landing-primary: #D90429;
+  --landing-text: #EAEAEA;
+  --landing-muted: #9aa0a6;
+
+  --bg: var(--landing-bg);
+  --card: #0f1112;
+  --primary: var(--landing-primary);
+  --text: var(--landing-text);
+  --muted: var(--landing-muted);
 }
-.login-page{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:24px}
-.login-card{width:100%;max-width:var(--login-card-width);background:var(--card-bg);padding:28px;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.6);color:var(--text)}
-.login-header{display:flex;flex-direction:column;align-items:center;margin-bottom:18px}
-.login-header h2{margin:0;font-size:22px}
-.login-header p{color:var(--muted);margin-top:8px;margin-bottom:0}
-.login-form{display:grid;gap:10px}
-.login-form label{font-size:13px;color:var(--muted)}
-.login-form input{padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:var(--input-bg, #ffffff);color:var(--text)}
-.login-actions{display:flex;gap:12px;margin-top:8px;align-items:center}
-.login-cta{display:flex;justify-content:center;margin-top:12px}
-.login-note{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
-@media(max-width:520px){
-  .login-card{padding:18px;border-radius:10px}
+
+.login-page{
+  /* Force full-viewport dark background to match Register regardless of global defaults */
+  min-height: 100vh;
+  width: 100vw;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: var(--landing-bg) !important;
+  color: var(--landing-text) !important;
+  padding: 40px 16px;
+}
+
+.login-wrap{ width: 100%; max-width: 920px; display:flex; gap:28px; align-items:flex-start; }
+.brand{ width: 320px; display:flex; flex-direction:column; align-items:center; text-align:center; }
+.logo{ width:96px; height:96px; border-radius:96px; background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.12)); display:flex; align-items:center; justify-content:center; margin-bottom:14px; }
+.logo-inner{ width:78px; height:78px; border-radius:78px; background:var(--card); display:flex; align-items:center; justify-content:center; color:var(--primary); font-weight:700; font-size:28px; }
+.title{ font-size:20px; font-weight:700; margin-bottom:6px; }
+.subtitle{ color:var(--muted); font-size:13px; }
+
+.login-wrap .card{ flex:1; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:14px; padding:24px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.03); color:var(--landing-text); }
+.login-form{ display:flex; flex-direction:column; align-items:center; gap:12px }
+.login-form .form-group{ margin-bottom:14px; background:rgba(255,255,255,0.01); padding:8px; border-radius:10px; width:100%; max-width:380px; box-sizing:border-box; }
+.login-form label{ display:block; font-size:13px; margin-bottom:6px; color:var(--landing-muted); }
+.login-form input{ width:100%; padding:12px 14px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:#151515; color:var(--landing-text); outline:none; height:48px; box-sizing:border-box }
+.login-form input:-webkit-autofill,
+.login-form input:-webkit-autofill:hover,
+.login-form input:-webkit-autofill:focus,
+.login-form input:-webkit-autofill:active{
+  -webkit-box-shadow: 0 0 0px 1000px #151515 inset !important;
+  -webkit-text-fill-color: var(--landing-text) !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+.login-form input::placeholder{ color:rgba(234,234,234,0.45); }
+
+.login-form input:focus{ box-shadow:0 8px 24px rgba(217,4,41,0.10); border-color:rgba(217,4,41,0.22); }
+
+/* Reduce the large button shadow and make it subtler */
+.login-wrap .btn-primary{ box-shadow:0 6px 18px rgba(217,4,41,0.12); }
+
+/* Logo sizing and ring */
+.brand .logo{ width:96px; height:96px; border-radius:999px; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,0.6); border:8px solid rgba(234,234,234,0.03); }
+.brand .logo-inner{ width:72px; height:72px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:700; }
+
+/* Slightly lift the card on hover for a premium feel */
+.login-wrap .card:hover{ transform:translateY(-4px); transition:transform 180ms ease; }
+
+.btn-show{ position:absolute; right:8px; top:50%; transform:translateY(-50%); border:0; background:#0f1112; width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--muted); }
+
+.actions{ display:flex; flex-direction:column; gap:10px; margin-top:12px; align-items:center }
+.btn-primary{ background:var(--landing-primary); border:none; color:#0F0F10; padding:12px; border-radius:10px; font-weight:700; cursor:pointer; box-shadow:0 8px 20px rgba(217,4,41,0.16); min-width:220px; width:70% }
+.btn-primary:hover{ filter:brightness(0.97) }
+.btn-ghost{ background:transparent; border:1px solid rgba(255,255,255,0.12); color:var(--landing-text); padding:10px; border-radius:10px; cursor:pointer }
+.btn-link{ background:none; border:0; color:var(--primary); cursor:pointer; font-weight:600; }
+
+.card-footer{ margin-top:16px; }
+.login-note{ color:var(--muted); font-size:13px; }
+
+@media (max-width:880px){
+  .login-wrap{ flex-direction:column; max-width:520px; }
+  .brand{ width:100%; flex-direction:row; gap:14px; align-items:center; text-align:left; }
+}
+
+/* Responsive adjustments to match Register layout */
+@media (max-width:900px){
+  .login-wrap{ max-width:720px; padding:18px; gap:20px }
+  .card{ padding:20px }
+  .btn-primary{ width:84%; margin:0 auto }
+}
+
+@media (max-width:620px){
+  .login-wrap{ max-width:92%; margin:12px auto; gap:12px }
+  .brand{ flex-direction:column; align-items:center; text-align:center }
+  .logo{ width:72px; height:72px }
+  .logo-inner{ width:60px; height:60px; font-size:22px }
+  .card{ padding:18px }
+  .login-form .form-group{ margin-bottom:10px }
+  .login-form input{ height:44px; padding:10px 12px }
+  .actions{ flex-direction:column; gap:10px }
+  .btn-primary{ width:100%; min-width:0 }
+  .btn-ghost{ width:100% }
+}
+
+@media (max-width:420px){
+  .login-wrap{ padding:12px }
+  .logo{ width:64px; height:64px }
+  .logo-inner{ width:56px; height:56px; font-size:20px }
+  .card{ padding:14px }
+  .login-form input{ height:42px }
+  .btn-primary{ padding:10px }
 }

@@ -8,6 +8,7 @@ export default function Login({onSuccess}){
   const [form, setForm] = useState({email:'',password:''});
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const { setToken, setUser } = useContext(AuthContext);
 
   function onChange(e){ setForm({...form,[e.target.name]:e.target.value}); }
@@ -30,30 +31,42 @@ export default function Login({onSuccess}){
 
   return (
     <div className="login-page">
-      <div className="login-card">
-        <div className="login-header">
-          <h2>Iniciar sesión</h2>
-          <p>Accede con tu cuenta para continuar</p>
+      <div className="login-wrap">
+        <div className="brand">
+          <div className="logo" aria-hidden>
+            <div className="logo-inner">D</div>
+          </div>
+          <div className="title">Inicia sesión</div>
+          <div className="subtitle">Accede con tu cuenta institucional</div>
         </div>
-        {alert && <Alert {...alert} onClose={()=>setAlert(null)} />}
-        <form onSubmit={onSubmit} className="login-form">
-          <div>
-            <label>Email</label>
-            <input name="email" value={form.email} onChange={onChange} />
+
+        <div className="card">
+          {alert && <Alert {...alert} onClose={()=>setAlert(null)} />}
+          <form onSubmit={onSubmit} className="login-form">
+            <div className="form-group">
+              <label>Correo</label>
+              <input name="email" value={form.email} onChange={onChange} placeholder="usuario@correounivalle.edu.co" autoComplete="email" />
+            </div>
+            <div className="form-group">
+              <label>Contraseña</label>
+              <div style={{position:'relative'}}>
+                <input name="password" type={showPassword? 'text' : 'password'} value={form.password} onChange={onChange} autoComplete="current-password" />
+                <button type="button" className="btn-show" onClick={()=>setShowPassword(s=>!s)} aria-label={showPassword? 'Ocultar contraseña' : 'Mostrar contraseña'}>
+                  {showPassword ? '🙈' : '👁️'}
+                </button>
+              </div>
+            </div>
+
+            <div className="actions">
+              <button className="btn-primary" type="submit" disabled={loading}>{loading? 'Ingresando...' : 'Entrar'}</button>
+              <button type="button" className="btn-ghost" onClick={()=>window.location.pathname = '/forgot'}>Olvidé mi contraseña</button>
+            </div>
+          </form>
+
+          <div className="card-footer">
+            <div className="login-note">¿No tienes cuenta? <button className="btn-link" onClick={()=>window.location.pathname = '/register'}>Crear cuenta</button></div>
           </div>
-          <div>
-            <label>Contraseña</label>
-            <input name="password" type="password" value={form.password} onChange={onChange} />
-          </div>
-          <div className="login-actions">
-            <button className="btn" type="submit" disabled={loading}>{loading? 'Ingresando...' : 'Entrar'}</button>
-            <a onClick={(e)=>{ e.preventDefault(); if(onSuccess) onSuccess(); else window.location.pathname = '/forgot'; }} style={{fontSize:13,cursor:'pointer',color:'var(--muted)'}}>Olvidé mi contraseña</a>
-          </div>
-        </form>
-        <div className="login-cta">
-          <button className="btn ghost" onClick={()=>window.location.pathname = '/register'}>Crear cuenta</button>
         </div>
-        <div className="login-note">¿No tienes cuenta? Regístrate para descubrir productos exclusivos.</div>
       </div>
     </div>
   );

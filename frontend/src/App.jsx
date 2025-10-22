@@ -13,6 +13,7 @@ import PrivateRoute from './components/PrivateRoute';
 import { AuthContext } from './context/AuthContext';
 import Landing from './pages/Landing';
 import ForgotPassword from './pages/ForgotPassword';
+import Terms from './pages/Terms';
 
 function MainApp(){
   const navigate = useNavigate();
@@ -61,6 +62,7 @@ export default function App(){
   <Route path="/" element={<Landing />} />
   <Route path="/login" element={<LoginWrapper />} />
   <Route path="/register" element={<Register />} />
+  <Route path="/terms" element={<Terms />} />
   <Route path="/forgot" element={<ForgotPassword />} />
         <Route path="/app/*" element={<MainApp />} />
       </Routes>

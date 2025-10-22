@@ -1,4 +1,5 @@
 import React, {useState, useRef} from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../services/auth';
 import Alert from '../components/Alert';
@@ -13,24 +14,38 @@ export default function Register(){
   const fileRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  const today = new Date();
+  const todayISO = today.toISOString().split('T')[0];
 
   function onChange(e){
     setForm({...form,[e.target.name]:e.target.value});
   }
 
   function validate(){
-    if(!form.firstName.trim()) return 'El nombre es obligatorio';
-    if(!form.lastName.trim()) return 'El apellido es obligatorio';
-    if(!form.email.includes('@') || !form.email.endsWith(institucionalDomain)) return 'Usa tu correo institucional';
-    if(form.password.length < 6) return 'La contraseña debe tener al menos 6 caracteres';
-    if(form.password !== form.confirm) return 'Las contraseñas no coinciden';
-    return null;
+    const e = {};
+    if(!form.firstName.trim()) e.firstName = 'El nombre es obligatorio';
+    if(!form.lastName.trim()) e.lastName = 'El apellido es obligatorio';
+    if(!form.email.includes('@') || !form.email.endsWith(institucionalDomain)) e.email = 'Usa tu correo institucional';
+    if(form.studentCode && !/^\d{6,10}$/.test(form.studentCode)) e.studentCode = 'Código debe ser numérico (6-10 dígitos)';
+    if(!form.password || form.password.length < 6) e.password = 'La contraseña debe tener al menos 6 caracteres';
+    if(form.password !== form.confirm) e.confirm = 'Las contraseñas no coinciden';
+    if(form.dob){
+      const d = new Date(form.dob);
+      if(isNaN(d.getTime())) e.dob = 'Fecha inválida';
+      else if(d > today) e.dob = 'La fecha no puede ser en el futuro';
+    }
+    setErrors(e);
+    return Object.keys(e).length === 0;
   }
 
   async function onSubmit(e){
     e.preventDefault();
-    const v = validate();
-    if(v){ setAlert({type:'error',message:v}); return; }
+    const ok = validate();
+  if(!ok){ setAlert({type:'error',message:'Completa los campos adecuadamente'}); return; }
     setLoading(true);
     try{
       const payload = { firstName: form.firstName, lastName: form.lastName, name: (form.firstName + ' ' + form.lastName).trim(), email: form.email, password: form.password };
@@ -38,8 +53,8 @@ export default function Register(){
   if (form.dob) payload.dob = form.dob;
       if (form.avatarUrl) payload.avatarUrl = form.avatarUrl;
       const data = await register(payload);
-      setAlert({type:'success',message:'Registro exitoso. Revisa tu correo para confirmar.'});
-      setForm({firstName:'',lastName:'',email:'',password:'',confirm:'',studentCode:'',dob:'',avatarUrl:''});
+      // Redirect user to login after successful registration
+      navigate('/login');
     }catch(err){
       const message = err?.message || 'Error en registro';
       setAlert({type:'error',message});
@@ -68,8 +83,15 @@ export default function Register(){
           {/* Avatar upload moved here; input hidden and button overlays the circle */}
           {form.avatarUrl ? <img src={form.avatarUrl} alt="avatar" style={{width:'100%',height:'100%',objectFit:'cover'}} /> : <div style={{color:'#777'}}> </div>}
           <input ref={fileRef} type="file" accept="image/*" style={{display:'none'}} onChange={(e)=>{ const f = e.target.files && e.target.files[0]; if(f) handleAvatarUpload(f); }} />
-          <button type="button" className="btn-ghost" onClick={()=>fileRef.current && fileRef.current.click()} style={{position:'absolute',right:6,bottom:6,background:'rgba(0,0,0,0.45)',borderRadius:8,padding:'6px 10px',border:'1px solid rgba(255,255,255,0.06)',color:'var(--text)',fontSize:12}}>Subir foto</button>
+          <button type="button" className="btn-upload" onClick={()=>fileRef.current && fileRef.current.click()} aria-label="Subir foto">
+            {/* Camera SVG icon */}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+              <path d="M3 7h3l2-2h6l2 2h3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+              <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.2"/>
+            </svg>
+          </button>
         </div>
+        <div className="upload-caption">Sube tu foto</div>
         <div className="title">Crea tu cuenta</div>
         <div className="subtitle">Regístrate con tu correo institucional</div>
       </div>
@@ -78,42 +100,67 @@ export default function Register(){
         <div className="grid-2">
           <div className="form-group">
             <label>Nombre</label>
-            <input name="firstName" value={form.firstName} onChange={onChange} placeholder="nombre" autoComplete="given-name" />
+            <input name="firstName" className={errors.firstName? 'input-error':''} value={form.firstName} onChange={onChange} placeholder="nombre" autoComplete="given-name" />
+            {errors.firstName && <small className="field-error">{errors.firstName}</small>}
           </div>
           <div className="form-group">
             <label>Apellido</label>
-            <input name="lastName" value={form.lastName} onChange={onChange} placeholder="apellido" autoComplete="family-name" />
+            <input name="lastName" className={errors.lastName? 'input-error':''} value={form.lastName} onChange={onChange} placeholder="apellido" autoComplete="family-name" />
+            {errors.lastName && <small className="field-error">{errors.lastName}</small>}
           </div>
         </div>
         <div className="form-group">
           <label>Correo institucional</label>
-          <input name="email" value={form.email} onChange={onChange} placeholder="usuario@correounivalle.edu.co" autoComplete="email" />
+          <input name="email" className={errors.email? 'input-error':''} value={form.email} onChange={onChange} placeholder="usuario@correounivalle.edu.co" autoComplete="email" />
+          {errors.email && <small className="field-error">{errors.email}</small>}
         </div>
         <div className="grid-2">
           <div className="form-group">
             <label>Código estudiantil</label>
-            <input name="studentCode" value={form.studentCode} onChange={onChange} placeholder="202560722" autoComplete="off" />
+            <input name="studentCode" className={errors.studentCode? 'input-error':''} value={form.studentCode} onChange={onChange} placeholder="202560722" autoComplete="off" />
+            {errors.studentCode && <small className="field-error">{errors.studentCode}</small>}
           </div>
           <div className="form-group">
             <label>Fecha de nacimiento</label>
-            <input name="dob" type="date" value={form.dob} onChange={onChange} />
+            <input name="dob" type="date" value={form.dob} onChange={onChange} max={todayISO} />
+            {errors.dob && <small className="field-error">{errors.dob}</small>}
           </div>
         </div>
         {/* Avatar upload moved to brand above; remove duplicated avatar block here */}
         <div className="form-group">
           <label>Contraseña</label>
-          <input name="password" type="password" value={form.password} onChange={onChange} autoComplete="new-password" />
+          <div style={{position:'relative'}}>
+            <input name="password" className={errors.password? 'input-error':''} type={showPassword ? 'text' : 'password'} value={form.password} onChange={onChange} autoComplete="new-password" />
+            {errors.password && <small className="field-error">{errors.password}</small>}
+            <button type="button" className="btn-show" onClick={()=>setShowPassword(s=>!s)} aria-label={showPassword? 'Ocultar contraseña' : 'Mostrar contraseña'}>
+              {showPassword ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12s4-7 10-7c2.08 0 3.99.45 5.66 1.22" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/><path d="M22 12s-4 7-10 7c-2.08 0-3.99-.45-5.66-1.22" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/><path d="M3 3l18 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              )}
+            </button>
+          </div>
         </div>
         <div className="form-group">
           <label>Confirmar contraseña</label>
-          <input name="confirm" type="password" value={form.confirm} onChange={onChange} autoComplete="new-password" />
+          <div style={{position:'relative'}}>
+            <input name="confirm" className={errors.confirm? 'input-error':''} type={showConfirm ? 'text' : 'password'} value={form.confirm} onChange={onChange} autoComplete="new-password" />
+            {errors.confirm && <small className="field-error">{errors.confirm}</small>}
+            <button type="button" className="btn-show" onClick={()=>setShowConfirm(s=>!s)} aria-label={showConfirm? 'Ocultar contraseña' : 'Mostrar contraseña'}>
+              {showConfirm ? (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              ) : (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 12s4-7 10-7c2.08 0 3.99.45 5.66 1.22" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/><path d="M22 12s-4 7-10 7c-2.08 0-3.99-.45-5.66-1.22" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/><path d="M3 3l18 18" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              )}
+            </button>
+          </div>
         </div>
 
         <div className="actions">
           <button className="btn-primary" type="submit" disabled={loading}>{loading? 'Registrando...' : 'Registrarme'}</button>
           <button type="button" className="btn-ghost" onClick={()=>navigate('/login')}>Ya tengo cuenta</button>
         </div>
-        <div className="note">Al registrarte aceptas los términos y condiciones.</div>
+  <div className="note">Al registrarte aceptas los <Link to="/terms" style={{textDecoration:'underline',color:'var(--landing-text)'}}>términos y condiciones</Link>.</div>
       </form>
       </div>
     </div>

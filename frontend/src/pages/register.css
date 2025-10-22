@@ -1,6 +1,6 @@
-.register-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--landing-bg)}
-.register-wrap{max-width:420px;margin:0 auto;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:24px;border-radius:14px;color:var(--landing-text);box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03)}
-.brand{display:flex;flex-direction:column;align-items:center;margin-bottom:18px}
+.register-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--landing-bg);width:100%;overflow:hidden}
+.register-wrap{max-width:420px;width:100%;margin:0 auto;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:24px;border-radius:14px;color:var(--landing-text);box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;align-items:center;position:relative;left:50%;transform:translateX(-50%)}
+.brand{display:flex;flex-direction:column;align-items:center;margin-bottom:18px;text-align:center}
 .logo{width:88px;height:88px;border-radius:50%;background:#0F0F10;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
 .logo img{width:74px;height:74px;object-fit:cover;border-radius:50%}
 .title{font-weight:700;font-size:18px}
@@ -11,17 +11,7 @@
 .register-page .register-wrap .form-group input,
 .register-page .register-wrap .form-group select,
 .register-page .register-wrap .form-group textarea{
-  background:#151515 !important; /* solid dark input */
-  border:1px solid rgba(255,255,255,0.04) !important;
-  padding:0 14px !important;
-  border-radius:10px !important;
-  color:var(--landing-text) !important;
-  outline:none !important;
-  appearance:none;
-  -webkit-appearance:none;
-  height:48px !important;
-  box-sizing:border-box;
-  width:100%;
+  background:#151515;border:1px solid rgba(255,255,255,0.04);padding:0 14px;border-radius:10px;color:var(--landing-text);outline:none;height:48px;box-sizing:border-box;width:100%;
 }
 .register-page .register-wrap .form-group input::placeholder{color:rgba(234,234,234,0.45) !important}
 .register-page .register-wrap .form-group input:focus,
@@ -35,10 +25,17 @@
 .register-page .register-wrap .form-group input[type="date"]{
   padding:0 14px !important;
 }
-.actions{display:flex;flex-direction:column;gap:10px;margin-top:12px}
-.btn-primary{background:var(--landing-primary);border:none;color:#0F0F10;padding:12px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(217,4,41,0.16)}
+
+/* Eye icon button */
+.btn-show{position:absolute;right:10px;top:8px;background:transparent;border:none;color:rgba(234,234,234,0.8);cursor:pointer;padding:6px;border-radius:6px}
+.btn-show:hover{background:rgba(255,255,255,0.02)}
+.actions{display:flex;flex-direction:column;gap:10px;margin-top:12px;align-items:center}
+.btn-primary{background:var(--landing-primary);border:none;color:#0F0F10;padding:12px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(217,4,41,0.16);min-width:220px;width:70%;max-width:320px;margin:0 auto}
 .btn-primary:hover{filter:brightness(0.97)}
 .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.12);color:var(--landing-text);padding:10px;border-radius:10px;cursor:pointer}
+.btn-upload{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.55);border-radius:8px;padding:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);color:var(--landing-text);width:40px;height:40px}
+.btn-upload svg{color:var(--landing-text)}
+.upload-caption{font-size:12px;color:var(--landing-muted);margin-top:8px;margin-bottom:6px;text-align:center}
 .note{font-size:12px;color:var(--landing-muted);text-align:center;margin-top:12px}
 @media(max-width:480px){.register-wrap{margin:12px;padding:16px}}
 @media(max-width:720px){
@@ -52,4 +49,59 @@
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px}
 @media(max-width:720px){
   .grid-2{grid-template-columns:1fr}
+}
+
+/* Additional responsive tweaks */
+@media (max-width:900px){
+  .register-wrap{padding:20px}
+  .btn-primary{width:84%}
+}
+
+@media (max-width:620px){
+  .logo{width:72px;height:72px}
+  .logo img{width:60px;height:60px}
+  .btn-primary{width:100%;min-width:0}
+  .actions{gap:8px}
+  .form-group{padding:6px}
+}
+
+@media (max-width:420px){
+  .register-wrap{padding:14px}
+  .logo{width:64px;height:64px}
+  .logo img{width:56px;height:56px}
+  .upload-caption{font-size:10px}
+  .title{font-size:15px}
+  .register-page{padding:12px;justify-content:center}
+}
+
+/* Aggressive mobile centering: fix the card in the middle of the viewport on very small screens */
+@media (max-width:480px){
+  /* Center using grid to avoid fixed positioning issues */
+  .register-page{display:grid;place-items:center;padding:12px 0;overflow:hidden;width:100vw}
+  .register-wrap{position:relative !important;left:auto !important;top:auto !important;transform:none !important;width:calc(100% - 28px) !important;max-width:420px;margin:0 auto;box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+}
+
+@media (max-width:420px){
+  .register-page{padding-left:0;padding-right:0;align-items:center}
+}
+
+/* Specific centering overrides to ensure logo, title and CTA are centered */
+.register-page .register-wrap .brand{width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.register-page .register-wrap form{width:100%}
+.register-page .register-wrap .form-group{width:100%}
+/* avatar background slightly grey and center upload icon in the middle */
+.register-page .register-wrap .logo{margin:6px auto 6px;background:#222326;position:relative}
+.register-page .register-wrap .logo .btn-upload{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,0.04);border-radius:999px;padding:0;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);color:var(--landing-text);width:44px;height:44px}
+.register-page .register-wrap .logo .btn-upload svg{width:20px;height:20px}
+.register-page .register-wrap .actions{align-items:center}
+.register-page .register-wrap .actions .btn-primary{width:72%;min-width:220px;max-width:320px;margin:0 auto}
+
+/* Emergency overrides: force perfect centering on very small screens */
+@media (max-width:480px){
+  html, body, #root { width:100% !important; height:100% !important; margin:0 !important; padding:0 !important; overflow:hidden !important; }
+  .register-page { display:grid !important; place-items:center !important; padding:0 !important; width:100vw !important; left:0 !important; right:0 !important; }
+  .register-wrap { position:relative !important; left:50% !important; transform:translateX(-50%) !important; margin:0 auto !important; width:calc(100% - 28px) !important; max-width:420px !important; }
+  .register-wrap * { box-sizing:border-box !important; }
+  .register-wrap form, .register-wrap .form-group, .register-wrap .grid-2 { width:100% !important; max-width:420px !important; margin:0 auto !important; }
+  .register-wrap .logo { margin:8px auto !important; }
 }

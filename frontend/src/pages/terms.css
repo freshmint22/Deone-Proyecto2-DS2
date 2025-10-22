@@ -1,0 +1,14 @@
+/* Terms page cards */
+.terms-page{min-height:80vh;padding:28px;background:var(--landing-bg);color:var(--landing-text)}
+.terms-inner{max-width:1100px;margin:0 auto}
+.terms-inner h1{margin:0 0 6px 0;font-size:26px}
+.terms-inner .updated{color:var(--landing-muted);margin-bottom:18px}
+
+.terms-grid{display:flex;flex-direction:column;gap:18px}
+.term-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+.term-card h3{margin:0 0 8px 0}
+.term-card p{margin:0;color:var(--landing-text);opacity:0.95;line-height:1.5}
+
+@media(max-width:720px){
+  .terms-inner{padding:12px}
+}
