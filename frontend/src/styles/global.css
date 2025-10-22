@@ -5,8 +5,8 @@
 	--card-bg: #F6F0E6; /* Panels / cards - slightly warmer cream */
 	--primary: #7B1421; /* Acento (Primario) - rojovinotinto (wine red) */
 	--accent: var(--primary);
-	--text: #2B2B2B; /* Neutro (Texto) - dark charcoal for legibility */
-	--muted: #EFE6DA; /* Neutro (Secundario) - subtle cream */
+	--text: #1A1A1A; /* stronger dark text for contrast */
+	--muted: #767676; /* darker muted for visibility */
 	--success: #6BB98A; /* Acento Secundario (Éxito) - muted green */
 	--input-bg: #FFFFFF; /* inputs should be white */
 }
@@ -29,8 +29,8 @@ html,body{width:100%;overflow-x:hidden;touch-action:pan-y;overscroll-behavior-x:
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
 .card{background:var(--card-bg);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.04);padding:12px;display:flex;flex-direction:column}
 .card .media{height:170px;background:var(--muted);display:flex;align-items:center;justify-content:center;border-radius:8px;overflow:hidden}
-.card h4{margin:8px 0 4px 0;font-size:16px}
-.card .meta{color:#666;font-size:13px}
+.card h4{margin:8px 0 4px 0;font-size:16px;color:var(--text);font-weight:600}
+.card .meta{color:var(--muted);font-size:13px}
 .card .price{margin-top:auto;font-weight:700;font-size:16px}
 
 /* Cart button styles */

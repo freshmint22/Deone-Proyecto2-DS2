@@ -19,15 +19,20 @@ export default function ProductCard({product}){
 
   return (
     <>
-    <div className="card">
-      <div className="media" onClick={()=>setPreview(true)} style={{cursor:'pointer'}}>
-  <div style={{width:'100%',height:120,display:'flex',alignItems:'center',justifyContent:'center',background:'var(--card-bg)',borderRadius:6,color:'var(--muted)'}}>Imagen no disponible</div>
+    <div className="card" style={{display:'flex',flexDirection:'column',gap:8}}>
+      <div style={{position:'relative'}}>
+        <div className="media" onClick={()=>setPreview(true)} style={{cursor:'pointer',height:170}}>
+          <div style={{width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',background:'var(--muted)',borderRadius:6,color:'var(--muted)'}}>Imagen no disponible</div>
+        </div>
+        <div style={{position:'absolute',left:10,top:10,background:'#0ea5a4',color:'#fff',padding:'6px 8px',borderRadius:8,fontSize:12}}>Envío Gratis</div>
       </div>
-      <h4>{name}</h4>
-      <div className="meta">{category}</div>
-      <div className="price">{formatCOP(price)}</div>
-      <div style={{marginTop:8}}>
-        <button className="btn btn-cart" onClick={()=>addItem(product,1)}>Agregar al carrito</button>
+      <div style={{padding:'0 6px 6px 6px',display:'flex',flexDirection:'column',gap:6}}>
+        <h4 style={{margin:0}}>{name}</h4>
+        <div className="meta">{category}</div>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginTop:6}}>
+          <div className="price">{formatCOP(price)}</div>
+          <button className="btn btn-cart" onClick={()=>addItem(product,1)}>Agregar</button>
+        </div>
       </div>
     </div>
     {preview && (

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ProductList from '../components/ProductList';
+import ProductCard from '../components/ProductCard';
 import { getProducts } from '../services/api';
 import Cart from '../components/Cart';
 import { useContext } from 'react';
@@ -46,13 +47,11 @@ export default function Home({ navigateLocal }){
           <h2>Envíos rápidos y las mejores ofertas</h2>
           <p>Descubre productos y recibe tu pedido rápido.</p>
         </div>
-          <div style={{width:220}}>
-            <div style={{background:'var(--card-bg)',padding:12,borderRadius:10}}>Oferta del día</div>
-          </div>
+          {/* right column for offers removed per request */}
       </section>
 
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginTop:12}}>
-        <h3>Productos</h3>
+        <h3 style={{margin:0,fontSize:20,fontWeight:700}}>Productos</h3>
         <div style={{display:'flex',gap:8,alignItems:'center'}}>
           {/* Search input moved to bottom-nav as a magnifier button */}
           <FilterButton categories={categories} category={category} setCategory={setCategory} />
@@ -62,7 +61,10 @@ export default function Home({ navigateLocal }){
       {loading && <div>Cargando productos...</div>}
       {error && <div style={{color:'red'}}>{error}</div>}
   {/* removed debug UI */}
-      {!loading && !error && <ProductList products={filtered} />}
+      {/* pagination: show 16 items (4x4) and allow sliding between pages */}
+      {!loading && !error && (
+        <PaginatedProducts products={filtered} pageSize={16} />
+      )}
 
   <div style={{height:84}} />
   <BottomNav onOpenCart={()=>setShowCart(true)} onOpenMenu={()=>setShowMenu(true)} onOpenSearch={()=>setShowSearch(true)} />
@@ -95,6 +97,31 @@ export default function Home({ navigateLocal }){
       )}
     </main>
   );
+}
+
+function PaginatedProducts({ products, pageSize = 16 }){
+  const [page, setPage] = React.useState(0);
+  const totalPages = Math.max(1, Math.ceil(products.length / pageSize));
+  const pageItems = products.slice(page * pageSize, (page+1) * pageSize);
+  return (
+    <div>
+      <div style={{display:'flex',gap:12}}>
+        <button className="btn ghost" onClick={()=>setPage(Math.max(0,page-1))} disabled={page===0}>◀</button>
+        <div style={{flex:1}}>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
+            {pageItems.map(p=> <div key={p._id || p.id}><ProductCardWrapper product={p} /></div>)}
+          </div>
+        </div>
+        <button className="btn" onClick={()=>setPage(Math.min(totalPages-1,page+1))} disabled={page>=totalPages-1}>▶</button>
+      </div>
+      <div style={{textAlign:'center',marginTop:12}}>Página {page+1} de {totalPages}</div>
+    </div>
+  );
+}
+
+function ProductCardWrapper({product}){
+  // reuse existing ProductCard component directly to keep behavior
+  return <ProductCard product={product} />;
 }
 
 function BottomNav({ onOpenCart, onOpenMenu, onOpenSearch }){

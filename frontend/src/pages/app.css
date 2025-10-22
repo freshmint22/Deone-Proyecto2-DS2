@@ -1,16 +1,17 @@
 /* Professional admin shell styles for /app */
 
 :root{
-  --app-bg: #0b0d0e; /* deep charcoal */
-  --panel: #111315; /* slightly lighter panel */
-  --muted: #9aa0a6;
-  --accent: #7B1421; /* deep, elegant wine (corporate) */
-  --text: #E6E6E6;
-  --subtle: rgba(255,255,255,0.03);
+  /* Light admin palette for /app to prioritize readability */
+  --app-bg: #F4F6F8; /* very light neutral */
+  --panel: #FFFFFF; /* white panels/cards */
+  --muted: #6B7280; /* muted text */
+  --accent: #111827; /* dark accent for headings / KPIs */
+  --text: #0F172A; /* primary text (very dark) */
+  --subtle: rgba(15,23,42,0.04);
 }
 
-.app-shell{background:linear-gradient(180deg,#070808,var(--app-bg));min-height:100vh;color:var(--text);font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
-.app-container{max-width:1100px;margin:34px auto;padding:20px}
+.app-shell{background:var(--app-bg);min-height:100vh;color:var(--text);font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
+.app-container{max-width:1100px;margin:28px auto;padding:20px}
 
 .app-hero{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:22px}
 .hero-left h1{margin:0;font-size:26px;letter-spacing:0.2px}
@@ -20,7 +21,7 @@
 .app-content{display:grid;grid-template-columns:2fr 1fr;gap:20px}
 
 /* Main card styles for content blocks */
-.card-panel{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+.card-panel{background:var(--panel);padding:18px;border-radius:12px;border:1px solid var(--subtle);box-shadow:0 8px 24px rgba(15,23,42,0.06)}
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .kpi{background:var(--panel);padding:12px;border-radius:10px;color:var(--text);display:flex;flex-direction:column;gap:8px}
 .kpi .value{font-weight:700;font-size:18px}
@@ -31,6 +32,15 @@
 
 .sidebar{display:flex;flex-direction:column;gap:12px}
 .sidebar .panel{background:var(--panel);padding:12px;border-radius:10px}
+
+/* Ensure any logo circle that may be present is clipped/reduced inside the app */
+.app-shell .landing-icon svg, .app-shell .landing-icon-svg{
+  width: 40px;
+  height: 40px;
+  display:block;
+}
+.app-shell .landing-icon{overflow:hidden;border-radius:50%;width:40px;height:40px}
+.app-shell .logo{color:var(--accent)}
 
 @media(max-width:900px){
   .app-content{grid-template-columns:1fr}

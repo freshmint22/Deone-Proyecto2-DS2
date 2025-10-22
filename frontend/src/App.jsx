@@ -15,12 +15,19 @@ import Landing from './pages/Landing';
 import ForgotPassword from './pages/ForgotPassword';
 import Terms from './pages/Terms';
 import './pages/app.css';
+import OffersSidebar from './components/OffersSidebar';
 
 function MainApp(){
   const navigate = useNavigate();
   const [route, setRoute] = useState('home');
   const { token, logout } = useContext(AuthContext);
   function navigateLocal(r){ setRoute(r); }
+
+  // mock promotions for admin view (visible in /app)
+  const promotions = [
+    { id: 'a1', title: 'Envío gratis hoy', subtitle: 'Aplica para pedidos nuevos', image: '/assets/placeholder-product.png' },
+    { id: 'a2', title: '-20% en cafeterías', subtitle: 'Oferta por tiempo limitado', image: '/assets/placeholder-product.png' },
+  ];
 
   return (
     <div className="app-shell">
@@ -40,10 +47,10 @@ function MainApp(){
   </nav>
 
       <div className="app-container">
-        <header className="app-hero">
-          <div className="hero-left">
-            <h1>Panel de control</h1>
-            <p className="muted">Resumen ejecutivo — métricas clave y actividad en tiempo real.</p>
+        <header className="app-hero" style={{alignItems:'flex-start'}}>
+          <div style={{flex:1}} />
+          <div style={{width:320}}>
+            <OffersSidebar promotions={promotions} />
           </div>
         </header>
 
