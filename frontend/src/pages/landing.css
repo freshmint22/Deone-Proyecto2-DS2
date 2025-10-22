@@ -1,0 +1,124 @@
+/* Landing page - dark themed, high contrast for conversion */
+:root{
+  --landing-bg: #1A1A1A; /* dark base */
+  --landing-card: #0F0F10; /* card slightly lighter */
+  --landing-primary: #D90429; /* vibrant brand red */
+  --landing-text: #EAEAEA;
+  --landing-muted: #AAAAAA;
+  --landing-ghost-border: rgba(217,4,41,0.18);
+}
+
+.landing-hero{
+  min-height:100vh; /* cover full viewport to avoid white area below */
+  display:flex;
+  flex-direction:column; /* stack card and discounts vertically */
+  align-items:center;
+  justify-content:flex-start;
+  padding:36px 20px;
+  background:var(--landing-bg);
+  color:var(--landing-text);
+}
+
+.landing-card{
+  width:100%;
+  max-width:980px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border:1px solid rgba(255,255,255,0.03);
+  padding:40px;
+  border-radius:14px;
+  text-align:center;
+  box-shadow:0 12px 40px rgba(0,0,0,0.6);
+  margin-bottom:20px; /* separate from discounts banner */
+}
+
+.landing-head{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  justify-content:center;
+}
+
+.landing-icon{display:flex;align-items:center;justify-content:center;background:transparent;border-radius:999px}
+.landing-title{
+  margin:0;
+  font-size:36px;
+  line-height:1.05;
+  font-weight:800; /* stronger weight */
+  color:var(--landing-text);
+}
+
+.landing-sub{
+  margin-top:14px;
+  color:var(--landing-text);
+  opacity:0.95;
+  max-width:760px;
+  margin-left:auto;margin-right:auto;
+  font-size:16px;
+}
+.landing-sub .accent{color:var(--landing-primary);font-weight:700}
+
+.landing-ctas{display:flex;gap:20px;justify-content:center;margin-top:20px} /* increased gap for better click target */
+
+.cta-primary{
+  background:var(--landing-primary);
+  color:#0F0F10;
+  border:0;
+  padding:12px 20px;
+  border-radius:10px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(217,4,41,0.22);
+}
+.cta-primary:hover{filter:brightness(0.95)}
+
+.cta-ghost{
+  background:transparent;
+  color:var(--landing-text);
+  border:1px solid rgba(255,255,255,0.12); /* subtle ghost border */
+  padding:10px 18px;
+  border-radius:10px;
+  font-weight:600;
+  cursor:pointer;
+}
+.cta-ghost:hover{background:rgba(255,255,255,0.02)}
+
+@media(max-width:680px){
+  .landing-title{font-size:24px}
+  .landing-card{padding:20px}
+  .cta-primary,.cta-ghost{width:100%}
+  .landing-ctas{flex-direction:column;padding-top:8px}
+}
+
+/* Improved responsiveness and touch targets */
+@media(max-width:900px){
+  .landing-title{font-size:28px}
+  .landing-sub{font-size:15px}
+  .landing-card{padding:28px}
+  .cta-primary{padding:14px 18px;font-size:16px}
+  .cta-ghost{padding:12px 16px;font-size:15px}
+}
+
+/* Discounts - horizontal scroller on small screens */
+@media(max-width:760px){
+  .discount-list{display:flex;overflow-x:auto;gap:12px;padding-bottom:8px;-webkit-overflow-scrolling:touch}
+  .discount-card{min-width:140px;flex:0 0 auto}
+  .discounts-inner{padding:12px}
+  .landing-discounts{margin-top:12px}
+}
+
+/* Accessibility: increase hit area for CTAs */
+.cta-primary,.cta-ghost{min-height:44px}
+
+
+/* Discounts banner */
+.landing-discounts{width:100%;background:transparent;margin-top:18px;display:flex;justify-content:center}
+.discounts-inner{max-width:980px;width:100%;padding:18px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.005));border:1px solid rgba(255,255,255,0.03)}
+.discounts-inner h3{margin:0 0 8px 0;color:var(--landing-text);font-size:18px}
+.discount-list{display:flex;gap:12px;margin-top:6px;flex-wrap:wrap}
+.discount-card{min-width:140px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);text-align:center}
+.discount-card .muted{color:var(--landing-muted);opacity:0.9}
+
+@media(max-width:680px){
+  .discount-list{justify-content:space-between}
+  .discount-card{min-width:44%;margin-bottom:8px}
+}

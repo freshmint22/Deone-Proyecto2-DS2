@@ -7,10 +7,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { firstName, lastName, name, email, password, role, studentCode, dob } = req.body;
 
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'name, email and password are required' });
+    // allow either combined name or first+last
+    const fullName = name || [firstName || '', lastName || ''].filter(Boolean).join(' ').trim();
+
+    if (!fullName || !email || !password) {
+      return res.status(400).json({ message: 'name (or firstName+lastName), email and password are required' });
     }
 
     if (!validator.isEmail(email)) {
@@ -30,7 +33,11 @@ export const register = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashed = await bcrypt.hash(password, salt);
 
-    const user = new User({ name, email, password: hashed, role });
+  const userData = { name: fullName, email, password: hashed, role };
+  if (studentCode) userData.studentCode = String(studentCode);
+  if (dob) userData.dob = new Date(dob);
+
+  const user = new User(userData);
     await user.save();
 
     const payload = { id: user._id, email: user.email, role: user.role };

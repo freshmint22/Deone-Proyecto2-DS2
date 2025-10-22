@@ -2,6 +2,7 @@ import React, {useState, useContext} from 'react';
 import { login } from '../services/auth';
 import Alert from '../components/Alert';
 import { AuthContext } from '../context/AuthContext';
+import './login.css';
 
 export default function Login({onSuccess}){
   const [form, setForm] = useState({email:'',password:''});
@@ -28,20 +29,32 @@ export default function Login({onSuccess}){
   }
 
   return (
-    <div style={{maxWidth:420,margin:'24px auto',padding:20,background:'#fff',borderRadius:6}}>
-      <h2>Iniciar sesión</h2>
-      {alert && <Alert {...alert} onClose={()=>setAlert(null)} />}
-      <form onSubmit={onSubmit}>
-        <div style={{marginBottom:8}}>
-          <label>Email</label>
-          <input name="email" value={form.email} onChange={onChange} style={{width:'100%'}} />
+    <div className="login-page">
+      <div className="login-card">
+        <div className="login-header">
+          <h2>Iniciar sesión</h2>
+          <p>Accede con tu cuenta para continuar</p>
         </div>
-        <div style={{marginBottom:8}}>
-          <label>Contraseña</label>
-          <input name="password" type="password" value={form.password} onChange={onChange} style={{width:'100%'}} />
+        {alert && <Alert {...alert} onClose={()=>setAlert(null)} />}
+        <form onSubmit={onSubmit} className="login-form">
+          <div>
+            <label>Email</label>
+            <input name="email" value={form.email} onChange={onChange} />
+          </div>
+          <div>
+            <label>Contraseña</label>
+            <input name="password" type="password" value={form.password} onChange={onChange} />
+          </div>
+          <div className="login-actions">
+            <button className="btn" type="submit" disabled={loading}>{loading? 'Ingresando...' : 'Entrar'}</button>
+            <a onClick={(e)=>{ e.preventDefault(); if(onSuccess) onSuccess(); else window.location.pathname = '/forgot'; }} style={{fontSize:13,cursor:'pointer',color:'var(--muted)'}}>Olvidé mi contraseña</a>
+          </div>
+        </form>
+        <div className="login-cta">
+          <button className="btn ghost" onClick={()=>window.location.pathname = '/register'}>Crear cuenta</button>
         </div>
-        <button type="submit" disabled={loading}>{loading? 'Ingresando...' : 'Entrar'}</button>
-      </form>
+        <div className="login-note">¿No tienes cuenta? Regístrate para descubrir productos exclusivos.</div>
+      </div>
     </div>
   );
 }

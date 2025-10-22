@@ -25,11 +25,11 @@ export default function ForgotPassword(){
   }
 
   return (
-    <div style={{maxWidth:520,margin:'48px auto',padding:20,background:'#fff',borderRadius:8}}>
+  <div style={{maxWidth:520,margin:'48px auto',padding:20,background:'var(--card-bg)',borderRadius:8}}>
       <h2>Recuperar contraseña</h2>
       {alert && <Alert {...alert} onClose={()=>setAlert(null)} />}
       <form onSubmit={submit} style={{display:'grid',gap:8}}>
-        <input placeholder="Tu email" value={email} onChange={e=>setEmail(e.target.value)} style={{padding:8,borderRadius:6,border:'1px solid #e6e6e6'}} />
+  <input placeholder="Tu email" value={email} onChange={e=>setEmail(e.target.value)} style={{padding:8,borderRadius:6,border:'1px solid rgba(0,0,0,0.06)',background:'var(--input-bg)',color:'var(--text)'}} />
         <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
           <button className="btn" type="submit" disabled={loading}>{loading? 'Enviando...':'Enviar email'}</button>
           <a href="/" style={{fontSize:13}}>Volver</a>

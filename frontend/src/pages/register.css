@@ -1,0 +1,55 @@
+.register-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--landing-bg)}
+.register-wrap{max-width:420px;margin:0 auto;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:24px;border-radius:14px;color:var(--landing-text);box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03)}
+.brand{display:flex;flex-direction:column;align-items:center;margin-bottom:18px}
+.logo{width:88px;height:88px;border-radius:50%;background:#0F0F10;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.logo img{width:74px;height:74px;object-fit:cover;border-radius:50%}
+.title{font-weight:700;font-size:18px}
+.subtitle{font-size:13px;color:var(--muted);margin-top:6px}
+.form-group{display:flex;flex-direction:column;margin-bottom:12px;background:rgba(255,255,255,0.01);padding:8px;border-radius:10px}
+.form-group label{font-size:13px;color:var(--landing-muted);margin-bottom:6px}
+.register-page .register-wrap .form-group input,
+.register-page .register-wrap .form-group input,
+.register-page .register-wrap .form-group select,
+.register-page .register-wrap .form-group textarea{
+  background:#151515 !important; /* solid dark input */
+  border:1px solid rgba(255,255,255,0.04) !important;
+  padding:0 14px !important;
+  border-radius:10px !important;
+  color:var(--landing-text) !important;
+  outline:none !important;
+  appearance:none;
+  -webkit-appearance:none;
+  height:48px !important;
+  box-sizing:border-box;
+  width:100%;
+}
+.register-page .register-wrap .form-group input::placeholder{color:rgba(234,234,234,0.45) !important}
+.register-page .register-wrap .form-group input:focus,
+.register-page .register-wrap .form-group select:focus,
+.register-page .register-wrap .form-group textarea:focus{
+  box-shadow:0 8px 24px rgba(217,4,41,0.10) !important;
+  border-color:rgba(217,4,41,0.22) !important;
+}
+
+/* Specific styling for date inputs to ensure icon area matches */
+.register-page .register-wrap .form-group input[type="date"]{
+  padding:0 14px !important;
+}
+.actions{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.btn-primary{background:var(--landing-primary);border:none;color:#0F0F10;padding:12px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(217,4,41,0.16)}
+.btn-primary:hover{filter:brightness(0.97)}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.12);color:var(--landing-text);padding:10px;border-radius:10px;cursor:pointer}
+.note{font-size:12px;color:var(--landing-muted);text-align:center;margin-top:12px}
+@media(max-width:480px){.register-wrap{margin:12px;padding:16px}}
+@media(max-width:720px){
+  .register-wrap{max-width:92%;margin:18px auto;padding:18px}
+  .brand{align-items:center}
+  .logo{width:72px;height:72px}
+  .title{font-size:16px}
+}
+/* Ensure two-column grids collapse on small screens (used inline in JSX) */
+/* Symmetric two-column helper */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px}
+@media(max-width:720px){
+  .grid-2{grid-template-columns:1fr}
+}

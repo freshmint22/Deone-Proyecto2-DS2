@@ -25,10 +25,10 @@ export default function Cart({ onPay, onClose }){
           <div key={p.id || p._id} className="cart-item">
             <div className="info">
               <div style={{fontWeight:700}}>{name}</div>
-              <div style={{color:'#666'}}>{category} - {formatCOP(price)}</div>
+              <div style={{color:'var(--muted)'}}>{category} - {formatCOP(price)}</div>
             </div>
             <div>
-              <input type="number" value={p.qty} min={1} onChange={(e)=>updateQty(p.id||p._id, Number(e.target.value))} style={{width:80,padding:6,borderRadius:8,border:'1px solid #e6e6e6'}} />
+              <input type="number" value={p.qty} min={1} onChange={(e)=>updateQty(p.id||p._id, Number(e.target.value))} style={{width:80,padding:6,borderRadius:8,border:'1px solid rgba(0,0,0,0.06)',background:'var(--input-bg)',color:'var(--text)'}} />
             </div>
             <div>
               <button className="btn ghost" onClick={()=>removeItem(p.id||p._id)}>Eliminar</button>

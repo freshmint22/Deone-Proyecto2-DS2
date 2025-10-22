@@ -1,0 +1,18 @@
+/* Login page styles - dark theme aligned with project palette */
+:root{
+  --login-card-width: 420px;
+}
+.login-page{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{width:100%;max-width:var(--login-card-width);background:var(--card-bg);padding:28px;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.6);color:var(--text)}
+.login-header{display:flex;flex-direction:column;align-items:center;margin-bottom:18px}
+.login-header h2{margin:0;font-size:22px}
+.login-header p{color:var(--muted);margin-top:8px;margin-bottom:0}
+.login-form{display:grid;gap:10px}
+.login-form label{font-size:13px;color:var(--muted)}
+.login-form input{padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:var(--input-bg, #ffffff);color:var(--text)}
+.login-actions{display:flex;gap:12px;margin-top:8px;align-items:center}
+.login-cta{display:flex;justify-content:center;margin-top:12px}
+.login-note{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
+@media(max-width:520px){
+  .login-card{padding:18px;border-radius:10px}
+}

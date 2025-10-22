@@ -23,6 +23,9 @@ export async function updateMe(req, res){
     if(!userId) return res.status(400).json({ success:false, message: 'User id missing' });
     const payload = {};
     if(req.body.nombre || req.body.name) payload.name = req.body.nombre || req.body.name;
+    if(req.body.phone) payload.phone = req.body.phone;
+    if(req.body.direccion) payload.direccion = req.body.direccion;
+    if(req.body.avatarUrl) payload.avatarUrl = req.body.avatarUrl;
     if(req.body.password) {
       const salt = await bcrypt.genSalt(10);
       payload.password = await bcrypt.hash(req.body.password, salt);

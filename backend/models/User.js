@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema({
     enum: ['estudiante', 'comercio', 'admin'],
     default: 'estudiante'
   },
+  phone: { type: String, required: false },
+  direccion: { type: String, required: false },
+  avatarUrl: { type: String, required: false },
+  studentCode: { type: String, required: false },
+  dob: { type: Date, required: false },
   password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });

@@ -21,7 +21,7 @@ export default function ProductCard({product}){
     <>
     <div className="card">
       <div className="media" onClick={()=>setPreview(true)} style={{cursor:'pointer'}}>
-        <div style={{width:'100%',height:120,display:'flex',alignItems:'center',justifyContent:'center',background:'#f2f2f2',borderRadius:6,color:'#666'}}>Imagen no disponible</div>
+  <div style={{width:'100%',height:120,display:'flex',alignItems:'center',justifyContent:'center',background:'var(--card-bg)',borderRadius:6,color:'var(--muted)'}}>Imagen no disponible</div>
       </div>
       <h4>{name}</h4>
       <div className="meta">{category}</div>
@@ -35,11 +35,11 @@ export default function ProductCard({product}){
         <div className="modal-content" style={{width:'min(640px,96%)'}}>
           <div style={{display:'flex',gap:12}}>
             <div style={{flex:'0 0 280px'}}>
-              <div style={{width:'100%',height:200,display:'flex',alignItems:'center',justifyContent:'center',background:'#f2f2f2',borderRadius:8,color:'#666'}}>Imagen no disponible</div>
+              <div style={{width:'100%',height:200,display:'flex',alignItems:'center',justifyContent:'center',background:'var(--card-bg)',borderRadius:8,color:'var(--muted)'}}>Imagen no disponible</div>
             </div>
             <div style={{flex:1}}>
               <h3>{name}</h3>
-              <div style={{color:'#666'}}>{category}</div>
+              <div style={{color:'var(--muted)'}}>{category}</div>
               <p style={{marginTop:12}}>Precio: <strong>{formatCOP(price)}</strong></p>
               <div style={{marginTop:16,display:'flex',gap:8}}>
                 <button className="btn btn-cart" onClick={()=>{ addItem(product,1); setPreview(false); }}>Agregar al carrito</button>

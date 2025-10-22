@@ -26,7 +26,7 @@ function MainApp(){
       <nav className="topnav">
         <div style={{display:'flex',gap:8,alignItems:'center'}}>
           {/* Breadcrumb only (Home is clickable) */}
-          <div style={{marginLeft:12,color:'#666',fontSize:14}}>
+          <div style={{marginLeft:12,color:'var(--muted)',fontSize:14}}>
             {route==='home' && <button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button>}
             {route==='cart' && <span><button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button> <span className="breadcrumb-crumb">/ Carrito</span></span>}
             {route==='checkout' && <span><button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button> <span className="breadcrumb-crumb">/ Carrito / Pagar</span></span>}

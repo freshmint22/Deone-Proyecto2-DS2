@@ -1,63 +1,44 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../services/auth';
-import { AuthContext } from '../context/AuthContext';
-import Alert from '../components/Alert';
+import './landing.css';
 
-export default function Landing({onLogin, onRegister}){
-  const { setToken } = useContext(AuthContext);
+export default function Landing(){
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email:'', password:'' });
-  const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState(null);
-
-  function onChange(e){ setForm({...form,[e.target.name]:e.target.value}); }
-
-  async function submit(e){
-    e && e.preventDefault();
-    setAlert(null);
-    if(!form.email || !form.password){ setAlert({type:'error',message:'Completa email y contraseña'}); return; }
-    setLoading(true);
-    try{
-      const data = await login(form);
-      setToken(data.token);
-      setAlert({type:'success',message:'Ingreso exitoso'});
-  // navigate into app
-  navigate('/app');
-    }catch(err){
-      setAlert({type:'error',message: err?.message || 'Error en login'});
-    }finally{ setLoading(false); }
-  }
 
   return (
-    <div style={{minHeight:'80vh',display:'flex',alignItems:'center',justifyContent:'center'}}>
-      <div style={{maxWidth:980,width:'100%',display:'flex',gap:24,alignItems:'center'}}>
-        <div style={{flex:1,background:'#fff',padding:24,borderRadius:10,boxShadow:'0 6px 18px rgba(0,0,0,0.06)'}}>
-          <h1 style={{marginTop:0}}>Bienvenido a Deone</h1>
-          <p>Compra y recibe tus productos rápido. Accede con tu cuenta estudiantil para ver ofertas exclusivas.</p>
-
-          {alert && <Alert {...alert} onClose={()=>setAlert(null)} />}
-
-          <form onSubmit={submit} style={{marginTop:12,display:'grid',gap:8,maxWidth:420}}>
-            <input name="email" placeholder="Email" value={form.email} onChange={onChange} style={{padding:10,borderRadius:6,border:'1px solid #e6e6e6'}} />
-            <input name="password" type="password" placeholder="Contraseña" value={form.password} onChange={onChange} style={{padding:10,borderRadius:6,border:'1px solid #e6e6e6'}} />
-            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-              <button className="btn" type="submit" disabled={loading}>{loading? 'Ingresando...':'Ingresar'}</button>
-              <a onClick={(e)=>{ e.preventDefault(); navigate('/forgot'); }} style={{fontSize:13,cursor:'pointer'}}>Olvidé mi contraseña</a>
-            </div>
-          </form>
-
-          <div style={{marginTop:16}}>
-            <span>¿No tienes cuenta? </span>
-            <button className="btn ghost" onClick={()=>{ if(onRegister) onRegister(); else navigate('/register'); }}>Crear cuenta</button>
+    <div className="landing-hero">
+      <div className="landing-card">
+        <div className="landing-head">
+          <div className="landing-icon" aria-hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="var(--landing-primary)" strokeWidth="1.6" fill="rgba(217,4,41,0.06)" />
+              <path d="M12 7v6l4 2" stroke="var(--landing-primary)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </div>
+          <h1 className="landing-title">Deone — Compra rápido, recibe antes</h1>
         </div>
 
-        <div style={{width:380}}>
-          {/* Use an embedded data URL to guarantee the promo image renders even if the public file is inaccessible or corrupted */}
-          <div style={{width:'100%',height:220,display:'flex',alignItems:'center',justifyContent:'center',background:'#f2f2f2',borderRadius:8,color:'#666'}}>Imagen promocional deshabilitada</div>
+        <p className="landing-sub">Pide y recibe en <strong>minutos</strong>. Regístrate con tu <strong>correo institucional</strong> para acceder a <span className="accent">DESCUENTOS EXCLUSIVOS</span> y seguimiento de pedidos.</p>
+
+        <div className="landing-ctas">
+          <button className="cta-primary" onClick={()=>navigate('/register')}>Crear Cuenta y Obtener Descuentos</button>
+          <button className="cta-ghost" onClick={()=>navigate('/login')}>Iniciar sesión</button>
+        </div>
+      </div>
+      
+      <div className="landing-discounts">
+        <div className="discounts-inner">
+          <h3>Ofertas de la semana</h3>
+          <div className="discount-list">
+            <div className="discount-card">Producto A<br/><small className="muted">-15%</small></div>
+            <div className="discount-card">Producto B<br/><small className="muted">-10%</small></div>
+            <div className="discount-card">Producto C<br/><small className="muted">-25%</small></div>
+            <div className="discount-card">Producto D<br/><small className="muted">-5%</small></div>
+          </div>
+          <div style={{marginTop:12}}><button className="cta-ghost" onClick={()=>navigate('/login')}>Ver todos los descuentos</button></div>
         </div>
       </div>
     </div>
   );
 }
+

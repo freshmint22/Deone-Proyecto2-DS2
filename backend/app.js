@@ -11,6 +11,9 @@ import debugRoutes from './routes/debug.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import reportRoutes from './routes/report.routes.js';
 import orderRoutes from './routes/order.routes.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import multer from 'multer';
 
 dotenv.config();
 
@@ -27,6 +30,39 @@ if (rawOrigins !== '*') {
 }
 app.use(cors({ origin: corsOrigins, credentials: true }));
 app.use(express.json());
+
+// Serve uploaded static files
+// Resolve __dirname equivalent for ESM and compute a stable uploads directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadsDir = path.join(__dirname, 'public', 'uploads');
+
+// Ensure uploads directory exists (avoid ENOENT when multer writes files)
+try{
+  await import('fs').then(fs => fs.mkdirSync(uploadsDir, { recursive: true }));
+}catch(e){ /* ignore */ }
+
+app.use('/uploads', express.static(uploadsDir));
+
+// Simple multer setup for avatar uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadsDir);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname) || '.jpg';
+    const name = Date.now() + '-' + Math.random().toString(36).slice(2,8) + ext;
+    cb(null, name);
+  }
+});
+const upload = multer({ storage, limits: { fileSize: 2 * 1024 * 1024 } }); // 2MB
+
+// POST /api/users/upload-avatar -> returns { url }
+app.post('/api/users/upload-avatar', upload.single('avatar'), (req, res) => {
+  if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded' });
+  const url = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+  return res.json({ success: true, url });
+});
 
 // Log allowed origins at startup (helpful to verify in Render logs)
 try{

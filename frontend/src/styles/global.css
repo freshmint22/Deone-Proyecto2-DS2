@@ -1,33 +1,37 @@
 /* Estilos globales base */
 :root{
-	--primary:#d62828; /* red header */
-	--accent:#0a84ff; /* blue accent */
-	--muted:#f4f4f4;
-	--card-bg:#fff;
-	--text:#111;
+	/* Cream theme (light) - full palette */
+	--bg: #FBF7F0; /* Primario (Fondo/Base) - soft cream */
+	--card-bg: #F6F0E6; /* Panels / cards - slightly warmer cream */
+	--primary: #7B1421; /* Acento (Primario) - rojovinotinto (wine red) */
+	--accent: var(--primary);
+	--text: #2B2B2B; /* Neutro (Texto) - dark charcoal for legibility */
+	--muted: #EFE6DA; /* Neutro (Secundario) - subtle cream */
+	--success: #6BB98A; /* Acento Secundario (Éxito) - muted green */
+	--input-bg: #FFFFFF; /* inputs should be white */
 }
 *{box-sizing:border-box}
-body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, Helvetica, sans-serif;margin:0;padding:0;background:#fafafa;color:var(--text);-webkit-font-smoothing:antialiased}
+body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, Helvetica, sans-serif;margin:0;padding:0;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
 
 /* Top header / search */
-.topbar{background:var(--primary);color:#fff;padding:10px 12px;display:flex;align-items:center;gap:12px}
+.topbar{background:var(--primary);color:#ffffff;padding:10px 12px;display:flex;align-items:center;gap:12px}
 .logo{font-weight:700;font-size:20px}
 .search{flex:1;display:flex}
-.search input{width:100%;padding:10px;border-radius:8px;border:0;background:#fff}
+.search input{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:var(--input-bg);color:var(--text)}
 
 /* Page container */
 .container{padding:16px;max-width:1100px;margin:0 auto}
 
 /* Product grid and cards */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
-.card{background:var(--card-bg);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.06);padding:12px;display:flex;flex-direction:column}
+.card{background:var(--card-bg);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.04);padding:12px;display:flex;flex-direction:column}
 .card .media{height:170px;background:var(--muted);display:flex;align-items:center;justify-content:center;border-radius:8px;overflow:hidden}
 .card h4{margin:8px 0 4px 0;font-size:16px}
 .card .meta{color:#666;font-size:13px}
 .card .price{margin-top:auto;font-weight:700;font-size:16px}
 
 /* Cart button styles */
-.btn-cart{background:#d62828;border:0;color:#fff;padding:8px 12px;border-radius:8px}
+.btn-cart{background:var(--primary);border:0;color:#ffffff;padding:8px 12px;border-radius:8px}
 .btn-cart:hover{filter:brightness(0.95)}
 
 @media(max-width:600px){
@@ -36,50 +40,50 @@ body{font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, Hel
 }
 
 /* Bottom nav (mobile) */
-.bottom-nav{position:fixed;left:0;right:0;bottom:0;height:64px;background:#fff;border-top:1px solid #e6e6e6;display:flex;align-items:center;justify-content:space-around;padding:8px}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;height:64px;background:var(--card-bg);border-top:1px solid rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:space-around;padding:8px}
 .bottom-nav button{background:transparent;border:0}
 .icon-btn{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid transparent}
-.icon-btn:hover{background:#f6f6f6;border-color:#e6e6e6}
+.icon-btn:hover{background:rgba(0,0,0,0.02);border-color:rgba(0,0,0,0.04)}
 
 .modal-content input{width:100%}
 
 /* filter button */
-.filter-btn{background:transparent;border:1px solid #ddd;padding:6px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.filter-menu{position:absolute;right:0;top:44px;background:var(--card-bg);border:1px solid #e6e6e6;padding:8px;border-radius:8px;display:flex;flex-direction:column;gap:6px;z-index:3000}
+.filter-btn{background:transparent;border:1px solid rgba(0,0,0,0.04);padding:6px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.filter-menu{position:absolute;right:0;top:44px;background:var(--card-bg);border:1px solid rgba(0,0,0,0.04);padding:8px;border-radius:8px;display:flex;flex-direction:column;gap:6px;z-index:3000}
 .filter-menu .pill{display:block;text-align:left}
 
 /* Top navigation pills */
-.topnav{padding:10px 12px;background:#fff;border-bottom:1px solid #eee;display:flex;gap:8px;align-items:center}
-.pill{background:transparent;border:1px solid #d0d0d0;padding:6px 10px;border-radius:999px;font-size:14px;cursor:pointer}
-.pill.active{background:var(--primary);color:#fff;border-color:transparent}
+.topnav{padding:10px 12px;background:var(--card-bg);border-bottom:1px solid rgba(0,0,0,0.04);display:flex;gap:8px;align-items:center}
+.pill{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:6px 10px;border-radius:999px;font-size:14px;cursor:pointer}
+.pill.active{background:var(--primary);color:#ffffff;border-color:transparent}
 
 /* Notification bell */
-.notif-btn{position:relative;background:#fff;border:0;padding:8px;border-radius:8px}
-.notif-badge{position:absolute;top:-6px;right:-6px;background:#e63946;color:#fff;border-radius:999px;padding:3px 6px;font-size:12px}
+.notif-btn{position:relative;background:var(--card-bg);border:0;padding:8px;border-radius:8px}
+.notif-badge{position:absolute;top:-6px;right:-6px;background:var(--primary);color:#ffffff;border-radius:999px;padding:3px 6px;font-size:12px}
 
 /* Cart list improvements */
 .cart-item{display:flex;gap:12px;align-items:center;padding:12px;border-bottom:1px solid #f0f0f0}
 .cart-item .info{flex:1}
-.btn{background:var(--primary);color:#fff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer}
-.btn.ghost{background:#fff;color:var(--primary);border:1px solid #e6e6e6}
+.btn{background:var(--primary);color:#ffffff;border:0;padding:8px 12px;border-radius:8px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid rgba(0,0,0,0.06)}
 
 .content{padding:20px}
 
 /* Utility */
 .hero{display:flex;gap:12px;align-items:center;margin-bottom:16px}
-.hero .promo{flex:1;padding:12px;background:#fff;border-radius:10px}
+.hero .promo{flex:1;padding:12px;background:var(--card-bg);border-radius:10px}
 
 /* Modal / overlay used by Cart in mobile bottom nav */
-.modal-overlay{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000}
-.modal-content{width:min(720px,96%);max-height:90%;overflow:auto;background:var(--card-bg);border-radius:12px;box-shadow:0 8px 36px rgba(0,0,0,0.6)}
+.modal-overlay{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;z-index:2000}
+.modal-content{width:min(720px,96%);max-height:90%;overflow:auto;background:var(--card-bg);border-radius:12px;box-shadow:0 8px 36px rgba(0,0,0,0.06)}
 .modal-frame{display:flex;align-items:flex-start;gap:12px}
 .modal-window{display:flex}
-.modal-close{background:var(--card-bg);border:1px solid #ddd;border-radius:8px;padding:6px 10px;font-size:20px;cursor:pointer;height:36px}
+.modal-close{background:var(--card-bg);border:1px solid rgba(0,0,0,0.06);border-radius:8px;padding:6px 10px;font-size:20px;cursor:pointer;height:36px}
 
 /* breadcrumb small styling inside top nav */
-.topnav .breadcrumb{color:#666;font-size:14px;margin-left:12px}
+.topnav .breadcrumb{color:var(--muted);font-size:14px;margin-left:12px}
 .breadcrumb-home{background:transparent;border:0;color:var(--text);font-weight:700;text-decoration:underline;cursor:pointer;padding:0}
-.breadcrumb-crumb{color:#666;margin-left:8px}
+.breadcrumb-crumb{color:var(--muted);margin-left:8px}
 
 
 /* hamburger menu small styling */
