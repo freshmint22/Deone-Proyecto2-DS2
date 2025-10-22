@@ -14,6 +14,7 @@ import { AuthContext } from './context/AuthContext';
 import Landing from './pages/Landing';
 import ForgotPassword from './pages/ForgotPassword';
 import Terms from './pages/Terms';
+import './pages/app.css';
 
 function MainApp(){
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ function MainApp(){
   function navigateLocal(r){ setRoute(r); }
 
   return (
-    <div>
+    <div className="app-shell">
       <Header />
       <nav className="topnav">
         <div style={{display:'flex',gap:8,alignItems:'center'}}>
@@ -36,20 +37,30 @@ function MainApp(){
             {route==='profile' && <span><button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button> <span className="breadcrumb-crumb">/ Perfil</span></span>}
           </div>
         </div>
-      </nav>
-      <div>
-  {route === 'home' && <Home navigateLocal={navigateLocal} />}
-  {/* Register is handled at top-level route (/register). */}
-        {route === 'login' && <Login onSuccess={()=>navigateLocal('home')} />}
-        {route === 'profile' && (
-          <PrivateRoute>
-            <Profile />
-          </PrivateRoute>
-        )}
-        {route === 'cart' && <Cart />}
-        {route === 'checkout' && <Checkout />}
-        {route === 'orders' && <Orders />}
-        {route === 'tracker' && <OrderTracker />}
+  </nav>
+
+      <div className="app-container">
+        <header className="app-hero">
+          <div className="hero-left">
+            <h1>Panel de control</h1>
+            <p className="muted">Resumen ejecutivo — métricas clave y actividad en tiempo real.</p>
+          </div>
+        </header>
+
+        <main className="app-content">
+          {route === 'home' && <Home navigateLocal={navigateLocal} />}
+          {/* Register is handled at top-level route (/register). */}
+          {route === 'login' && <Login onSuccess={()=>navigateLocal('home')} />}
+          {route === 'profile' && (
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          )}
+          {route === 'cart' && <Cart />}
+          {route === 'checkout' && <Checkout />}
+          {route === 'orders' && <Orders />}
+          {route === 'tracker' && <OrderTracker />}
+        </main>
       </div>
     </div>
   )
