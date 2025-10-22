@@ -1,5 +1,34 @@
-.register-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:var(--landing-bg);width:100%;overflow:hidden}
-.register-wrap{max-width:420px;width:100%;margin:0 auto;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:24px;border-radius:14px;color:var(--landing-text);box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;align-items:center;position:relative;left:50%;transform:translateX(-50%)}
+.register-page{min-height:100vh;padding:32px;background:#0b0b0b;/* dark wrapper */width:100%;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.register-layout{width:100%;max-width:1100px;display:grid;grid-template-columns:1fr 460px;gap:28px;align-items:stretch}
+.promo{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:32px;box-shadow:0 18px 60px rgba(3,8,23,0.6);color:var(--landing-text);border:1px solid rgba(255,255,255,0.03);display:flex}
+.register-layout{width:100%;max-width:1100px;display:grid;grid-template-columns:1fr 520px;gap:28px;align-items:stretch}
+.promo{position:relative;overflow:hidden;border-radius:14px;padding:32px;box-shadow:0 18px 60px rgba(3,8,23,0.18);color:var(--text);border:1px solid rgba(0,0,0,0.06);display:flex;background:linear-gradient(90deg, rgba(123,20,33,0.25), rgba(0,0,0,0.20)), url('/assets/register-bg.jpg') right center/cover no-repeat; background-blend-mode: overlay}
+.promo::after{display:none}
+.promo-inner{position:relative;z-index:1}
+.promo-inner{display:flex;flex-direction:column;gap:18px}
+.promo-badge{background:rgba(255,255,255,0.04);display:inline-block;padding:8px 12px;border-radius:999px;color:var(--landing-text);font-weight:600;font-size:13px}
+.promo-title{font-size:48px;line-height:1.02;margin:4px 0;font-weight:800}
+.promo-accent{color:var(--primary);font-weight:800}
+.promo-desc{color:var(--muted);max-width:520px}
+.promo-title{font-size:48px;line-height:1.02;margin:4px 0;font-weight:800;color:#fff}
+.promo-deone{color:var(--primary);font-weight:900}
+.promo-desc{color:rgba(255,255,255,0.85);max-width:520px}
+.promo-features{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px}
+.feature{display:flex;gap:12px;padding:10px;border-radius:12px;background:rgba(255,255,255,0.02);align-items:flex-start}
+.feature-icon{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;font-size:18px}
+.feature{display:flex;gap:12px;padding:14px;border-radius:12px;background:rgba(255,255,255,0.02);align-items:flex-start;border:1px solid rgba(255,255,255,0.04)}
+.feature-icon{width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--primary)}
+.feature-title{font-weight:700;font-size:14px;color:#ffffff}
+.feature-sub{font-size:12px;color:rgba(255,255,255,0.85)}
+.promo-stats{display:flex;gap:18px;margin-top:14px}
+.stat{display:flex;flex-direction:column}
+.stat strong{font-size:20px;color:var(--primary)}
+.promo-stats{display:flex;gap:28px;margin-top:28px;align-items:flex-end}
+.stat{display:flex;flex-direction:column;align-items:flex-start}
+.stat strong{font-size:28px;color:#ffffff;display:block;font-weight:800}
+.stat span{font-size:13px;color:rgba(255,255,255,0.9);margin-top:6px;opacity:0.95}
+.register-wrap{max-width:100%;width:100%;margin:0 auto;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:24px;border-radius:14px;color:var(--landing-text);box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;align-items:center;position:relative}
+.register-wrap{max-width:100%;width:100%;margin:0 auto;background:#111111;padding:28px;border-radius:14px;color:var(--card-bg);box-shadow:0 12px 40px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;position:relative}
 .brand{display:flex;flex-direction:column;align-items:center;margin-bottom:18px;text-align:center}
 .logo{width:88px;height:88px;border-radius:50%;background:#0F0F10;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
 .logo img{width:74px;height:74px;object-fit:cover;border-radius:50%}
@@ -11,14 +40,27 @@
 .register-page .register-wrap .form-group input,
 .register-page .register-wrap .form-group select,
 .register-page .register-wrap .form-group textarea{
-  background:#151515;border:1px solid rgba(255,255,255,0.04);padding:0 14px;border-radius:10px;color:var(--landing-text);outline:none;height:48px;box-sizing:border-box;width:100%;
+  background:var(--card-bg);border:1px solid rgba(0,0,0,0.06);padding:0 14px;border-radius:10px;color:var(--text);outline:none;height:48px;box-sizing:border-box;width:100%;
 }
+.register-page .register-wrap .form-group input,
+.register-page .register-wrap .form-group input,
+.register-page .register-wrap .form-group select,
+.register-page .register-wrap .form-group textarea{
+  background:#1f1f1f;border:1px solid rgba(255,255,255,0.04);padding:0 14px;border-radius:10px;color:var(--card-bg);outline:none;height:48px;box-sizing:border-box;width:100%;
+}
+.register-page .register-wrap .form-group input::placeholder{color:rgba(255,255,255,0.45)}
 .register-page .register-wrap .form-group input::placeholder{color:rgba(234,234,234,0.45) !important}
 .register-page .register-wrap .form-group input:focus,
 .register-page .register-wrap .form-group select:focus,
 .register-page .register-wrap .form-group textarea:focus{
-  box-shadow:0 8px 24px rgba(217,4,41,0.10) !important;
-  border-color:rgba(217,4,41,0.22) !important;
+  box-shadow:0 8px 24px rgba(0,0,0,0.06) !important;
+  border-color:rgba(0,0,0,0.08) !important;
+}
+.register-page .register-wrap .form-group input:focus,
+.register-page .register-wrap .form-group select:focus,
+.register-page .register-wrap .form-group textarea:focus{
+  box-shadow:0 8px 24px rgba(123,20,33,0.12) !important;
+  border-color:rgba(123,20,33,0.22) !important;
 }
 
 /* Specific styling for date inputs to ensure icon area matches */
@@ -27,22 +69,44 @@
 }
 
 /* Eye icon button */
-.btn-show{position:absolute;right:10px;top:8px;background:transparent;border:none;color:rgba(234,234,234,0.8);cursor:pointer;padding:6px;border-radius:6px}
+.btn-show{position:absolute;right:10px;top:8px;background:transparent;border:none;color:rgba(0,0,0,0.6);cursor:pointer;padding:6px;border-radius:6px}
+.btn-show:hover{background:rgba(0,0,0,0.03)}
+.btn-show{position:absolute;right:10px;top:8px;background:transparent;border:none;color:rgba(255,255,255,0.8);cursor:pointer;padding:6px;border-radius:6px}
 .btn-show:hover{background:rgba(255,255,255,0.02)}
 .actions{display:flex;flex-direction:column;gap:10px;margin-top:12px;align-items:center}
-.btn-primary{background:var(--landing-primary);border:none;color:#0F0F10;padding:12px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(217,4,41,0.16);min-width:220px;width:70%;max-width:320px;margin:0 auto}
-.btn-primary:hover{filter:brightness(0.97)}
-.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.12);color:var(--landing-text);padding:10px;border-radius:10px;cursor:pointer}
-.btn-upload{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.55);border-radius:8px;padding:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.06);color:var(--landing-text);width:40px;height:40px}
-.btn-upload svg{color:var(--landing-text)}
-.upload-caption{font-size:12px;color:var(--landing-muted);margin-top:8px;margin-bottom:6px;text-align:center}
-.note{font-size:12px;color:var(--landing-muted);text-align:center;margin-top:12px}
+.btn-primary{background:var(--primary);border:none;color:var(--card-bg);padding:12px;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,0.06);min-width:220px;width:72%;max-width:320px;margin:0 auto}
+.btn-primary:hover{filter:brightness(0.98)}
+.btn-primary{background:linear-gradient(90deg,var(--primary),#e33a53);border:none;color:#fff;padding:14px;border-radius:12px;font-weight:700;cursor:pointer;box-shadow:0 12px 30px rgba(123,20,33,0.22);min-width:220px;width:100%;max-width:420px;margin:0 auto}
+.btn-primary:hover{filter:brightness(0.98)}
+.btn-ghost{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--text);padding:10px;border-radius:10px;cursor:pointer}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.9);padding:10px;border-radius:10px;cursor:pointer}
+.btn-upload{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.04);border-radius:8px;padding:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,0,0,0.06);color:var(--text);width:40px;height:40px}
+.btn-upload svg{color:var(--text)}
+.btn-upload{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.35);border-radius:8px;padding:8px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.04);color:var(--card-bg);width:44px;height:44px}
+.btn-upload svg{color:var(--card-bg)}
+.upload-caption{font-size:12px;color:var(--muted);margin-top:8px;margin-bottom:6px;text-align:center}
+.note{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+.upload-caption{font-size:12px;color:rgba(255,255,255,0.75);margin-top:8px;margin-bottom:6px;text-align:center}
+.note{font-size:12px;color:rgba(255,255,255,0.6);text-align:center;margin-top:12px}
+
+/* Promo badge change to Universidad del Valle style */
+.promo-badge{font-size:13px;padding:6px 10px;background:rgba(255,255,255,0.04);border-radius:8px;color:rgba(255,255,255,0.9);font-weight:700;display:inline-block}
 @media(max-width:480px){.register-wrap{margin:12px;padding:16px}}
-@media(max-width:720px){
-  .register-wrap{max-width:92%;margin:18px auto;padding:18px}
-  .brand{align-items:center}
-  .logo{width:72px;height:72px}
-  .title{font-size:16px}
+@media(max-width:1024px){
+  .register-layout{grid-template-columns:1fr 420px}
+}
+@media(max-width:900px){
+  .register-layout{grid-template-columns:1fr}
+  .promo{order:2}
+  .register-wrap{order:1}
+}
+@media(max-width:1024px){
+  .register-layout{grid-template-columns:1fr 420px}
+}
+@media(max-width:900px){
+  .register-layout{grid-template-columns:1fr}
+  .promo{order:2}
+  .register-wrap{order:1}
 }
 /* Ensure two-column grids collapse on small screens (used inline in JSX) */
 /* Symmetric two-column helper */
@@ -53,8 +117,8 @@
 
 /* Additional responsive tweaks */
 @media (max-width:900px){
-  .register-wrap{padding:20px}
-  .btn-primary{width:84%}
+  .register-wrap{padding:18px}
+  .btn-primary{width:100%}
 }
 
 @media (max-width:620px){

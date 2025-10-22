@@ -48,6 +48,28 @@
 
 .login-form input:focus{ box-shadow:0 8px 24px rgba(217,4,41,0.10); border-color:rgba(217,4,41,0.22); }
 
+/* Clear visible focus ring for accessibility */
+.login-form input:focus{ outline:3px solid rgba(217,4,41,0.12); outline-offset:2px; }
+
+/* Field error styles */
+.field-error{ color:#f44336; font-size:12px; margin-top:6px }
+
+/* Button hover/active states */
+.btn-primary{ transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease; }
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 26px rgba(217,4,41,0.18); filter:brightness(0.98); }
+.btn-primary:active{ transform:translateY(0); filter:brightness(0.95); }
+
+/* Make primary color more vibrant on text and links */
+.btn-link, .btn-primary, .btn-ghost, .btn-show{ --accent: var(--landing-primary) }
+.btn-link{ color:var(--landing-primary); }
+
+/* Show/hide button a11y improvements */
+.btn-show{ display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:8px; border:1px solid rgba(255,255,255,0.03); }
+.btn-show:focus{ outline:3px solid rgba(217,4,41,0.14); }
+
+/* Disabled primary button look */
+.btn-primary[disabled]{ opacity:0.64; cursor:not-allowed; box-shadow:none }
+
 /* Reduce the large button shadow and make it subtler */
 .login-wrap .btn-primary{ box-shadow:0 6px 18px rgba(217,4,41,0.12); }
 

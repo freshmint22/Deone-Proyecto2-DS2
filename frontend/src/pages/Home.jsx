@@ -24,7 +24,24 @@ export default function Home({ navigateLocal }){
     setLoading(true); setError(null);
     try{
       const data = await getProducts();
-      setProducts(data || []);
+      let list = data || [];
+      // If backend returns few/no products, inject demo products for better visual testing
+      const demoProducts = [
+        { _id: 'p1', nombre: 'Camiseta DeOne', categoria: 'Ropa', precio: 20000 },
+        { _id: 'p2', nombre: 'Gorra DeOne', categoria: 'Accesorios', precio: 15000 },
+        { _id: 'p3', nombre: 'Mug DeOne', categoria: 'Hogar', precio: 10000 },
+        { _id: 'p4', nombre: 'Libreta DeOne', categoria: 'Papelería', precio: 8000 },
+        { _id: 'p5', nombre: 'Sudadera DeOne', categoria: 'Ropa', precio: 45000 },
+        { _id: 'p6', nombre: 'Bolígrafo DeOne', categoria: 'Papelería', precio: 3000 },
+        { _id: 'p7', nombre: 'Audífonos DeOne', categoria: 'Electrónica', precio: 120000 },
+        { _id: 'p8', nombre: 'Taza térmica', categoria: 'Hogar', precio: 25000 },
+        { _id: 'p9', nombre: 'Mousepad DeOne', categoria: 'Accesorios', precio: 12000 },
+        { _id: 'p10', nombre: 'Calcetines DeOne', categoria: 'Ropa', precio: 6000 },
+        { _id: 'p11', nombre: 'Llaveros DeOne', categoria: 'Accesorios', precio: 7000 },
+        { _id: 'p12', nombre: 'Agenda DeOne', categoria: 'Papelería', precio: 18000 }
+      ];
+      if(!list || list.length < 4) list = demoProducts;
+      setProducts(list);
     }catch(err){ setError(err.message || 'Error cargando productos'); }
     finally{ setLoading(false); }
   }
@@ -63,7 +80,7 @@ export default function Home({ navigateLocal }){
   {/* removed debug UI */}
       {/* pagination: show 16 items (4x4) and allow sliding between pages */}
       {!loading && !error && (
-        <PaginatedProducts products={filtered} pageSize={16} />
+        <PaginatedProducts products={filtered} pageSize={4} />
       )}
 
   <div style={{height:84}} />
@@ -99,22 +116,52 @@ export default function Home({ navigateLocal }){
   );
 }
 
-function PaginatedProducts({ products, pageSize = 16 }){
+function PaginatedProducts({ products, pageSize = 4 }){
+  // pageSize default 4 -> 2x2 grid
   const [page, setPage] = React.useState(0);
   const totalPages = Math.max(1, Math.ceil(products.length / pageSize));
-  const pageItems = products.slice(page * pageSize, (page+1) * pageSize);
+  // build pages array
+  const pages = [];
+  for(let i=0;i<totalPages;i++) pages.push(products.slice(i*pageSize,(i+1)*pageSize));
+
+  // compute shift percentage relative to track width
+  const shift = totalPages > 0 ? (page * (100 / totalPages)) : 0;
   return (
-    <div>
-      <div style={{display:'flex',gap:12}}>
-        <button className="btn ghost" onClick={()=>setPage(Math.max(0,page-1))} disabled={page===0}>◀</button>
-        <div style={{flex:1}}>
-          <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16}}>
-            {pageItems.map(p=> <div key={p._id || p.id}><ProductCardWrapper product={p} /></div>)}
+    <div className="slider-wrap">
+      <div className="slider-viewport">
+        {pages.map((pageItems, idx)=> (
+          <div
+            key={idx}
+            className={`slider-page ${idx===page? 'active':''}`}
+            style={{display: idx===page ? 'block' : 'none'}}
+            data-page-index={idx}
+            data-items-count={pageItems.length}
+          >
+            {/* Inline grid styles to avoid being overridden by other CSS in consumer environments */}
+            <div
+              className="page-grid"
+              style={{display:'grid', gridTemplateColumns:'repeat(2, 1fr)', gap:16}}
+            >
+              {pageItems.map(p=> (
+                <div key={p._id || p.id} className="page-cell" style={{display:'flex'}}>
+                  <ProductCard product={p} />
+                </div>
+              ))}
+
+              {/* pad empty cells if pageItems < pageSize to keep 2x2 layout */}
+              {Array.from({length: Math.max(0, pageSize - pageItems.length)}).map((_,i)=> (
+                <div key={`empty-${i}`} className="page-cell" style={{visibility:'hidden',height:0}} />
+              ))}
+            </div>
           </div>
-        </div>
-        <button className="btn" onClick={()=>setPage(Math.min(totalPages-1,page+1))} disabled={page>=totalPages-1}>▶</button>
+        ))}
       </div>
-      <div style={{textAlign:'center',marginTop:12}}>Página {page+1} de {totalPages}</div>
+
+      <div className="slider-controls">
+        <button className="btn ghost slider-arrow" onClick={()=>setPage(Math.max(0,page-1))} disabled={page===0} aria-label="Anterior">◀</button>
+        <div className="slider-page-indicator">Página {page+1} de {totalPages}</div>
+        <button className="btn slider-arrow" onClick={()=>setPage(Math.min(totalPages-1,page+1))} disabled={page>=totalPages-1} aria-label="Siguiente">▶</button>
+      </div>
     </div>
   );
 }

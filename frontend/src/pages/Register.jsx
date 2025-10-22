@@ -77,27 +77,70 @@ export default function Register(){
 
   return (
     <div className="register-page">
-      <div className="register-wrap">
-      <div className="brand">
-        <div className="logo" style={{position:'relative',width:88,height:88,borderRadius:88,overflow:'hidden',background:'#0f1112',display:'flex',alignItems:'center',justifyContent:'center'}}>
-          {/* Avatar upload moved here; input hidden and button overlays the circle */}
-          {form.avatarUrl ? <img src={form.avatarUrl} alt="avatar" style={{width:'100%',height:'100%',objectFit:'cover'}} /> : <div style={{color:'#777'}}> </div>}
-          <input ref={fileRef} type="file" accept="image/*" style={{display:'none'}} onChange={(e)=>{ const f = e.target.files && e.target.files[0]; if(f) handleAvatarUpload(f); }} />
-          <button type="button" className="btn-upload" onClick={()=>fileRef.current && fileRef.current.click()} aria-label="Subir foto">
-            {/* Camera SVG icon */}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-              <path d="M3 7h3l2-2h6l2 2h3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.2"/>
-            </svg>
-          </button>
-        </div>
-        <div className="upload-caption">Sube tu foto</div>
-        <div className="title">Crea tu cuenta</div>
-        <div className="subtitle">Regístrate con tu correo institucional</div>
-      </div>
-      {alert && <Alert type={alert.type} message={alert.message} onClose={()=>setAlert(null)} />}
-      <form onSubmit={onSubmit}>
-        <div className="grid-2">
+      <div className="register-layout">
+        <aside className="promo">
+          <div className="promo-inner">
+            <div className="promo-badge">Portal Estudiantil</div>
+            <h1 className="promo-title">Bienvenido a<br/><span className="promo-deone">DeOne</span></h1>
+            <p className="promo-desc">Tu plataforma de pedidos en el campus.<br/>Compra sin filas, recibe notificaciones y apoya los comercios locales</p>
+
+            <div className="promo-features">
+              <div className="feature">
+                <div className="feature-icon">📦</div>
+                <div className="feature-body">
+                  <div className="feature-title">Pedidos rápidos</div>
+                  <div className="feature-sub">Ordena sin filas, ahorra tiempo</div>
+                </div>
+              </div>
+              <div className="feature">
+                <div className="feature-icon">⏱️</div>
+                <div className="feature-body">
+                  <div className="feature-title">Seguimiento en tiempo real</div>
+                  <div className="feature-sub">Conoce el estado de tu pedido al instante</div>
+                </div>
+              </div>
+              <div className="feature">
+                <div className="feature-icon">🏪</div>
+                <div className="feature-body">
+                  <div className="feature-title">Comercios del campus</div>
+                  <div className="feature-sub">Acceso a cafeterías, librerías y más</div>
+                </div>
+              </div>
+              <div className="feature">
+                <div className="feature-icon">📈</div>
+                <div className="feature-body">
+                  <div className="feature-title">Gestión eficiente</div>
+                  <div className="feature-sub">Inventarios y pedidos digitalizados</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="promo-stats bottom-stats">
+              <div className="stat"><strong>-30%</strong><span>Tiempo de espera</span></div>
+              <div className="stat"><strong>20+</strong><span>Comercios disponibles</span></div>
+              <div className="stat"><strong>&lt;5s</strong><span>Actualización en vivo</span></div>
+            </div>
+          </div>
+        </aside>
+        <div className="register-wrap">
+          <div className="brand">
+            <div className="logo" style={{position:'relative',width:88,height:88,borderRadius:88,overflow:'hidden',background:'#0f1112',display:'flex',alignItems:'center',justifyContent:'center'}}>
+              {form.avatarUrl ? <img src={form.avatarUrl} alt="avatar" style={{width:'100%',height:'100%',objectFit:'cover'}} /> : <div style={{color:'#777'}} />}
+              <input ref={fileRef} type="file" accept="image/*" style={{display:'none'}} onChange={(e)=>{ const f = e.target.files && e.target.files[0]; if(f) handleAvatarUpload(f); }} />
+              <button type="button" className="btn-upload" onClick={()=>fileRef.current && fileRef.current.click()} aria-label="Subir foto">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                  <path d="M3 7h3l2-2h6l2 2h3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="12" cy="13" r="3" stroke="currentColor" strokeWidth="1.2"/>
+                </svg>
+              </button>
+            </div>
+            <div className="upload-caption">Sube tu foto</div>
+            <div className="title">Crea tu cuenta</div>
+            <div className="subtitle">Regístrate con tu correo institucional</div>
+          </div>
+          {alert && <Alert type={alert.type} message={alert.message} onClose={()=>setAlert(null)} />}
+          <form onSubmit={onSubmit}>
+            <div className="grid-2">
           <div className="form-group">
             <label>Nombre</label>
             <input name="firstName" className={errors.firstName? 'input-error':''} value={form.firstName} onChange={onChange} placeholder="nombre" autoComplete="given-name" />
@@ -161,7 +204,8 @@ export default function Register(){
           <button type="button" className="btn-ghost" onClick={()=>navigate('/login')}>Ya tengo cuenta</button>
         </div>
   <div className="note">Al registrarte aceptas los <Link to="/terms" style={{textDecoration:'underline',color:'var(--landing-text)'}}>términos y condiciones</Link>.</div>
-      </form>
+          </form>
+        </div>
       </div>
     </div>
   );

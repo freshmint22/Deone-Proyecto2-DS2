@@ -8,23 +8,38 @@
   --accent: #111827; /* dark accent for headings / KPIs */
   --text: #0F172A; /* primary text (very dark) */
   --subtle: rgba(15,23,42,0.04);
+  --primary: #7B1421; /* project wine primary to use as accent */
+  --card-elev: rgba(11,15,20,0.04);
 }
 
 .app-shell{background:var(--app-bg);min-height:100vh;color:var(--text);font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial}
-.app-container{max-width:1100px;margin:28px auto;padding:20px}
+.app-container{max-width:1200px;margin:28px auto;padding:20px}
+
+/* Top navigation containing breadcrumbs, search and user actions */
+.topnav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;margin-bottom:10px}
+.topnav-left{flex:1}
+.topnav-center{flex:0 1 520px;display:flex;justify-content:center}
+.topnav-right{flex:0 0 auto}
+.app-search{width:100%;max-width:680px;padding:10px 14px;border-radius:12px;border:1px solid rgba(15,23,42,0.06);box-shadow:0 6px 20px rgba(11,15,20,0.03);background:#fff}
+.app-search::placeholder{color:var(--muted)}
+
+.user-actions{display:flex;gap:8px;align-items:center}
+.user-actions .btn-ghost{background:transparent;border:1px solid rgba(15,23,42,0.06);padding:8px 10px;border-radius:10px}
 
 .app-hero{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:22px}
-.hero-left h1{margin:0;font-size:26px;letter-spacing:0.2px}
+.hero-left h1{margin:0;font-size:26px;letter-spacing:0.2px;color:var(--accent)}
 .hero-left .muted{color:var(--muted);margin-top:6px;font-size:14px}
-.hero-actions .btn-primary{background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:0;font-weight:700}
+.hero-actions .btn-primary{background:var(--primary);color:#fff;padding:10px 14px;border-radius:10px;border:0;font-weight:700}
 
-.app-content{display:grid;grid-template-columns:2fr 1fr;gap:20px}
+.app-content{display:grid;grid-template-columns:1fr 320px;gap:22px;align-items:start}
+.app-main{min-width:0}
+.app-right{width:320px}
 
 /* Main card styles for content blocks */
-.card-panel{background:var(--panel);padding:18px;border-radius:12px;border:1px solid var(--subtle);box-shadow:0 8px 24px rgba(15,23,42,0.06)}
+.card-panel{background:var(--panel);padding:18px;border-radius:12px;border:1px solid var(--subtle);box-shadow:0 6px 20px var(--card-elev)}
 .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.kpi{background:var(--panel);padding:12px;border-radius:10px;color:var(--text);display:flex;flex-direction:column;gap:8px}
-.kpi .value{font-weight:700;font-size:18px}
+.kpi{background:linear-gradient(180deg,#fff, #FBFBFD);padding:14px;border-radius:10px;color:var(--text);display:flex;flex-direction:column;gap:6px;border:1px solid rgba(11,15,20,0.03)}
+.kpi .value{font-weight:800;font-size:20px;color:var(--accent)}
 .kpi .label{color:var(--muted);font-size:13px}
 
 .recent-list{display:flex;flex-direction:column;gap:12px}
@@ -32,6 +47,7 @@
 
 .sidebar{display:flex;flex-direction:column;gap:12px}
 .sidebar .panel{background:var(--panel);padding:12px;border-radius:10px}
+.sidebar .panel.sticky{position:sticky;top:88px}
 
 /* Ensure any logo circle that may be present is clipped/reduced inside the app */
 .app-shell .landing-icon svg, .app-shell .landing-icon-svg{
@@ -41,6 +57,24 @@
 }
 .app-shell .landing-icon{overflow:hidden;border-radius:50%;width:40px;height:40px}
 .app-shell .logo{color:var(--accent)}
+
+/* Offers sidebar styles */
+.offers-sidebar{width:100%;max-width:320px;margin-left:6px}
+.offers-inner{position:sticky;top:88px}
+.offers-title{margin:0;font-size:16px}
+.offers-list{display:flex;flex-direction:column;gap:10px;margin-top:8px;max-height:60vh;overflow:auto;padding-right:6px}
+.offers-card{background:var(--panel);padding:10px;border-radius:10px;border:1px solid var(--subtle);box-shadow:0 6px 18px rgba(11,15,20,0.03)}
+.offers-card-title{font-weight:700;color:var(--accent)}
+.offers-card-sub{font-size:13px;color:var(--muted);margin-top:6px}
+.offers-card-cta{margin-top:8px}
+
+/* Pagination controls used in product lists */
+.paginated-controls .btn-prev, .paginated-controls .btn-next{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.paginated-controls .btn-prev[disabled], .paginated-controls .btn-next[disabled]{opacity:0.5}
+
+/* ProductList spacing override to ensure even cards */
+.paginated-controls .grid, .paginated-controls .product-grid{display:block}
+.paginated-controls .card{margin:0}
 
 @media(max-width:900px){
   .app-content{grid-template-columns:1fr}

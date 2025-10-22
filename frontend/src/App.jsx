@@ -33,9 +33,8 @@ function MainApp(){
     <div className="app-shell">
       <Header />
       <nav className="topnav">
-        <div style={{display:'flex',gap:8,alignItems:'center'}}>
-          {/* Breadcrumb only (Home is clickable) */}
-          <div style={{marginLeft:12,color:'var(--muted)',fontSize:14}}>
+        <div className="topnav-left">
+          <div className="breadcrumbs">
             {route==='home' && <button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button>}
             {route==='cart' && <span><button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button> <span className="breadcrumb-crumb">/ Carrito</span></span>}
             {route==='checkout' && <span><button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button> <span className="breadcrumb-crumb">/ Carrito / Pagar</span></span>}
@@ -44,18 +43,25 @@ function MainApp(){
             {route==='profile' && <span><button className="breadcrumb-home" onClick={()=>navigateLocal('home')}>Home</button> <span className="breadcrumb-crumb">/ Perfil</span></span>}
           </div>
         </div>
-  </nav>
+
+        <div className="topnav-right">
+          {/* Removed 'Mi cuenta' and 'Salir' per request; keep only minimal sign-in when not authenticated */}
+          {token ? (
+            <div className="user-actions">
+              {/* Intentionally empty to keep header minimal for /app view */}
+            </div>
+          ) : (
+            <div className="user-actions">
+              <button className="btn-ghost" onClick={()=>navigate('/login')}>Iniciar</button>
+            </div>
+          )}
+        </div>
+      </nav>
 
       <div className="app-container">
-        <header className="app-hero" style={{alignItems:'flex-start'}}>
-          <div style={{flex:1}} />
-          <div style={{width:320}}>
-            <OffersSidebar promotions={promotions} />
-          </div>
-        </header>
-
         <main className="app-content">
-          {route === 'home' && <Home navigateLocal={navigateLocal} />}
+          <div className="app-main">
+            {route === 'home' && <Home navigateLocal={navigateLocal} />}
           {/* Register is handled at top-level route (/register). */}
           {route === 'login' && <Login onSuccess={()=>navigateLocal('home')} />}
           {route === 'profile' && (
@@ -67,6 +73,10 @@ function MainApp(){
           {route === 'checkout' && <Checkout />}
           {route === 'orders' && <Orders />}
           {route === 'tracker' && <OrderTracker />}
+          </div>
+          <aside className="app-right">
+            <OffersSidebar promotions={promotions} />
+          </aside>
         </main>
       </div>
     </div>
