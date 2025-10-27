@@ -6,7 +6,7 @@ import { createOrder } from '../services/api';
 import Alert from '../components/Alert';
 
 export default function Checkout() {
-  const { items, total, clear } = useContext(CartContext);
+  const { items, total, clear, coupon, discount, totalWithDiscount } = useContext(CartContext);
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
@@ -100,8 +100,13 @@ export default function Checkout() {
             );
           })}
 
+          {coupon && (
+            <div style={{ marginTop: 12, color: 'var(--muted)' }}>
+              Saldo a favor: {formatCOP(discount)} ({coupon.code})
+            </div>
+          )}
           <div style={{ marginTop: 12, fontWeight: 700 }}>
-            Total: {total != null ? formatCOP(total) : '-'}
+            Total: {totalWithDiscount != null ? formatCOP(totalWithDiscount) : '-'}
           </div>
 
               <div style={{ marginTop: 12 }}>

@@ -53,7 +53,7 @@ export default function OffersSidebar({promotions}){
                 }}>Aprovechar</button>
               </div>
             </div>
-            <button className="modal-close" style={{position:'absolute',right:12,top:12}} onClick={closeOffer}>×</button>
+            <button className="modal-close" onClick={closeOffer} aria-label="Cerrar">×</button>
           </div>
         </div>
       </div>

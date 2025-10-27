@@ -1,4 +1,5 @@
 import React, {useState, useContext} from 'react';
+import Alert from './components/Alert';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import BottomNav from './components/BottomNav';
@@ -46,6 +47,7 @@ function MainApp(){
 
   return (
     <div className="app-shell">
+      <CartNotifier />
       <Header />
       <nav className="topnav">
         <div className="topnav-left">
@@ -140,6 +142,27 @@ function MainApp(){
       )}
     </div>
   )
+}
+
+function CartNotifier(){
+  const [note, setNote] = React.useState(null);
+  React.useEffect(()=>{
+    function onAdd(e){
+      const name = e?.detail?.name || 'Producto';
+      setNote({ message: `${name} agregado al carrito!` });
+      setTimeout(()=> setNote(null), 2000);
+    }
+    window.addEventListener('cartItemAdded', onAdd);
+    return ()=> window.removeEventListener('cartItemAdded', onAdd);
+  },[]);
+  if(!note) return null;
+  return (
+    <div style={{position:'fixed',right:20,bottom:100,zIndex:5000}}>
+      <div style={{minWidth:200}}>
+        <Alert type="success" message={note.message} onClose={()=>setNote(null)} />
+      </div>
+    </div>
+  );
 }
 
 export default function App(){

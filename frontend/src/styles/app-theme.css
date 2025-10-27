@@ -65,7 +65,7 @@
 
 /* Filter button and pills */
 .app-shell .filter-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:8px;border-radius:8px;display:inline-flex;align-items:center;cursor:pointer}
-.app-shell .filter-menu{position:absolute;right:0;top:44px;background:var(--panel);border:1px solid rgba(255,255,255,0.03);padding:10px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+.app-shell .filter-menu{position:absolute;/* open to the right of the button instead of overlapping */left:calc(100% + 8px);top:44px;right:auto;background:var(--panel);border:1px solid rgba(255,255,255,0.03);padding:10px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.6);z-index:2200}
 .app-shell .filter-menu .pill{display:block;margin-bottom:8px}
 .app-shell .pill{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:6px 10px;border-radius:999px;cursor:pointer}
 .app-shell .pill.active{background:rgba(255,255,255,0.06);color:var(--text);border-color:transparent}
@@ -105,11 +105,34 @@
 .app-shell .product-tile .price{color:#fff;font-weight:800;font-size:16px}
 .app-shell .product-tile .btn-cart{margin-top:auto;background:var(--primary-red);color:#fff;padding:12px;border-radius:12px;border:0;width:100%;font-weight:800;box-shadow:0 12px 36px rgba(229,9,20,0.18)}
 
+/* Add hover 'jump' animation for add-to-cart button */
+.app-shell .product-tile .btn-cart{transition:transform 180ms cubic-bezier(.2,.8,.2,1), box-shadow 180ms}
+.app-shell .product-tile .btn-cart:hover{transform:translateY(-6px);box-shadow:0 18px 46px rgba(229,9,20,0.24)}
+.app-shell .product-tile .btn-cart:active{transform:translateY(-2px) scale(0.98)}
+
 /* Product internal layout */
 .app-shell .product-body{display:flex;flex-direction:column;gap:10px;padding:0 6px 6px 6px}
 .app-shell .product-bottom{display:flex;flex-direction:column}
 .app-shell .product-bottom .price{margin-bottom:10px}
 .app-shell .media-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:8px;color:var(--muted);font-size:14px}
+
+/* Slider spacing: add space between section title 'Productos' and the slider */
+.app-shell .slider-wrap{margin-top:18px}
+
+/* Slider controls: improve visual appearance and spacing */
+.app-shell .slider-controls{display:flex;align-items:center;gap:10px;justify-content:flex-start;margin-top:12px}
+.app-shell .slider-controls .slider-back{background:rgba(255,255,255,0.06);color:var(--text);border-radius:12px;padding:10px 14px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,0.45);border:0}
+.app-shell .slider-controls .slider-arrow{background:rgba(255,255,255,0.03);color:var(--text);border-radius:10px;padding:8px 10px;border:0;display:inline-flex;align-items:center;justify-content:center}
+.app-shell .slider-controls .slider-arrow[disabled], .app-shell .slider-controls .slider-back[disabled]{opacity:0.35;cursor:not-allowed}
+.app-shell .slider-controls .slider-next{background:linear-gradient(180deg,var(--primary-red),#b8162f);color:#fff;border-radius:10px;padding:8px 12px;border:0;font-weight:800;box-shadow:0 12px 36px rgba(229,9,20,0.18)}
+.app-shell .slider-controls .slider-next[disabled]{opacity:0.45;box-shadow:none;cursor:not-allowed}
+.app-shell .slider-controls .slider-page-indicator{color:var(--text);font-weight:700;margin:0 6px}
+
+/* compact layout for small widths */
+@media(max-width:520px){
+  .app-shell .slider-controls{flex-wrap:wrap;gap:8px}
+  .app-shell .slider-controls .slider-page-indicator{width:100%;text-align:left}
+}
 
 /* Footer / bottom nav */
 .app-shell .bottom-nav{
@@ -136,7 +159,52 @@
 
 /* Modal adjustments */
 .app-shell .modal-overlay, .app-shell .offer-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center}
-.app-shell .modal-content, .app-shell .offer-modal .offer-modal-card{background:var(--panel-2);padding:18px;border-radius:12px;color:var(--text);box-shadow:0 30px 80px rgba(0,0,0,0.7)}
+.app-shell .modal-content, .app-shell .offer-modal .offer-modal-card{background:var(--panel-2);padding:18px;border-radius:12px;color:var(--text);box-shadow:0 30px 80px rgba(0,0,0,0.7);position:relative}
+
+/* place the modal close button just above the card so it's clearly visible */
+.app-shell .offer-modal .offer-modal-card .modal-close{
+  position:absolute;
+  top:-18px;
+  left:12px;
+  min-width:36px;
+  height:36px;
+  padding:0 8px;
+  border-radius:8px;
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,0.06);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  line-height:1;
+  box-shadow:0 12px 30px rgba(0,0,0,0.6);
+  cursor:pointer;
+  z-index:2300;
+}
+
+/* ensure overlay allows overflow so the close button is visible above the centered card */
+.app-shell .offer-modal-overlay{overflow:visible}
+
+/* generic modal close for modal-content (used by ProductCard modal) */
+.app-shell .modal-content .modal-close{
+  position:absolute;
+  top:8px;
+  right:8px;
+  width:36px;
+  height:36px;
+  border-radius:8px;
+  background:var(--panel);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,0.06);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  line-height:1;
+  box-shadow:0 8px 20px rgba(0,0,0,0.5);
+  cursor:pointer;
+}
 
 /* Layout columns for app content */
 .app-shell .app-content{display:flex;gap:28px;align-items:flex-start}

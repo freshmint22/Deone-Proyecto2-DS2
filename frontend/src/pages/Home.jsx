@@ -140,7 +140,7 @@ function PaginatedProducts({ products, pageSize = 4 }){
       <div className="slider-controls">
         <button className="btn ghost slider-arrow" onClick={()=>setPage(Math.max(0,page-1))} disabled={page===0} aria-label="Anterior">◀</button>
         <div className="slider-page-indicator">Página {page+1} de {totalPages}</div>
-        <button className="btn slider-arrow" onClick={()=>setPage(Math.min(totalPages-1,page+1))} disabled={page>=totalPages-1} aria-label="Siguiente">▶</button>
+        <button className="btn slider-arrow slider-next" onClick={()=>setPage(Math.min(totalPages-1,page+1))} disabled={page>=totalPages-1} aria-label="Siguiente">▶</button>
       </div>
     </div>
   );
