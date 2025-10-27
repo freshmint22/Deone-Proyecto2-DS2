@@ -39,12 +39,8 @@ function MainApp(){
       return;
     }
     try{
-      // fetch products and try to find matches locally
-      const all = await getProducts();
-      const matches = (all || []).filter(p=>{
-        const name = (p.nombre || p.name || '').toLowerCase();
-        return name.includes(q.toLowerCase());
-      });
+      // ask backend to filter by name (uses ?name=...)
+      const matches = await getProducts(q);
       if(matches.length > 0){
         try{ localStorage.setItem('deone_search', q); }catch(e){}
         setShowSearch(false);

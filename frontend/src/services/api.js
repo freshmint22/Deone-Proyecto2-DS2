@@ -31,8 +31,10 @@ async function safeFetch(url, opts){
   }
 }
 
-export async function getProducts(){
-  const json = await safeFetch(`${API_BASE}/api/products`);
+// getProducts optionally accepts a `query` string to filter by product name (server supports `name` query param)
+export async function getProducts(query){
+  const url = query ? `${API_BASE}/api/products?name=${encodeURIComponent(query)}` : `${API_BASE}/api/products`;
+  const json = await safeFetch(url);
   return json?.data || [];
 }
 
