@@ -5,32 +5,30 @@ import { getMe, updateMe } from '../services/user';
 import './profile.css';
 import CATEGORIES from '../utils/categories';
 import BottomNav from '../components/BottomNav';
-import { useRef } from 'react';
 
 export default function Profile(){
   const { token, user, setUser } = useContext(AuthContext);
-  const [form, setForm] = useState({ name:'', email:'', password:'', phone:'', direccion:'', avatarUrl:'', studentCode:'', dob:'', role:'estudiante', category:'', storeName: '' });
+  const [form, setForm] = useState({ name:'', email:'', password:'', phone:'', direccion:'', studentCode:'', dob:'', role:'estudiante', category:'', storeName: '' });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [editing, setEditing] = useState(false);
-  const avatarInputRef = useRef(null);
+  const [originalForm, setOriginalForm] = useState(null);
 
-  async function handleAvatarUpload(file){
-    if(!file) return;
-    try{
-      const formData = new FormData();
-      formData.append('avatar', file);
-      const res = await fetch(`${window.location.origin.replace(window.location.hostname, window.location.hostname==='localhost' ? 'localhost:4000' : window.location.hostname)}${window.location.port ? ':'+window.location.port : ''}/api/users/upload-avatar`,{
-        method: 'POST',
-        body: formData
-      });
-      const json = await res.json();
-      if(!res.ok) throw new Error(json?.message || 'Upload failed');
-      setForm(f=>({ ...f, avatarUrl: json.url }));
-    }catch(e){
-      setMessage({ type:'error', text: 'Error subiendo avatar' });
+  // allow Escape to cancel editing
+  useEffect(()=>{
+    function onKey(e){
+      if(e.key === 'Escape' && editing){
+        setEditing(false);
+        setMessage(null);
+        // revert changes when cancelling with Escape
+        if(originalForm) setForm(originalForm);
+      }
     }
-  }
+    window.addEventListener('keydown', onKey);
+    return ()=> window.removeEventListener('keydown', onKey);
+  },[editing]);
+
+  // avatar handling removed by request: no avatar UI or uploads
 
   useEffect(()=>{
     async function load(){
@@ -48,7 +46,6 @@ export default function Profile(){
           password: '',
           phone: data.phone || '',
           direccion: data.direccion || '',
-          avatarUrl: data.avatarUrl || '',
           studentCode: data.studentCode || data.student_id || '',
           dob: data.dob || '',
           role,
@@ -70,9 +67,9 @@ export default function Profile(){
     setLoading(true); setMessage(null);
     try{
   const payload = { nombre: form.name };
+  if(form.email) payload.email = form.email;
   if(form.phone) payload.phone = form.phone;
   if(form.direccion) payload.direccion = form.direccion;
-  if(form.avatarUrl) payload.avatarUrl = form.avatarUrl;
   if(form.password) payload.password = form.password;
   // include role-specific fields
   if(form.role) payload.role = form.role;
@@ -91,24 +88,22 @@ export default function Profile(){
 
   if(!token) return <div className="content"><h3>Perfil</h3><p>Debes iniciar sesión para ver tu perfil.</p></div>;
 
-  return (
+    return (
     <div className="profile-page">
       <div className="profile-wrap">
-        <div className="register-wrap centered-edit">
-          <div className="profile-header" style={{display:'flex',gap:18,alignItems:'center'}}>
-            <div className="avatar-box" style={{width:110,height:110,borderRadius:999,overflow:'hidden',display:'flex',alignItems:'center',justifyContent:'center'}}>
-              {form.avatarUrl ? <img src={form.avatarUrl} alt="avatar" style={{width:'100%',height:'100%',objectFit:'cover'}} /> : <div style={{color:'#777'}}>Avatar</div>}
-            </div>
+  <div className="register-wrap centered-edit" onDoubleClick={()=>{ if(!editing){ setOriginalForm(form); setEditing(true); } }}>
+            <div className="profile-header" style={{display:'flex',gap:18,alignItems:'center'}}>
+            {/* Avatar removed from header per requirements */}
             <div style={{flex:1}} className="profile-info">
               {form.role === 'comercio' && form.storeName ? (
                 <div>
-                  <h1 style={{margin:0,fontSize:28}} onDoubleClick={()=>{ setEditing(true); }}>{form.storeName}</h1>
-                  <div style={{color:'var(--muted)',marginTop:6}} onDoubleClick={()=>{ setEditing(true); }}>{form.name || form.email}</div>
+                  <h1 style={{margin:0,fontSize:28}} onDoubleClick={()=>{ if(!editing){ setOriginalForm(form); setEditing(true); } }}>{form.storeName}</h1>
+                  <div style={{color:'var(--muted)',marginTop:6}} onDoubleClick={()=>{ if(!editing){ setOriginalForm(form); setEditing(true); } }}>{form.name || form.email}</div>
                 </div>
               ) : (
                 <>
-                  <h2 onDoubleClick={()=>{ setEditing(true); }}>{form.name || 'Usuario'}</h2>
-                  <p onDoubleClick={()=>{ setEditing(true); }}>{form.email || ' — '}</p>
+                  <h2 onDoubleClick={()=>{ if(!editing){ setOriginalForm(form); setEditing(true); } }}>{form.name || 'Usuario'}</h2>
+                  <p onDoubleClick={()=>{ if(!editing){ setOriginalForm(form); setEditing(true); } }}>{form.email || ' — '}</p>
                 </>
               )}
               <div className="stats-row" style={{display:'flex',gap:12,marginTop:8}}>
@@ -118,16 +113,7 @@ export default function Profile(){
               </div>
             </div>
             <div style={{display:'flex',flexDirection:'column',alignItems:'flex-end',gap:8}}>
-              {editing && (
-                <div style={{display:'flex',gap:8,alignItems:'center'}}>
-                  <input ref={avatarInputRef} type="file" accept="image/*" style={{display:'none'}} onChange={(e)=>{ const f = e.target.files && e.target.files[0]; if(f) handleAvatarUpload(f); }} />
-                  <button className="edit-btn alt" onClick={()=>avatarInputRef.current && avatarInputRef.current.click()}>Subir foto</button>
-                </div>
-              )}
-              <div className="profile-actions" style={{marginTop:8}}>
-                {/* replicate /app pills: Pedidos, Seguimiento, Perfil, Salir */}
-                <ProfileActions />
-              </div>
+              {/* no avatar/upload UI; action pills removed */}
             </div>
           </div>
 
@@ -137,11 +123,19 @@ export default function Profile(){
             <div className="form-grid">
               <div className="form-group">
                 <label>Nombre</label>
-                <input name="name" value={editing ? form.name : ''} onChange={onChange} disabled={!editing} placeholder={editing ? '' : 'Ingresar dato'} />
+                {editing ? (
+                  <input name="name" value={form.name} onChange={onChange} placeholder={''} />
+                ) : (
+                  <div className="readonly-field" onDoubleClick={()=>{ setOriginalForm(form); setEditing(true); }}>{form.name || 'Ingresar dato'}</div>
+                )}
               </div>
               <div className="form-group">
                 <label>Email</label>
-                <input name="email" value={''} disabled placeholder={form.email || 'Ingresar dato'} />
+                {editing ? (
+                  <input name="email" value={form.email || ''} onChange={onChange} placeholder={''} />
+                ) : (
+                  <div className="readonly-field" onDoubleClick={()=>{ setOriginalForm(form); setEditing(true); }}>{form.email || ' — '}</div>
+                )}
               </div>
 
               <div className="form-group">
@@ -153,22 +147,38 @@ export default function Profile(){
 
               <div className="form-group">
                 <label>Teléfono</label>
-                <input name="phone" value={editing ? form.phone : ''} onChange={onChange} placeholder={editing ? '(+57) 300 000 0000' : 'Ingresar dato'} disabled={!editing} />
+                {editing ? (
+                  <input name="phone" value={form.phone || ''} onChange={onChange} placeholder={'(+57) 300 000 0000'} />
+                ) : (
+                  <div className="readonly-field" onDoubleClick={()=>{ setOriginalForm(form); setEditing(true); }}>{form.phone || 'Ingresar dato'}</div>
+                )}
               </div>
               <div className="form-group">
                 <label>Dirección</label>
-                <input name="direccion" value={editing ? form.direccion : ''} onChange={onChange} placeholder={editing ? 'Calle, ciudad, país' : 'Ingresar dato'} disabled={!editing} />
+                {editing ? (
+                  <input name="direccion" value={form.direccion || ''} onChange={onChange} placeholder={'Calle, ciudad, país'} />
+                ) : (
+                  <div className="readonly-field" onDoubleClick={()=>{ setOriginalForm(form); setEditing(true); }}>{form.direccion || 'Ingresar dato'}</div>
+                )}
               </div>
 
               {form.role === 'estudiante' && (
                 <>
                   <div className="form-group">
                     <label>Código estudiantil</label>
-                    <input name="studentCode" value={editing ? form.studentCode : ''} onChange={onChange} placeholder={editing ? '' : (form.studentCode || 'Ingresar dato')} disabled={!editing} />
+                    {editing ? (
+                      <input name="studentCode" value={form.studentCode || ''} onChange={onChange} />
+                    ) : (
+                      <div className="readonly-field" onDoubleClick={()=>{ setOriginalForm(form); setEditing(true); }}>{form.studentCode || 'Ingresar dato'}</div>
+                    )}
                   </div>
                   <div className="form-group">
                     <label>Fecha de nacimiento</label>
-                    <input name="dob" type="date" value={editing ? form.dob : (form.dob || '')} onChange={onChange} disabled={!editing} />
+                    {editing ? (
+                      <input name="dob" type="date" value={form.dob || ''} onChange={onChange} />
+                    ) : (
+                      <div className="readonly-field" onDoubleClick={()=>{ setOriginalForm(form); setEditing(true); }}>{form.dob || '—'}</div>
+                    )}
                   </div>
                 </>
               )}
@@ -184,21 +194,22 @@ export default function Profile(){
                       ))}
                     </select>
                   ) : (
-                    <input name="category" value={form.category || ''} disabled />
+                    <div className="readonly-field" onDoubleClick={()=>{ setOriginalForm(form); setEditing(true); }}>{form.category || '—'}</div>
                   )}
                 </div>
               )}
               {form.role === 'comercio' && (
                 <div className="form-group">
                   <label>Nombre del comercio</label>
-                  <input name="storeName" value={editing ? form.storeName : (form.storeName || '')} onChange={onChange} disabled={!editing} placeholder={editing ? 'Nombre del comercio' : (form.storeName || '')} />
+                  {editing ? (
+                    <input name="storeName" value={form.storeName || ''} onChange={onChange} placeholder={'Nombre del comercio'} />
+                  ) : (
+                    <div className="readonly-field" onDoubleClick={()=>{ setOriginalForm(form); setEditing(true); }}>{form.storeName || '—'}</div>
+                  )}
                 </div>
               )}
 
-              <div className="form-group">
-                <label>Avatar</label>
-                <input name="avatarUrl" value={editing ? form.avatarUrl : ''} onChange={onChange} placeholder={editing ? 'https://...' : 'Ingresar dato'} disabled={!editing} />
-              </div>
+              {/* Avatar input removed per requirements (do not ask/store avatar) */}
               <div className="form-group">
                 <label>Nueva contraseña (opcional)</label>
                 <input name="password" type="password" value={form.password} onChange={onChange} disabled={!editing} placeholder={editing ? '' : 'Ingresar dato'} />
@@ -206,7 +217,7 @@ export default function Profile(){
             </div>
 
             <div className="actions">
-              <button type="button" className="btn-secondary" onClick={()=>{ setEditing(false); setMessage(null); }} disabled={!editing}>Cancelar</button>
+              <button type="button" className="btn-secondary" onClick={()=>{ setEditing(false); setMessage(null); if(originalForm) setForm(originalForm); }} disabled={!editing}>Cancelar</button>
               <button className="btn-primary" type="submit" disabled={loading || !editing}>{loading? 'Guardando...':'Guardar cambios'}</button>
             </div>
           </form>
@@ -219,6 +230,8 @@ export default function Profile(){
 // render bottom nav on profile (mobile) so users have consistent navigation
 export function ProfileWithNav(props){
   const navigate = useNavigate();
+  const { logout, token, user } = useContext(AuthContext);
+  const [showMenu, setShowMenu] = useState(false);
   // Wrap profile and bottom nav inside .app-shell so bottom-nav uses the same scoped styles as /app
   return (
     <div className="app-shell profile-shell" style={{minHeight: '100vh'}}>
@@ -229,8 +242,28 @@ export function ProfileWithNav(props){
         onHome={()=>navigate('/app')}
         onOpenSearch={()=>navigate('/app')}
         onOpenCart={()=>navigate('/app')}
-        onOpenMenu={()=>navigate('/profile')}
+        onOpenMenu={()=>setShowMenu(v=>!v)}
       />
+
+      {showMenu && (
+        <div style={{position:'fixed',right:12,bottom:80,background:'var(--card-bg)',border:'1px solid rgba(0,0,0,0.06)',borderRadius:8,padding:8,zIndex:3000}}>
+          <div style={{display:'flex',flexDirection:'column',gap:8}}>
+            <button className="pill" onClick={()=>{ try{ localStorage.setItem('openOrders','1'); }catch(e){} navigate('/app'); setShowMenu(false); }}>Pedidos</button>
+            <button className="pill" onClick={()=>{ try{ localStorage.setItem('openTracker','1'); }catch(e){} navigate('/app'); setShowMenu(false); }}>Seguimiento</button>
+            <button className="pill" onClick={()=>{ navigate('/profile'); setShowMenu(false); }}>Perfil</button>
+            {token ? (
+              <>
+                {user && user.role === 'comercio' && (
+                  <button className="pill" onClick={()=>{ navigate('/commerce'); setShowMenu(false); }}>Ir al comercio</button>
+                )}
+                <button className="pill" onClick={()=>{ logout && logout(); navigate('/'); setShowMenu(false); }}>Salir</button>
+              </>
+            ) : (
+              <button className="pill" onClick={()=>{ navigate('/login'); setShowMenu(false); }}>Ingresar</button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
