@@ -1,5 +1,6 @@
 import React, {useState, useContext} from 'react';
 import Alert from './components/Alert';
+import { getProducts } from './services/api';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import Home from './pages/Home';
 import BottomNav from './components/BottomNav';
@@ -27,8 +28,40 @@ function MainApp(){
   const [showCart, setShowCart] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [searchNote, setSearchNote] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
   function navigateLocal(r){ setRoute(r); }
+
+  async function handleSearch(){
+    const q = (searchValue || '').trim();
+    if(!q){
+      setShowSearch(false);
+      return;
+    }
+    try{
+      // fetch products and try to find matches locally
+      const all = await getProducts();
+      const matches = (all || []).filter(p=>{
+        const name = (p.nombre || p.name || '').toLowerCase();
+        return name.includes(q.toLowerCase());
+      });
+      if(matches.length > 0){
+        try{ localStorage.setItem('deone_search', q); }catch(e){}
+        setShowSearch(false);
+        navigate('/app');
+      } else {
+        // no matches: show a short notification and close
+        setSearchNote({ type: 'info', message: 'No se encontró' });
+        setShowSearch(false);
+        setTimeout(()=> setSearchNote(null), 2000);
+      }
+    }catch(err){
+      // on error, still close modal and show message
+      setSearchNote({ type: 'error', message: err.message || 'Error buscando' });
+      setShowSearch(false);
+      setTimeout(()=> setSearchNote(null), 2500);
+    }
+  }
 
   // On mount, check for localStorage flags set by other pages (Profile, Checkout)
   // so external navigation to /app can open a specific internal view immediately.
@@ -49,6 +82,11 @@ function MainApp(){
 
   return (
     <div className="app-shell">
+      {searchNote && (
+        <div style={{position:'fixed',left:20,top:20,zIndex:6000}}>
+          <Alert type={searchNote.type || 'info'} message={searchNote.message} onClose={()=>setSearchNote(null)} />
+        </div>
+      )}
       <CartNotifier />
       <Header />
       <nav className="topnav">
@@ -125,18 +163,14 @@ function MainApp(){
                     onKeyDown={e=>{
                       if(e.key === 'Enter'){
                         e.preventDefault();
-                        // persist query so Home or other pages can pick it up
-                        try{ localStorage.setItem('deone_search', searchValue || ''); }catch(err){}
-                        setShowSearch(false);
-                        // navigate to app home internal view
-                        navigate('/app');
+                        handleSearch();
                       } else if(e.key === 'Escape'){
                         setShowSearch(false);
                       }
                     }}
                     style={{flex:1,padding:8,borderRadius:8,border:'1px solid rgba(0,0,0,0.06)',background:'var(--input-bg)'}}
                   />
-                  <button className="btn" onClick={()=>setShowSearch(false)}>Cerrar</button>
+                  <button className="btn" onClick={()=>handleSearch()}>Buscar</button>
                 </div>
               </div>
             </div>
