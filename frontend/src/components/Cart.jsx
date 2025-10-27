@@ -36,10 +36,12 @@ export default function Cart({ onPay, onClose }){
           <div key={p.id || p._id} className="cart-item">
             <div className="info">
               <div style={{fontWeight:700}}>{name}</div>
-              <div style={{color:'var(--muted)'}}>{category} - {formatCOP(price)}</div>
+              <div style={{color:'var(--muted)'}}>
+                {category} - <span style={{color:'#000', fontWeight:700}}>{formatCOP(price)}</span>
+              </div>
             </div>
             <div>
-              <input type="number" value={p.qty} min={1} onChange={(e)=>updateQty(p.id||p._id, Number(e.target.value))} style={{width:80,padding:6,borderRadius:8,border:'1px solid rgba(0,0,0,0.06)',background:'var(--input-bg)',color:'var(--text)'}} />
+              <input type="number" value={p.qty} min={1} onChange={(e)=>updateQty(p.id||p._id, Number(e.target.value))} style={{width:80,padding:6,borderRadius:8,border:'1px solid rgba(0,0,0,0.06)',background:'var(--input-bg)',color:'#000'}} />
             </div>
             <div>
               <button className="btn ghost" onClick={()=>removeItem(p.id||p._id)}>Eliminar</button>
@@ -48,9 +50,9 @@ export default function Cart({ onPay, onClose }){
         )})}
       </div>
       {coupon && (
-        <div style={{marginTop:8,color:'var(--muted)'}}>Saldo a favor: <strong>{formatCOP(coupon.amount)}</strong> ({coupon.code})</div>
+        <div style={{marginTop:8,color:'var(--muted)'}}>Saldo a favor: <strong style={{color:'#000'}}>{formatCOP(coupon.amount)}</strong> ({coupon.code})</div>
       )}
-      <div style={{marginTop:12,fontWeight:700}}>Total: {formatCOP(Math.max(0,total - (coupon?.amount || 0)) )}</div>
+      <div style={{marginTop:12,fontWeight:700,color:'#000'}}>Total: {formatCOP(Math.max(0,total - (coupon?.amount || 0)) )}</div>
       <div style={{marginTop:12,display:'flex',gap:8}}>
         <button className="btn ghost" onClick={clear}>Vaciar carrito</button>
         <button className="btn" onClick={()=>{ if(onPay) onPay(); }}>Proceder al pago</button>
