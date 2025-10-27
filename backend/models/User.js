@@ -18,6 +18,9 @@ const userSchema = new mongoose.Schema({
     enum: ['estudiante', 'comercio', 'admin'],
     default: 'estudiante'
   },
+  // Optional fields for commerces
+  category: { type: String, required: false },
+  storeName: { type: String, required: false },
   phone: { type: String, required: false },
   direccion: { type: String, required: false },
   avatarUrl: { type: String, required: false },

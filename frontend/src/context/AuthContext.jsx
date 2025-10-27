@@ -15,7 +15,14 @@ export function AuthProvider({children}){
   const [user, setUserState] = useState(()=> {
     try{
       const raw = localStorage.getItem('deone_user');
-      return raw ? JSON.parse(raw) : null;
+      if(!raw) return null;
+      const parsed = JSON.parse(raw);
+      // Normalize role values coming from older clients (english) to spanish enum
+      if(parsed && parsed.role){
+        if(parsed.role === 'student') parsed.role = 'estudiante';
+        if(parsed.role === 'commerce') parsed.role = 'comercio';
+      }
+      return parsed;
     }catch(e){ return null; }
   });
 
@@ -30,7 +37,14 @@ export function AuthProvider({children}){
   },[user]);
 
   function setToken(t){ setTokenState(t); }
-  function setUser(u){ setUserState(u); }
+  function setUser(u){
+    // Normalize role before storing
+    if(u && u.role){
+      if(u.role === 'student') u.role = 'estudiante';
+      if(u.role === 'commerce') u.role = 'comercio';
+    }
+    setUserState(u);
+  }
   function logout(){
     setTokenState(null);
     setUserState(null);

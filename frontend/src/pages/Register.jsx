@@ -5,12 +5,13 @@ import { register } from '../services/auth';
 import Alert from '../components/Alert';
 import './register.css';
 import { API_BASE } from '../services/api';
+import CATEGORIES from '../utils/categories';
 
 const institucionalDomain = 'correounivalle.edu.co'; // Debe coincidir con validación backend
 
 export default function Register(){
   const navigate = useNavigate();
-  const [form, setForm] = useState({firstName:'',lastName:'',email:'',password:'',confirm:'',studentCode:'',dob:'',avatarUrl:''});
+  const [form, setForm] = useState({firstName:'',lastName:'',email:'',password:'',confirm:'',studentCode:'',dob:'',avatarUrl:'', role:'estudiante', category:'', storeName: ''});
   const fileRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
@@ -38,6 +39,8 @@ export default function Register(){
       if(isNaN(d.getTime())) e.dob = 'Fecha inválida';
       else if(d > today) e.dob = 'La fecha no puede ser en el futuro';
     }
+  if(form.role === 'comercio' && !form.category) e.category = 'Indica la categoría del comercio';
+  if(form.role === 'comercio' && !form.storeName?.trim()) e.storeName = 'Indica el nombre del comercio';
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -48,10 +51,16 @@ export default function Register(){
   if(!ok){ setAlert({type:'error',message:'Completa los campos adecuadamente'}); return; }
     setLoading(true);
     try{
-      const payload = { firstName: form.firstName, lastName: form.lastName, name: (form.firstName + ' ' + form.lastName).trim(), email: form.email, password: form.password };
+    const payload = { firstName: form.firstName, lastName: form.lastName, name: (form.firstName + ' ' + form.lastName).trim(), email: form.email, password: form.password };
   if (form.studentCode) payload.studentCode = form.studentCode;
   if (form.dob) payload.dob = form.dob;
-      if (form.avatarUrl) payload.avatarUrl = form.avatarUrl;
+    if (form.avatarUrl) payload.avatarUrl = form.avatarUrl;
+    // role & category
+  if (form.role) payload.role = form.role;
+  if (form.role === 'comercio') {
+    if (form.category) payload.category = form.category;
+    if (form.storeName) payload.storeName = form.storeName;
+  }
       const data = await register(payload);
       // Redirect user to login after successful registration
       navigate('/login');
@@ -152,6 +161,32 @@ export default function Register(){
             {errors.lastName && <small className="field-error">{errors.lastName}</small>}
           </div>
         </div>
+        <div className="form-group">
+          <label>Tipo de cuenta</label>
+          <div style={{display:'flex',gap:12,alignItems:'center'}}>
+            <label style={{display:'flex',alignItems:'center',gap:6}}><input type="radio" name="role" value="estudiante" checked={form.role==='estudiante'} onChange={(e)=>setForm(f=>({...f,role:e.target.value}))} /> Estudiante</label>
+            <label style={{display:'flex',alignItems:'center',gap:6}}><input type="radio" name="role" value="comercio" checked={form.role==='comercio'} onChange={(e)=>setForm(f=>({...f,role:e.target.value}))} /> Comercio</label>
+          </div>
+        </div>
+  {form.role === 'comercio' && (
+          <div className="form-group">
+            <label>Categoría del comercio</label>
+            <select name="category" value={form.category} onChange={onChange}>
+              <option value="">Selecciona una categoría</option>
+              {CATEGORIES.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+            {errors.category && <small className="field-error">{errors.category}</small>}
+          </div>
+        )}
+    {form.role === 'comercio' && (
+            <div className="form-group">
+              <label>Nombre del comercio</label>
+              <input name="storeName" value={form.storeName} onChange={onChange} placeholder="Ej: Cafetería La Esquina" />
+              {errors.storeName && <small className="field-error">{errors.storeName}</small>}
+            </div>
+          )}
         <div className="form-group">
           <label>Correo institucional</label>
           <input name="email" className={errors.email? 'input-error':''} value={form.email} onChange={onChange} placeholder="usuario@correounivalle.edu.co" autoComplete="email" />

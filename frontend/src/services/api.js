@@ -52,10 +52,44 @@ export async function getOrder(id){
   return await safeFetch(`${API_BASE}/api/orders/${id}`);
 }
 
-export async function updateOrderStatus(id,status){
+export async function updateOrderStatus(id,status, token){
+  const headers = {'Content-Type':'application/json'};
+  if(token) headers.Authorization = `Bearer ${token}`;
   return await safeFetch(`${API_BASE}/api/orders/${id}/status`,{
     method:'PATCH',
-    headers:{'Content-Type':'application/json'},
+    headers,
     body:JSON.stringify({status})
+  });
+}
+
+// Merchant/admin product management endpoints
+export async function createProductAdmin(token, payload){
+  return await safeFetch(`${API_BASE}/api/products/admin`,{
+    method:'POST',
+    headers:{'Content-Type':'application/json', Authorization: `Bearer ${token}`},
+    body:JSON.stringify(payload)
+  });
+}
+
+export async function updateProductAdmin(token, id, payload){
+  return await safeFetch(`${API_BASE}/api/products/admin/${id}`,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json', Authorization: `Bearer ${token}`},
+    body:JSON.stringify(payload)
+  });
+}
+
+export async function deleteProductAdmin(token, id){
+  return await safeFetch(`${API_BASE}/api/products/admin/${id}`,{
+    method:'DELETE',
+    headers:{ Authorization: `Bearer ${token}` }
+  });
+}
+
+// Get orders assigned to authenticated merchant
+export async function getMerchantOrders(token){
+  return await safeFetch(`${API_BASE}/api/orders/merchant`,{
+    method:'GET',
+    headers:{ Authorization: `Bearer ${token}` }
   });
 }

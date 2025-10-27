@@ -4,12 +4,13 @@ import { AuthContext } from '../context/AuthContext';
 import { getMe, updateMe } from '../services/user';
 import './register.css';
 import './profile.css';
+import CATEGORIES from '../utils/categories';
 import BottomNav from '../components/BottomNav';
 import { useRef } from 'react';
 
 export default function Profile(){
   const { token, user, setUser } = useContext(AuthContext);
-  const [form, setForm] = useState({ name:'', email:'', password:'', phone:'', direccion:'', avatarUrl:'' });
+  const [form, setForm] = useState({ name:'', email:'', password:'', phone:'', direccion:'', avatarUrl:'', studentCode:'', dob:'', role:'estudiante', category:'', storeName: '' });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -38,13 +39,22 @@ export default function Profile(){
       try{
         const res = await getMe(token);
         const data = res?.data || res;
+        // normalize role values coming from backend or legacy clients
+        let role = data.role || 'estudiante';
+        if(role === 'student') role = 'estudiante';
+        if(role === 'commerce') role = 'comercio';
         setForm({
           name: data.nombre || data.name || '',
           email: data.email || '',
           password: '',
           phone: data.phone || '',
           direccion: data.direccion || '',
-          avatarUrl: data.avatarUrl || ''
+          avatarUrl: data.avatarUrl || '',
+          studentCode: data.studentCode || data.student_id || '',
+          dob: data.dob || '',
+          role,
+          category: data.category || '',
+          storeName: data.storeName || data.storeName || ''
         });
         if(setUser) setUser(data);
       }catch(err){
@@ -65,6 +75,12 @@ export default function Profile(){
   if(form.direccion) payload.direccion = form.direccion;
   if(form.avatarUrl) payload.avatarUrl = form.avatarUrl;
   if(form.password) payload.password = form.password;
+  // include role-specific fields
+  if(form.role) payload.role = form.role;
+  if(form.role === 'comercio' && form.category) payload.category = form.category;
+  if(form.role === 'comercio' && form.storeName) payload.storeName = form.storeName;
+  if(form.role === 'estudiante' && form.studentCode) payload.studentCode = form.studentCode;
+  if(form.role === 'estudiante' && form.dob) payload.dob = form.dob;
       const res = await updateMe(token, payload);
       const data = res?.data || res;
       setMessage({ type:'success', text: 'Perfil actualizado' });
@@ -123,8 +139,17 @@ export default function Profile(){
               {form.avatarUrl ? <img src={form.avatarUrl} alt="avatar" style={{width:'100%',height:'100%',objectFit:'cover'}} /> : <div style={{color:'#777'}}>Avatar</div>}
             </div>
             <div style={{flex:1}} className="profile-info">
-              <h2 onDoubleClick={()=>{ setEditing(true); }}>{form.name || 'Usuario'}</h2>
-              <p onDoubleClick={()=>{ setEditing(true); }}>{form.email || ' — '}</p>
+              {form.role === 'comercio' && form.storeName ? (
+                <div>
+                  <h1 style={{margin:0,fontSize:28}} onDoubleClick={()=>{ setEditing(true); }}>{form.storeName}</h1>
+                  <div style={{color:'var(--muted)',marginTop:6}} onDoubleClick={()=>{ setEditing(true); }}>{form.name || form.email}</div>
+                </div>
+              ) : (
+                <>
+                  <h2 onDoubleClick={()=>{ setEditing(true); }}>{form.name || 'Usuario'}</h2>
+                  <p onDoubleClick={()=>{ setEditing(true); }}>{form.email || ' — '}</p>
+                </>
+              )}
               <div className="stats-row" style={{display:'flex',gap:12,marginTop:8}}>
                 <div className="stat"><strong>0</strong><span>Pedidos</span></div>
                 <div className="stat"><strong>0</strong><span>Favoritos</span></div>
@@ -159,6 +184,13 @@ export default function Profile(){
               </div>
 
               <div className="form-group">
+                <label>Tipo de cuenta</label>
+                <div style={{display:'flex',gap:8}}>
+                  <input type="text" value={form.role || 'estudiante'} disabled style={{background:'transparent',border:'0',color:'var(--muted)'}} />
+                </div>
+              </div>
+
+              <div className="form-group">
                 <label>Teléfono</label>
                 <input name="phone" value={editing ? form.phone : ''} onChange={onChange} placeholder={editing ? '(+57) 300 000 0000' : 'Ingresar dato'} disabled={!editing} />
               </div>
@@ -166,6 +198,41 @@ export default function Profile(){
                 <label>Dirección</label>
                 <input name="direccion" value={editing ? form.direccion : ''} onChange={onChange} placeholder={editing ? 'Calle, ciudad, país' : 'Ingresar dato'} disabled={!editing} />
               </div>
+
+              {form.role === 'estudiante' && (
+                <>
+                  <div className="form-group">
+                    <label>Código estudiantil</label>
+                    <input name="studentCode" value={editing ? form.studentCode : ''} onChange={onChange} placeholder={editing ? '' : (form.studentCode || 'Ingresar dato')} disabled={!editing} />
+                  </div>
+                  <div className="form-group">
+                    <label>Fecha de nacimiento</label>
+                    <input name="dob" type="date" value={editing ? form.dob : (form.dob || '')} onChange={onChange} disabled={!editing} />
+                  </div>
+                </>
+              )}
+
+              {form.role === 'comercio' && (
+                <div className="form-group">
+                  <label>Categoría del comercio</label>
+                  {editing ? (
+                    <select name="category" value={form.category} onChange={onChange}>
+                      <option value="">Selecciona una categoría</option>
+                      {CATEGORIES.map(c=> (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input name="category" value={form.category || ''} disabled />
+                  )}
+                </div>
+              )}
+              {form.role === 'comercio' && (
+                <div className="form-group">
+                  <label>Nombre del comercio</label>
+                  <input name="storeName" value={editing ? form.storeName : (form.storeName || '')} onChange={onChange} disabled={!editing} placeholder={editing ? 'Nombre del comercio' : (form.storeName || '')} />
+                </div>
+              )}
 
               <div className="form-group">
                 <label>Avatar</label>

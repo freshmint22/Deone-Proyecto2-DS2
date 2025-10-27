@@ -11,6 +11,7 @@ import Header from './components/Header';
 import Orders from './pages/Orders';
 import OrderTracker from './pages/OrderTracker';
 import Profile, { ProfileWithNav } from './pages/Profile';
+import MerchantDashboard from './pages/MerchantDashboard';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthContext } from './context/AuthContext';
 import Landing from './pages/Landing';
@@ -22,7 +23,7 @@ import OffersSidebar from './components/OffersSidebar';
 function MainApp(){
   const navigate = useNavigate();
   const [route, setRoute] = useState('home');
-  const { token, logout } = useContext(AuthContext);
+  const { token, logout, user } = useContext(AuthContext);
   const [showCart, setShowCart] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -128,10 +129,14 @@ function MainApp(){
           <div style={{display:'flex',flexDirection:'column',gap:8}}>
             <button className="pill" onClick={()=>{ navigateLocal('orders'); setShowMenu(false); }}>Pedidos</button>
             <button className="pill" onClick={()=>{ navigateLocal('tracker'); setShowMenu(false); }}>Seguimiento</button>
-                {token ? (
+            {token ? (
               <>
                 {/* Navigate to the top-level /profile route so Profile's dark styles apply */}
                 <button className="pill" onClick={()=>{ navigate('/profile'); setShowMenu(false); }}>Perfil</button>
+                {/* Show merchant link for commerce users */}
+                {user && user.role === 'comercio' && (
+                  <button className="pill" onClick={()=>{ navigate('/commerce'); setShowMenu(false); }}>Ir al comercio</button>
+                )}
                 <button className="pill" onClick={()=>{ logout(); setShowMenu(false); }}>Salir</button>
               </>
             ) : (
@@ -170,7 +175,9 @@ export default function App(){
     <BrowserRouter>
       <Routes>
   <Route path="/" element={<Landing />} />
-  <Route path="/profile" element={<PrivateRoute><ProfileWithNav /></PrivateRoute>} />
+      <Route path="/profile" element={<PrivateRoute><ProfileWithNav /></PrivateRoute>} />
+      <Route path="/merchant" element={<PrivateRoute><MerchantDashboard /></PrivateRoute>} />
+      <Route path="/commerce" element={<PrivateRoute><MerchantDashboard /></PrivateRoute>} />
   <Route path="/login" element={<LoginWrapper />} />
   <Route path="/register" element={<Register />} />
   <Route path="/terms" element={<Terms />} />

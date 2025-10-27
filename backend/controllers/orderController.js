@@ -151,3 +151,33 @@ export async function updateOrderStatus(req, res) {
 export default {
   createOrder
 };
+
+// List orders for the authenticated merchant
+export async function getOrdersForMerchant(req, res) {
+  try {
+    const user = req.user;
+    if (!user || !user.id) return res.status(401).json({ success: false, message: 'No autorizado' });
+    // If the merchant has a category, return orders that include products in that category
+    // Otherwise, fallback to orders explicitly assigned to merchantId
+    const orders = await Order.find({}).sort({ createdAt: -1 }).populate('items.product').lean();
+    let filtered = orders;
+    if (user.category) {
+      filtered = orders.filter(o => {
+        // if order was explicitly sent to merchantId, include it
+        if (o.merchantId && String(o.merchantId) === String(user.id)) return true;
+        // otherwise include if any item.product.categoria matches merchant category
+        return (o.items || []).some(it => {
+          const prod = it.product || {};
+          return String(prod.categoria || '').toLowerCase() === String(user.category || '').toLowerCase();
+        });
+      });
+    } else {
+      // if no category on merchant, return orders assigned to merchantId only
+      filtered = orders.filter(o => o.merchantId && String(o.merchantId) === String(user.id));
+    }
+    return res.json({ success: true, data: filtered });
+  } catch (error) {
+    console.error('Error obteniendo órdenes del comercio:', error);
+    return res.status(500).json({ success: false, message: 'Error del servidor' });
+  }
+}

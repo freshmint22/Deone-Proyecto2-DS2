@@ -20,7 +20,7 @@ export const login = async (req, res) => {
 
     return res.status(200).json({
       message: 'Inicio de sesión exitoso',
-      user: { _id: user._id, name: user.name, email: user.email, role: user.role },
+      user: { _id: user._id, name: user.name, email: user.email, role: user.role, category: user.category || '', storeName: user.storeName || '' },
       token
     });
   } catch (err) {

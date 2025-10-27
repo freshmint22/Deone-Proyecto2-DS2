@@ -29,7 +29,10 @@ if (rawOrigins !== '*') {
   if (corsOrigins.length === 1) corsOrigins = corsOrigins[0];
 }
 app.use(cors({ origin: corsOrigins, credentials: true }));
-app.use(express.json());
+// Increase JSON/body-parser limits to accept product images sent as base64 data URLs from the frontend.
+// Default limit is small (~100kb) which causes 413 when uploading base64 images; set to 10MB for now.
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve uploaded static files
 // Resolve __dirname equivalent for ESM and compute a stable uploads directory

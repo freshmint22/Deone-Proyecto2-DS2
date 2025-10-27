@@ -7,7 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
 export const register = async (req, res) => {
   try {
-    const { firstName, lastName, name, email, password, role, studentCode, dob } = req.body;
+  const { firstName, lastName, name, email, password, role, studentCode, dob, category, storeName } = req.body;
 
     // allow either combined name or first+last
     const fullName = name || [firstName || '', lastName || ''].filter(Boolean).join(' ').trim();
@@ -36,6 +36,11 @@ export const register = async (req, res) => {
   const userData = { name: fullName, email, password: hashed, role };
   if (studentCode) userData.studentCode = String(studentCode);
   if (dob) userData.dob = new Date(dob);
+  // allow commerces to provide category and storeName
+  if (role === 'comercio') {
+    if (category) userData.category = category;
+    if (storeName) userData.storeName = storeName;
+  }
 
   const user = new User(userData);
     await user.save();
@@ -45,11 +50,16 @@ export const register = async (req, res) => {
 
     return res.status(201).json({
       message: 'Usuario registrado exitosamente',
-      user: { _id: user._id, name: user.name, email: user.email, role: user.role },
+      user: { _id: user._id, name: user.name, email: user.email, role: user.role, category: user.category || '', storeName: user.storeName || '' },
       token
     });
   } catch (err) {
-    console.error('Register error:', err);
+    // Log full stack to help debugging on dev machines
+    console.error('Register error:', err && err.stack ? err.stack : err);
+    // In non-production return the error message to aid local debugging
+    if (process.env.NODE_ENV !== 'production') {
+      return res.status(500).json({ message: 'Error del servidor', error: err?.message || String(err) });
+    }
     return res.status(500).json({ message: 'Error del servidor' });
   }
 };

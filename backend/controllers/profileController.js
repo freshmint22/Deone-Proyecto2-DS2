@@ -26,6 +26,9 @@ export async function updateMe(req, res){
     if(req.body.phone) payload.phone = req.body.phone;
     if(req.body.direccion) payload.direccion = req.body.direccion;
     if(req.body.avatarUrl) payload.avatarUrl = req.body.avatarUrl;
+  // allow commerces to update category and storeName
+  if(req.body.category && req.user && req.user.role === 'comercio') payload.category = req.body.category;
+  if(req.body.storeName && req.user && req.user.role === 'comercio') payload.storeName = req.body.storeName;
     if(req.body.password) {
       const salt = await bcrypt.genSalt(10);
       payload.password = await bcrypt.hash(req.body.password, salt);

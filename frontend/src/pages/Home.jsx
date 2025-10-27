@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ProductList from '../components/ProductList';
 import ProductCard from '../components/ProductCard';
 import { getProducts } from '../services/api';
+import CATEGORIES from '../utils/categories';
 import Cart from '../components/Cart';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
@@ -53,7 +54,8 @@ export default function Home({ navigateLocal, onOpenCart, onOpenSearch, onOpenMe
   }
 
 
-  const categories = Array.from(new Set(products.map(p=> p.categoria || p.category).filter(Boolean)));
+  // Use the canonical categories list so filters match commerce profile options
+  const categories = CATEGORIES;
 
   const filtered = products.filter(p=>{
     const name = (p.nombre || p.name || '').toLowerCase();
