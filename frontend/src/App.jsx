@@ -26,6 +26,7 @@ function MainApp(){
   const { token, logout, user } = useContext(AuthContext);
   const [showCart, setShowCart] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
   const [showMenu, setShowMenu] = useState(false);
   function navigateLocal(r){ setRoute(r); }
 
@@ -116,7 +117,25 @@ function MainApp(){
               <div className="modal-content" style={{width:'min(640px,96%)',padding:16}}>
                 {/* Simple search input; Home will also receive open/close handlers via props */}
                 <div style={{display:'flex',gap:8,alignItems:'center'}}>
-                  <input placeholder="Buscar productos" style={{flex:1,padding:8,borderRadius:8,border:'1px solid rgba(0,0,0,0.06)',background:'var(--input-bg)',color:'var(--text)'}} />
+                  <input
+                    className="search-input"
+                    placeholder="Buscar productos"
+                    value={searchValue}
+                    onChange={e=>setSearchValue(e.target.value)}
+                    onKeyDown={e=>{
+                      if(e.key === 'Enter'){
+                        e.preventDefault();
+                        // persist query so Home or other pages can pick it up
+                        try{ localStorage.setItem('deone_search', searchValue || ''); }catch(err){}
+                        setShowSearch(false);
+                        // navigate to app home internal view
+                        navigate('/app');
+                      } else if(e.key === 'Escape'){
+                        setShowSearch(false);
+                      }
+                    }}
+                    style={{flex:1,padding:8,borderRadius:8,border:'1px solid rgba(0,0,0,0.06)',background:'var(--input-bg)'}}
+                  />
                   <button className="btn" onClick={()=>setShowSearch(false)}>Cerrar</button>
                 </div>
               </div>

@@ -23,6 +23,10 @@
 .app-search{width:100%;max-width:680px;padding:10px 14px;border-radius:12px;border:1px solid rgba(15,23,42,0.06);box-shadow:0 6px 20px rgba(11,15,20,0.03);background:#fff}
 .app-search::placeholder{color:var(--muted)}
 
+/* Explicit search input styling used in modal: make text and placeholder black */
+.search-input{color:#000}
+.search-input::placeholder{color:#000;opacity:0.6}
+
 .user-actions{display:flex;gap:8px;align-items:center}
 .user-actions .btn-ghost{background:transparent;border:1px solid rgba(15,23,42,0.06);padding:8px 10px;border-radius:10px}
 

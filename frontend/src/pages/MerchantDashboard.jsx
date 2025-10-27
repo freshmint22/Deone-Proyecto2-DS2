@@ -3,6 +3,41 @@ import { AuthContext } from '../context/AuthContext';
 import { getProducts, createProductAdmin, updateProductAdmin, deleteProductAdmin, getMerchantOrders, updateOrderStatus } from '../services/api';
 import Alert from '../components/Alert';
 
+// Resize and crop an image file to a fixed square (or given) size and return a data URL
+async function resizeImageFile(file, targetWidth = 400, targetHeight = 400, mime = 'image/jpeg', quality = 0.85){
+  if(!file) return null;
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      try{
+        // determine source crop to cover target (center-crop)
+        const srcW = img.width;
+        const srcH = img.height;
+        const scale = Math.max(targetWidth / srcW, targetHeight / srcH);
+        const sWidth = targetWidth / scale;
+        const sHeight = targetHeight / scale;
+        const sx = Math.max(0, (srcW - sWidth) / 2);
+        const sy = Math.max(0, (srcH - sHeight) / 2);
+
+        const canvas = document.createElement('canvas');
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        const ctx = canvas.getContext('2d');
+        // fill transparent / dark background to match theme (optional)
+        ctx.fillStyle = 'rgba(255,255,255,0)';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img, sx, sy, sWidth, sHeight, 0, 0, targetWidth, targetHeight);
+        const dataUrl = canvas.toDataURL(mime, quality);
+        URL.revokeObjectURL(url);
+        resolve(dataUrl);
+      }catch(err){ URL.revokeObjectURL(url); reject(err); }
+    };
+    img.onerror = (e)=>{ URL.revokeObjectURL(url); reject(new Error('Failed to load image')); };
+    img.src = url;
+  });
+}
+
 function SimpleField({label, children}){
   return (
     <div style={{display:'flex',flexDirection:'column',gap:6,marginBottom:8}}>
@@ -14,6 +49,10 @@ function SimpleField({label, children}){
 
 export default function MerchantDashboard(){
   const { user, token } = useContext(AuthContext);
+  // centralized image sizing for easy adjustments
+  const IMAGE_TARGET_SIZE = 400; // pixels for stored image (square)
+  const PREVIEW_SIZE = 96; // size in form preview
+  const THUMB_SIZE = 64; // size in product list thumbnail
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -154,16 +193,19 @@ export default function MerchantDashboard(){
                 <input type="file" accept="image/*" onChange={async (e)=>{
                   const file = e.target.files && e.target.files[0];
                   if(!file) return;
-                  const reader = new FileReader();
-                  reader.onload = () => {
-                    const data = reader.result;
-                    // store data URL (base64) in imagen field
-                    setForm(f=>({...f, imagen: data}));
-                  };
-                  reader.readAsDataURL(file);
+                  try{
+                    // resize and center-crop to 400x400 for consistent thumbnails
+                    const resized = await resizeImageFile(file, IMAGE_TARGET_SIZE, IMAGE_TARGET_SIZE, 'image/jpeg', 0.85);
+                    if(resized) setForm(f=>({...f, imagen: resized}));
+                  }catch(err){
+                    // fallback to raw data URL if resizing fails
+                    const reader = new FileReader();
+                    reader.onload = () => setForm(f=>({...f, imagen: reader.result}));
+                    reader.readAsDataURL(file);
+                  }
                 }} />
                 {form.imagen && (
-                  <div style={{width:80,height:60,overflow:'hidden',borderRadius:6,border:'1px solid #eee'}}>
+                  <div style={{width:PREVIEW_SIZE,height:PREVIEW_SIZE,overflow:'hidden',borderRadius:6,border:'1px solid #eee'}}>
                     <img src={form.imagen} alt="preview" style={{width:'100%',height:'100%',objectFit:'cover'}} />
                   </div>
                 )}
@@ -180,11 +222,18 @@ export default function MerchantDashboard(){
             {loading && <p>Cargando...</p>}
             <div style={{display:'flex',flexDirection:'column',gap:8}}>
               {products.map(p=> (
-                <div key={p._id} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:10,background:'var(--card-bg)',borderRadius:8}}>
-                  <div>
-                    <strong>{p.nombre}</strong>
-                    <div style={{fontSize:13,color:'var(--muted)'}}>{p.categoria} — {p.descripcion}</div>
-                    <div style={{fontSize:13}}>{new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(p.precio || 0)} • stock: {p.stock}</div>
+                <div key={p._id} style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:10,background:'var(--card-bg)',borderRadius:8,minHeight: Math.max(THUMB_SIZE + 20, 72)}}>
+                  <div style={{display:'flex',alignItems:'center',gap:12}}>
+                    {p.imagen ? (
+                      <div style={{width:THUMB_SIZE,height:THUMB_SIZE,overflow:'hidden',borderRadius:8,border:'1px solid rgba(0,0,0,0.06)'}}>
+                        <img src={p.imagen} alt="thumb" style={{width:'100%',height:'100%',objectFit:'cover'}} />
+                      </div>
+                    ) : null}
+                    <div>
+                      <strong>{p.nombre}</strong>
+                      <div style={{fontSize:13,color:'var(--muted)'}}>{p.categoria} — {p.descripcion}</div>
+                      <div style={{fontSize:13}}>{new Intl.NumberFormat('es-CO',{style:'currency',currency:'COP',maximumFractionDigits:0}).format(p.precio || 0)} • stock: {p.stock}</div>
+                    </div>
                   </div>
                   <div style={{display:'flex',gap:8}}>
                     {(p.merchantId && user && String(p.merchantId) === String(user.id)) || user.role === 'admin' ? (

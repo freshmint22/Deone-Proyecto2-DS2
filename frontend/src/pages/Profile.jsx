@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { getMe, updateMe } from '../services/user';
-import './register.css';
 import './profile.css';
 import CATEGORIES from '../utils/categories';
 import BottomNav from '../components/BottomNav';
@@ -93,47 +92,9 @@ export default function Profile(){
   if(!token) return <div className="content"><h3>Perfil</h3><p>Debes iniciar sesión para ver tu perfil.</p></div>;
 
   return (
-    <div className="register-page profile-page">
-      <div className="profile-wrap register-layout">
-        <aside className="promo">
-          <div className="promo-inner">
-            <div className="promo-badge">Perfil</div>
-            <h1 className="promo-title">Tu cuenta en <span className="promo-deone">DeOne</span></h1>
-            <p className="promo-desc">Mantén tu información actualizada para recibir tus pedidos sin problemas. Doble clic en el nombre o correo para editar.</p>
-
-            <div className="promo-features">
-              <div className="feature">
-                <div className="feature-icon">📦</div>
-                <div className="feature-body">
-                  <div className="feature-title">Historial de pedidos</div>
-                  <div className="feature-sub">Accede rápidamente a tus compras</div>
-                </div>
-              </div>
-              <div className="feature">
-                <div className="feature-icon">🔒</div>
-                <div className="feature-body">
-                  <div className="feature-title">Seguridad</div>
-                  <div className="feature-sub">Cambia tu contraseña cuando quieras</div>
-                </div>
-              </div>
-              <div className="feature">
-                <div className="feature-icon">🏷️</div>
-                <div className="feature-body">
-                  <div className="feature-title">Ofertas personalizadas</div>
-                  <div className="feature-sub">Recibe descuentos basados en tu actividad</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="promo-stats bottom-stats">
-              <div className="stat"><strong>Pedidos</strong><span>{/* dynamic count could go here */}</span></div>
-              <div className="stat"><strong>Favoritos</strong><span>—</span></div>
-              <div className="stat"><strong>Visitas</strong><span>—</span></div>
-            </div>
-          </div>
-        </aside>
-
-        <div className="register-wrap">
+    <div className="profile-page">
+      <div className="profile-wrap">
+        <div className="register-wrap centered-edit">
           <div className="profile-header" style={{display:'flex',gap:18,alignItems:'center'}}>
             <div className="avatar-box" style={{width:110,height:110,borderRadius:999,overflow:'hidden',display:'flex',alignItems:'center',justifyContent:'center'}}>
               {form.avatarUrl ? <img src={form.avatarUrl} alt="avatar" style={{width:'100%',height:'100%',objectFit:'cover'}} /> : <div style={{color:'#777'}}>Avatar</div>}
