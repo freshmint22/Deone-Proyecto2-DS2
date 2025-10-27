@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { getMe, updateMe } from '../services/user';
-import './profile.css';
 import './register.css';
+import './profile.css';
+import BottomNav from '../components/BottomNav';
 import { useRef } from 'react';
 
 export default function Profile(){
@@ -183,6 +184,25 @@ export default function Profile(){
           </form>
         </div>
       </div>
+    </div>
+  );
+}
+
+// render bottom nav on profile (mobile) so users have consistent navigation
+export function ProfileWithNav(props){
+  const navigate = useNavigate();
+  // Wrap profile and bottom nav inside .app-shell so bottom-nav uses the same scoped styles as /app
+  return (
+    <div className="app-shell profile-shell" style={{minHeight: '100vh'}}>
+      <div style={{paddingBottom:72}}>
+        <Profile {...props} />
+      </div>
+      <BottomNav
+        onHome={()=>navigate('/app')}
+        onOpenSearch={()=>navigate('/app')}
+        onOpenCart={()=>navigate('/app')}
+        onOpenMenu={()=>navigate('/profile')}
+      />
     </div>
   );
 }

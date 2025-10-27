@@ -10,7 +10,7 @@ import Checkout from './pages/Checkout';
 import Header from './components/Header';
 import Orders from './pages/Orders';
 import OrderTracker from './pages/OrderTracker';
-import Profile from './pages/Profile';
+import Profile, { ProfileWithNav } from './pages/Profile';
 import PrivateRoute from './components/PrivateRoute';
 import { AuthContext } from './context/AuthContext';
 import Landing from './pages/Landing';
@@ -170,7 +170,7 @@ export default function App(){
     <BrowserRouter>
       <Routes>
   <Route path="/" element={<Landing />} />
-  <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+  <Route path="/profile" element={<PrivateRoute><ProfileWithNav /></PrivateRoute>} />
   <Route path="/login" element={<LoginWrapper />} />
   <Route path="/register" element={<Register />} />
   <Route path="/terms" element={<Terms />} />
