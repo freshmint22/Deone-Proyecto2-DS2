@@ -36,20 +36,85 @@ export default function Checkout() {
     }
   };
 
-  // Per user request: remove the demo-order creation logic and simplify
-  // the checkout page to only provide a shortcut to track the last order.
-  async function onConfirm() {
+  // Show payment modal (simulate pasarela de pagos). On success generate demo order id
+  const [showPayment, setShowPayment] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const [payerName, setPayerName] = useState('');
+  const [location, setLocation] = useState('');
+  const [payMethod, setPayMethod] = useState('transferencia');
+
+  function openPayment() {
     setAlert(null);
-    // write lastOrderId if we find one in localStorage, but do not create new demo orders
-    const last = localStorage.getItem('lastOrderId');
-    if (last) {
-      // navigate to tracker with the last order prefilled
-      window.location.pathname = '/app';
-      // Open tracker via local navigation state if available (MainApp handles route state)
-      // store a small flag so OrderTracker picks it up when inside /app
-      try { localStorage.setItem('openTracker', '1'); } catch(e){}
-    } else {
-      setAlert({ type: 'info', message: 'No hay pedidos recientes para rastrear.' });
+    // prefill location if user has profile data (best-effort)
+    try {
+      const profileLoc = user && (user.location || user.campus);
+      if (profileLoc) setLocation(profileLoc);
+    } catch (e) {}
+    setShowPayment(true);
+  }
+
+  async function handleFakePayment(e) {
+    e && e.preventDefault();
+    setAlert(null);
+    if (!payerName) {
+      setAlert({ type: 'error', message: 'Ingresa el nombre del pagador.' });
+      return;
+    }
+    if (!location) {
+      setAlert({ type: 'error', message: 'Ingresa tu ubicación dentro de la universidad.' });
+      return;
+    }
+    setProcessing(true);
+    try {
+      // simulate processing
+      await new Promise((r) => setTimeout(r, 1200));
+
+      const orderId = 'demo-' + Date.now();
+      const paymentInfo = { method: payMethod };
+
+      if (payMethod === 'transferencia') {
+        // simulate bank reference
+        paymentInfo.reference = 'REF' + Math.floor(100000 + Math.random() * 899999);
+        paymentInfo.status = 'pagado';
+      } else {
+        // efectivo: generate a cash code and mark pending payment
+        paymentInfo.cashCode = 'CASH' + Math.floor(10000 + Math.random() * 89999);
+        paymentInfo.status = 'pendiente_pago';
+      }
+
+      const orderObj = {
+        id: orderId,
+        items: items || [],
+        total: totalWithDiscount != null ? totalWithDiscount : total,
+        user: user ? (user.id || user._id || user.email) : null,
+        status: paymentInfo.status,
+        payment: paymentInfo,
+        payerName,
+        location,
+        createdAt: new Date().toISOString(),
+      };
+
+      // best-effort create order via API
+      try { await createOrder(orderObj).catch(()=>{}); } catch(e){}
+
+      try {
+        const raw = localStorage.getItem('demoOrders');
+        const map = raw ? JSON.parse(raw) : {};
+        map[orderId] = orderObj;
+        localStorage.setItem('demoOrders', JSON.stringify(map));
+        localStorage.setItem('lastOrderId', orderId);
+      } catch (e) {}
+
+      try { clear(); } catch (e) {}
+      setShowPayment(false);
+      // show specific message depending on method
+      if (payMethod === 'transferencia') {
+        setAlert({ type: 'success', message: `Pago por transferencia. ID: ${orderId} Ref: ${paymentInfo.reference}` });
+      } else {
+        setAlert({ type: 'success', message: `Orden creada (efectivo). ID: ${orderId} Código para pago: ${paymentInfo.cashCode}` });
+      }
+    } finally {
+      setProcessing(false);
     }
   }
 
@@ -114,12 +179,49 @@ export default function Checkout() {
                   <div style={{ marginBottom: 8, fontWeight: 700 }}>Rastreo</div>
                   <div style={{ color: 'var(--muted)', marginBottom: 8 }}>Puedes rastrear tu último pedido aquí.</div>
                   <div>
-                    <button onClick={onConfirm} disabled={loading} className="btn">
-                      Rastrear último pedido
-                    </button>
+                            <button onClick={openPayment} disabled={loading} className="btn">
+                              Realizar pago
+                            </button>
                   </div>
                 </div>
               </div>
+                      {showPayment && (
+                        <div style={{position:'fixed',inset:0,display:'flex',alignItems:'center',justifyContent:'center',background:'rgba(0,0,0,0.6)',zIndex:1200}}>
+                          <form onSubmit={handleFakePayment} style={{background:'#0b0b0b',padding:24,borderRadius:12,minWidth:340,maxWidth:560,color:'#fff',boxShadow:'0 20px 60px rgba(0,0,0,0.6)'}}>
+                            <h3 style={{marginTop:0,color:'#fff'}}>Realizar pago</h3>
+                            <div style={{marginBottom:12}}>
+                              <label style={{display:'block',fontSize:13,marginBottom:6,color:'#ccc'}}>Nombre del pagador</label>
+                              <input value={payerName} onChange={e=>setPayerName(e.target.value)} placeholder="Tu nombre" style={{width:'100%',padding:10,borderRadius:8,border:'1px solid #222',background:'#0f0f10',color:'#fff'}} />
+                            </div>
+                            <div style={{marginBottom:12}}>
+                              <label style={{display:'block',fontSize:13,marginBottom:6,color:'#ccc'}}>Ubicación (dentro de la universidad)</label>
+                              <input value={location} onChange={e=>setLocation(e.target.value)} placeholder="Ej: Facultad de Ingeniería - Bloque B" style={{width:'100%',padding:10,borderRadius:8,border:'1px solid #222',background:'#0f0f10',color:'#fff'}} />
+                            </div>
+                            <div style={{marginBottom:12}}>
+                              <label style={{display:'block',fontSize:13,marginBottom:6}}>Método de pago</label>
+                              <div style={{display:'flex',gap:8}}>
+                                <label style={{display:'flex',alignItems:'center',gap:6}}>
+                                  <input type="radio" name="pm" checked={payMethod==='transferencia'} onChange={()=>setPayMethod('transferencia')} /> Transferencia
+                                </label>
+                                <label style={{display:'flex',alignItems:'center',gap:6}}>
+                                  <input type="radio" name="pm" checked={payMethod==='efectivo'} onChange={()=>setPayMethod('efectivo')} /> Efectivo
+                                </label>
+                              </div>
+                            </div>
+                            <div style={{display:'flex',justifyContent:'flex-end',gap:8}}>
+                              <button type="button" className="pill" onClick={()=>setShowPayment(false)} disabled={processing} style={{background:'transparent',border:'1px solid #272727',color:'#ddd',padding:'8px 12px',borderRadius:8}}>Cancelar</button>
+                              <button type="submit" className="btn" disabled={processing} style={{background:'linear-gradient(180deg,#ff5272,#e11b3b)',borderColor:'#e11b3b',padding:'10px 16px',borderRadius:10,boxShadow:'0 14px 36px rgba(225,27,59,0.22)'}}>{processing? 'Procesando...' : 'Confirmar pago'}</button>
+                            </div>
+                            <div style={{marginTop:12,fontSize:13,color:'var(--muted)'}}>
+                              {payMethod === 'transferencia' ? (
+                                <div>Al confirmar, se generará una referencia bancaria para que completes la transferencia.</div>
+                              ) : (
+                                <div>Al confirmar, se creará un código que presentarás para pagar en efectivo en el punto seleccionado.</div>
+                              )}
+                            </div>
+                          </form>
+                        </div>
+                      )}
         </div>
       )}
     </div>
