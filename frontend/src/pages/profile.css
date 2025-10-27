@@ -1,42 +1,83 @@
-:root{
-  --bg: var(--bg);
-  --panel: var(--card-bg);
-  --muted: var(--muted);
-  --accent: var(--primary);
-  --input-bg: var(--input-bg);
-  --card-shadow: 0 6px 16px rgba(11,11,11,0.06);
+/* Dark profile page specific overrides (complements register.css) */
+.profile-page{min-height:100vh;padding:28px;background:linear-gradient(180deg,#0b0b0b,#0b0b0b);display:flex;align-items:flex-start;justify-content:center}
+.profile-page .profile-wrap{width:100%;max-width:1100px;display:grid;grid-template-columns:340px 1fr;gap:28px;align-items:stretch}
+.profile-page .promo{background:linear-gradient(90deg, rgba(123,20,33,0.20), rgba(0,0,0,0.15));border-radius:14px;padding:28px;box-shadow:0 18px 60px rgba(3,8,23,0.6);color:#fff;border:1px solid rgba(255,255,255,0.03)}
+.profile-page .promo-title{font-size:36px}
+.profile-page .promo-desc{color:rgba(255,255,255,0.85)}
+.profile-page .register-wrap{background:linear-gradient(180deg,#0f0f0f,#0b0b0b);padding:28px;border-radius:14px;color:rgba(255,255,255,0.92);box-shadow:0 12px 40px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.02)}
+.profile-page .profile-header h2{font-size:28px;margin:0;color:#fff}
+.profile-page .profile-header p{color:rgba(255,255,255,0.75);margin:0}
+.profile-page .avatar-box{background:linear-gradient(180deg,#1a1a1a,#0f0f0f);border:1px solid rgba(255,255,255,0.03)}
+.profile-page .form-body{width:100%;margin-top:12px}
+.profile-page .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.profile-page .form-group label{color:rgba(255,255,255,0.75)}
+.profile-page .form-group input{background:#1f1f1f;border:1px solid rgba(255,255,255,0.04);color:rgba(255,255,255,0.95);height:48px;padding:8px 12px}
+.profile-page .actions{display:flex;justify-content:flex-end;gap:12px;margin-top:16px}
+.profile-page .btn-secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.9);padding:10px 14px;border-radius:10px}
+.profile-page .btn-primary{background:linear-gradient(90deg,var(--primary),#e33a53);border:none;color:#fff;padding:12px 18px;border-radius:10px}
+
+@media(max-width:900px){
+  .profile-page .profile-wrap{grid-template-columns:1fr}
+  .profile-page .promo{order:2}
+  .profile-page .register-wrap{order:1}
+  .profile-page{padding:18px}
+}
+.profile-page{
+  --bg: #0f0f10;
+  --panel: #0d0d0e;
+  --muted: #9a9a9a;
+  --accent: #7a1b1f;
+  --input-bg: rgba(255,255,255,0.03);
+  --card-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  background: linear-gradient(180deg,#0b0b0c 0%, #0f0f10 100%);
+  min-height: calc(100vh - 80px);
+  padding: 36px 18px;
+  color: #eee;
 }
 
-.profile-wrap{max-width:980px;margin:28px auto;padding:28px;background:var(--panel);border-radius:14px;box-shadow:var(--card-shadow);color:var(--text)}
+.profile-wrap{max-width:1180px;margin:18px auto;padding:28px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.18));border-radius:14px;box-shadow:var(--card-shadow);color:var(--text)}
 .profile-header{display:flex;gap:28px;align-items:center;margin-bottom:18px}
-.avatar-box{width:140px;height:140px;border-radius:50%;background:linear-gradient(180deg,#ffffff,#f6f0e6);display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px solid rgba(0,0,0,0.04)}
+.avatar-box{width:110px;height:110px;border-radius:50%;background:linear-gradient(180deg,#222,#111);display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px solid rgba(255,255,255,0.04)}
 .avatar-box img{width:100%;height:100%;object-fit:cover}
 
 .avatar-box{position:relative}
 .avatar-box .upload-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.avatar-box .upload-overlay button{pointer-events:auto;background:rgba(0,0,0,0.06);border:1px solid rgba(0,0,0,0.04);color:var(--text);padding:6px 10px;border-radius:8px;font-size:13px;cursor:pointer}
-.avatar-box .upload-icon{font-size:12px;color:var(--muted);}
-.profile-info h2{margin:0;font-size:22px;font-weight:700;letter-spacing:0.2px}
+.avatar-box .upload-overlay button{pointer-events:auto;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.04);color:#fff;padding:6px 10px;border-radius:8px;font-size:13px;cursor:pointer}
+.avatar-box .upload-icon{font-size:12px;color:var(--muted);} 
+.profile-info h2{margin:0;font-size:22px;font-weight:700;letter-spacing:0.2px;color:#fff}
 .profile-info p{margin:6px 0;color:var(--muted);font-size:13px}
 .profile-actions{margin-left:auto}
-.edit-btn{background:transparent;border:1px solid rgba(0,0,0,0.06);padding:8px 12px;border-radius:6px;color:var(--text);cursor:pointer}
+.edit-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:6px;color:#fff;cursor:pointer}
 .edit-btn.alt{background:transparent;border-radius:6px;padding:8px 12px;margin-left:8px}
 
 .stats-row{display:flex;gap:18px;margin-top:10px;color:var(--muted);font-size:14px}
 .stat{display:flex;flex-direction:column;align-items:center}
-.stat strong{color:var(--text)}
+.stat strong{color:#fff}
+
+/* profile action pills to match /app menu */
+.profile-actions .pill{display:inline-block;padding:8px 12px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff;cursor:pointer;margin-left:8px}
+.profile-actions .pill:hover{background:rgba(255,255,255,0.02)}
 
 .form-body{margin-top:18px}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .form-group{display:flex;flex-direction:column}
 .form-group label{font-size:13px;color:var(--muted);margin-bottom:8px}
-.form-group input, .form-group textarea{background:var(--input-bg);border:1px solid rgba(0,0,0,0.06);padding:10px;border-radius:999px;color:var(--text)}
-.form-group input::placeholder, .form-group textarea::placeholder{color:rgba(255,255,255,0.55)}
-.form-group input:disabled{opacity:0.95}
+.form-group input, .form-group textarea{background:var(--input-bg);border:1px solid rgba(255,255,255,0.06);padding:12px;border-radius:10px;color:var(--text)}
+.form-group input::placeholder, .form-group textarea::placeholder{color:rgba(255,255,255,0.35)}
+.form-group input:disabled{opacity:0.7}
+.form-group textarea{min-height:90px;resize:vertical;border-radius:10px}
 .form-group textarea{min-height:90px;resize:vertical;border-radius:10px}
 
 .actions{display:flex;gap:12px;justify-content:flex-end;margin-top:18px}
-.btn-primary{background:var(--primary);border:none;color:var(--text);padding:10px 16px;border-radius:8px;cursor:pointer}
-.btn-secondary{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted);padding:10px 14px;border-radius:8px;cursor:pointer}
+.btn-primary{background:var(--accent);border:none;color:#fff;padding:10px 16px;border-radius:8px;cursor:pointer}
+.btn-secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);padding:10px 14px;border-radius:8px;cursor:pointer}
+
+/* Promo aside styles to match marketplace look */
+.promo{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.12));padding:22px;border-radius:12px;color:#fff;border:1px solid rgba(255,255,255,0.02);}
+.promo-badge{background:rgba(255,255,255,0.04);color:#ffd6d6;padding:6px 10px;border-radius:999px;display:inline-block;margin-bottom:12px;font-weight:700}
+.promo-title{font-size:28px;margin:0 0 8px}
+.promo-desc{color:var(--muted);margin-bottom:16px}
+.promo-features .feature{background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;margin-bottom:10px;display:flex;gap:12px}
+.feature-icon{width:44px;height:44px;border-radius:8px;background:rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:center}
 
 @media(max-width:880px){.form-grid{grid-template-columns:1fr}.profile-header{flex-direction:column;align-items:flex-start}.profile-actions{width:100%;display:flex;justify-content:flex-end;margin-top:8px}}

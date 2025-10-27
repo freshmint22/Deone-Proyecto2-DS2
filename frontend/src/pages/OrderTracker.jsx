@@ -10,6 +10,14 @@ export default function OrderTracker(){
   const [error, setError] = useState(null);
 
   useEffect(()=>{
+    // if user navigates to tracker, prefill with last demo order if available
+    try{
+      const last = localStorage.getItem('lastOrderId');
+      if(last) setOrderId(last);
+    }catch(e){}
+  },[]);
+
+  useEffect(()=>{
     let mounted = true;
     (async ()=>{
       const s = await connectSocket();
@@ -25,12 +33,27 @@ export default function OrderTracker(){
     catch(err){ setError(err.message || 'Error'); }
   }
 
+  // helper: try local demo orders when backend isn't available
+  function tryLocalOrder(){
+    try{
+      const demoRaw = localStorage.getItem('demoOrders');
+      if(!demoRaw) return null;
+      const demo = JSON.parse(demoRaw);
+      return demo[orderId] || null;
+    }catch(e){ return null; }
+  }
+
   return (
     <div className="content">
       <h2>Seguimiento de pedido</h2>
       <div style={{marginBottom:12}}>
         <input placeholder="ID de pedido" value={orderId} onChange={e=>setOrderId(e.target.value)} />
         <button onClick={fetchOrder} className="btn" style={{marginLeft:8}}>Buscar</button>
+        <button onClick={()=>{
+          // try to use last order stored locally and fetch it
+          const last = localStorage.getItem('lastOrderId');
+          if(last) { setOrderId(last); const local = tryLocalOrder(); if(local) setOrder(local); else fetchOrder(); }
+        }} className="pill" style={{marginLeft:8}}>Usar último pedido</button>
       </div>
       {error && <Alert type="error" message={error} />}
       {order && (

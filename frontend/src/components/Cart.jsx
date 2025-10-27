@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import { CartContext } from '../context/CartContext';
 
 function formatCOP(value){
@@ -7,6 +7,17 @@ function formatCOP(value){
 
 export default function Cart({ onPay, onClose }){
   const { items, removeItem, updateQty, total, clear } = useContext(CartContext);
+  const [coupon, setCoupon] = useState(null);
+
+  useEffect(()=>{
+    function read(){
+      try{ const c = JSON.parse(localStorage.getItem('deone_coupon')||'null'); setCoupon(c); }catch(e){ setCoupon(null); }
+    }
+    read();
+    const handler = ()=> read();
+    window.addEventListener('couponApplied', handler);
+    return ()=> window.removeEventListener('couponApplied', handler);
+  },[]);
 
   if(items.length === 0) return <div style={{padding:20}}>El carrito está vacío</div>;
 
@@ -14,7 +25,7 @@ export default function Cart({ onPay, onClose }){
     <div style={{padding:20}}>
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
         <h3>Carrito</h3>
-        {onClose && <button className="pill" onClick={onClose}>Cerrar</button>}
+        {/* Close button removed to avoid duplication with overlay X */}
       </div>
       <div>
         {items.map(p=> {
@@ -36,7 +47,10 @@ export default function Cart({ onPay, onClose }){
           </div>
         )})}
       </div>
-      <div style={{marginTop:12,fontWeight:700}}>Total: {formatCOP(total)}</div>
+      {coupon && (
+        <div style={{marginTop:8,color:'var(--muted)'}}>Saldo a favor: <strong>{formatCOP(coupon.amount)}</strong> ({coupon.code})</div>
+      )}
+      <div style={{marginTop:12,fontWeight:700}}>Total: {formatCOP(Math.max(0,total - (coupon?.amount || 0)) )}</div>
       <div style={{marginTop:12,display:'flex',gap:8}}>
         <button className="btn ghost" onClick={clear}>Vaciar carrito</button>
         <button className="btn" onClick={()=>{ if(onPay) onPay(); }}>Proceder al pago</button>

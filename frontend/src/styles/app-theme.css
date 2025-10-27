@@ -1,0 +1,153 @@
+/* App theme: dark, matching reference image
+   - Deep background, dark cards, vivid red CTA, generous spacing
+   - Scoped to .app-shell so landing remains light if needed
+*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+.app-shell{
+  /* tuned to match reference */
+  --app-bg: #121212; /* deep page background */
+  --panel: #1e1e1e; /* card/panel background */
+  --panel-2: #171717;
+  --primary-red: #E50914; /* vivid CTA closer to ref */
+  --text: #ffffff;
+  --muted: #bdbdbd;
+  --muted-2: #9a9a9a;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* Page background */
+.app-shell, .app-shell body{background:var(--app-bg);color:var(--text)}
+
+/* Topbar / header */
+.app-shell .topbar{background:transparent;padding:18px 0;display:flex;align-items:center;justify-content:center}
+.app-shell .topbar .container{display:flex;align-items:center;gap:16px}
+.app-shell .logo{font-weight:800;font-size:20px;color:var(--text);letter-spacing:0.4px;padding-left:20px}
+
+/* Compact topbar variant: smaller height and wine-red background */
+.app-shell .topbar.topbar-compact{
+  height:48px;
+  padding:6px 0;
+  background: linear-gradient(180deg,#7B1421,#5E0F14);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.6);
+  align-items:center;
+}
+.app-shell .topbar.topbar-compact .container{display:flex;align-items:center;gap:12px}
+.app-shell .logo.logo-compact{font-size:16px;padding-left:12px;padding-right:8px;color:#fff}
+.app-shell .nav-actions{display:flex;align-items:center;gap:14px}
+.app-shell .nav-actions button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:8px 12px;border-radius:10px}
+
+/* Top navigation bar inside the app (below header) */
+.app-shell .topnav{
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 0 14px;
+  gap:12px;
+  background:transparent;
+  border-bottom:1px solid rgba(255,255,255,0.03);
+}
+.app-shell .topnav .topnav-left{display:flex;align-items:center;gap:12px}
+.app-shell .topnav .topnav-right{display:flex;align-items:center;gap:12px}
+.app-shell .topnav .breadcrumbs{display:flex;align-items:center;gap:8px}
+.app-shell .breadcrumb-home{color:var(--muted);background:transparent;border:none;padding:8px 12px;border-radius:8px;font-weight:700}
+.app-shell .breadcrumb-crumb{color:rgba(255,255,255,0.65);margin-left:6px}
+
+/* Ensure hero promo is visible and centered even if other global rules interfere */
+.app-shell .hero .promo{display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.app-shell .hero{min-height:180px}
+
+/* Make sure the main.container uses the centered container rules when inside .app-shell */
+.app-shell .container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* Filter button and pills */
+.app-shell .filter-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:8px;border-radius:8px;display:inline-flex;align-items:center;cursor:pointer}
+.app-shell .filter-menu{position:absolute;right:0;top:44px;background:var(--panel);border:1px solid rgba(255,255,255,0.03);padding:10px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+.app-shell .filter-menu .pill{display:block;margin-bottom:8px}
+.app-shell .pill{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:6px 10px;border-radius:999px;cursor:pointer}
+.app-shell .pill.active{background:rgba(255,255,255,0.06);color:var(--text);border-color:transparent}
+
+/* Small utility icon buttons used in topnav */
+.app-shell .icon-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:8px;color:var(--text);display:inline-flex;align-items:center;justify-content:center}
+.app-shell .icon-btn:hover{background:rgba(255,255,255,0.02)}
+
+/* Main hero banner */
+.app-shell .hero{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px 36px;margin-bottom:28px}
+.app-shell .hero .promo{width:100%;max-width:1100px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.45));padding:40px 42px;border-radius:14px;box-shadow:0 30px 60px rgba(0,0,0,0.6);}
+.app-shell .promo h2{font-size:44px;color:var(--text);margin:0 0 8px;font-weight:800;line-height:1.02}
+.app-shell .promo p{color:var(--muted);margin:0 0 18px;font-size:15px;max-width:860px}
+.app-shell .promo .ctas{display:flex;gap:12px;align-items:center}
+.app-shell .btn-cta{background:linear-gradient(180deg,var(--primary-red),#b8162f);color:#fff;padding:14px 22px;border-radius:12px;font-weight:800;box-shadow:0 18px 50px rgba(227,27,57,0.28);border:0}
+.app-shell .btn-secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:12px 18px;border-radius:10px}
+
+/* Override landing.css which forces hero-sub-black to black with !important */
+.app-shell .hero .hero-sub-black{color:var(--muted) !important}
+
+/* Offers row */
+.app-shell .offers-list{display:flex;gap:18px;overflow:hidden;padding:18px 14px}
+.app-shell .offers-card{background:var(--panel);padding:16px;border-radius:12px;min-width:240px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 12px 30px rgba(0,0,0,0.5)}
+.app-shell .offers-card .offers-card-title{color:var(--text);font-weight:700;margin-bottom:8px}
+.app-shell .offers-card .offers-card-sub{color:var(--muted);font-size:14px}
+.app-shell .offers-card .offers-card-cta{margin-top:14px}
+.app-shell .offers-card .btn{background:var(--primary-red);color:#fff;padding:8px 12px;border-radius:10px;border:0}
+
+/* Product grid */
+.app-shell .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:24px}
+.app-shell .product-tile{background:var(--panel);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:12px;min-height:360px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 18px 36px rgba(0,0,0,0.55)}
+.app-shell .product-tile .media{aspect-ratio:1 / 1;min-height:180px;background:linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.45));border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--muted);overflow:hidden}
+.app-shell .product-tile .media img{width:100%;height:100%;object-fit:cover;display:block}
+.app-shell .product-tile .pill{position:absolute;left:14px;top:14px;background:#fff;color:#111;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,0.4)}
+.app-shell .product-tile h4{margin:0;color:var(--text);font-weight:700;font-size:16px}
+.app-shell .product-tile .meta{color:var(--muted);font-size:13px}
+.app-shell .product-tile .price{color:#fff;font-weight:800;font-size:16px}
+.app-shell .product-tile .btn-cart{margin-top:auto;background:var(--primary-red);color:#fff;padding:12px;border-radius:12px;border:0;width:100%;font-weight:800;box-shadow:0 12px 36px rgba(229,9,20,0.18)}
+
+/* Product internal layout */
+.app-shell .product-body{display:flex;flex-direction:column;gap:10px;padding:0 6px 6px 6px}
+.app-shell .product-bottom{display:flex;flex-direction:column}
+.app-shell .product-bottom .price{margin-bottom:10px}
+.app-shell .media-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:8px;color:var(--muted);font-size:14px}
+
+/* Footer / bottom nav */
+.app-shell .bottom-nav{
+  /* compact floating wine-red bar */
+  position:fixed;
+  left:24px;
+  right:24px;
+  bottom:18px;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-around;
+  padding:8px 18px;
+  border-radius:12px;
+  background: linear-gradient(180deg,#7B1421,#5E0F14);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+  z-index: 4000;
+  border: 1px solid rgba(0,0,0,0.45);
+}
+.app-shell .bottom-nav button{color:#fff;background:transparent;border:0;display:inline-flex;align-items:center;justify-content:center;padding:10px;border-radius:10px}
+.app-shell .bottom-nav .icon-btn{border:0;padding:8px;color:#fff}
+.app-shell .bottom-nav .icon-btn svg{color:inherit;fill:currentColor}
+.app-shell .bottom-nav .cart-count{background:rgba(255,255,255,0.12);color:#fff;padding:4px 8px;border-radius:999px;font-weight:700}
+
+/* Modal adjustments */
+.app-shell .modal-overlay, .app-shell .offer-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center}
+.app-shell .modal-content, .app-shell .offer-modal .offer-modal-card{background:var(--panel-2);padding:18px;border-radius:12px;color:var(--text);box-shadow:0 30px 80px rgba(0,0,0,0.7)}
+
+/* Layout columns for app content */
+.app-shell .app-content{display:flex;gap:28px;align-items:flex-start}
+.app-shell .app-main{flex:1}
+.app-shell .app-right{width:300px}
+
+/* Container centering */
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* Responsive tweaks */
+@media(max-width:900px){
+  .app-shell .grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+  .app-shell .promo h2{font-size:28px}
+}

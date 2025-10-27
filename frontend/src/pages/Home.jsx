@@ -7,7 +7,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
 // Home shows hero and inline product catalog with categories
-export default function Home({ navigateLocal }){
+export default function Home({ navigateLocal, onOpenCart, onOpenSearch, onOpenMenu }){
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -17,6 +17,12 @@ export default function Home({ navigateLocal }){
   const [category, setCategory] = useState('');
   const [query, setQuery] = useState('');
   const { token, logout } = useContext(AuthContext);
+
+  function closeSearch(){
+    // clear the query so filter is removed when the search modal closes
+    setQuery('');
+    setShowSearch(false);
+  }
 
   useEffect(()=>{ fetchProducts(); },[]);
 
@@ -62,7 +68,7 @@ export default function Home({ navigateLocal }){
       <section className="hero">
         <div className="promo">
           <h2>Envíos rápidos y las mejores ofertas</h2>
-          <p>Descubre productos y recibe tu pedido rápido.</p>
+          <p className="hero-sub-black">Descubre productos y recibe tu pedido rápido.</p>
         </div>
           {/* right column for offers removed per request */}
       </section>
@@ -84,34 +90,8 @@ export default function Home({ navigateLocal }){
       )}
 
   <div style={{height:84}} />
-  <BottomNav onOpenCart={()=>setShowCart(true)} onOpenMenu={()=>setShowMenu(true)} onOpenSearch={()=>setShowSearch(true)} />
-  <HamburgerMenu visible={showMenu} onClose={()=>setShowMenu(false)} navigateLocal={navigateLocal} logout={logout} token={token} />
-      {showCart && (
-        <div className="modal-overlay">
-          <div className="modal-frame">
-            <button className="modal-close" onClick={()=>setShowCart(false)}>×</button>
-            <div className="modal-window">
-              <div className="modal-content">
-                <Cart onClose={()=>setShowCart(false)} onPay={()=>{ setShowCart(false); navigateLocal('checkout'); }} />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      {showSearch && (
-        <div className="modal-overlay">
-          <div className="modal-frame" style={{alignItems:'center',justifyContent:'center'}}>
-            <div className="modal-window">
-              <div className="modal-content" style={{width:'min(640px,96%)',padding:16}}>
-                <div style={{display:'flex',gap:8,alignItems:'center'}}>
-                  <input autoFocus placeholder="Buscar productos" value={query} onChange={e=>setQuery(e.target.value)} style={{flex:1,padding:8,borderRadius:8,border:'1px solid rgba(0,0,0,0.06)',background:'var(--input-bg)',color:'var(--text)'}} />
-                  <button className="btn" onClick={()=>setShowSearch(false)}>Cerrar</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+  {/* Bottom nav and modals lifted to MainApp. Use provided handlers to open app-wide controls */}
+  <HamburgerMenu visible={showMenu} onClose={()=>setShowMenu(false)} navigateLocal={navigateLocal} logout={logout} token={token} onOpenCart={onOpenCart} onOpenSearch={onOpenSearch} onOpenMenu={onOpenMenu} />
     </main>
   );
 }

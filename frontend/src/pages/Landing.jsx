@@ -29,13 +29,41 @@ export default function Landing(){
       <div className="landing-discounts">
         <div className="discounts-inner">
           <h3>Ofertas de la semana</h3>
-          <div className="discount-list">
-            <div className="discount-card">Producto A<br/><small className="muted">-15%</small></div>
-            <div className="discount-card">Producto B<br/><small className="muted">-10%</small></div>
-            <div className="discount-card">Producto C<br/><small className="muted">-25%</small></div>
-            <div className="discount-card">Producto D<br/><small className="muted">-5%</small></div>
+          <div className="discount-list promo-grid">
+            <div className="discount-card promo" onClick={()=>navigate('/register')}>
+              <div className="promo-badge">50% OFF</div>
+              <div style={{fontSize:16,fontWeight:800,marginTop:8}}>Prime Snacks</div>
+              <div className="muted">Mitad de precio en tu primera compra</div>
+            </div>
+
+            <div className="discount-card promo" onClick={()=>navigate('/register')}>
+              <div className="promo-badge">DEONE30</div>
+              <div style={{fontSize:16,fontWeight:800,marginTop:8}}>Envío Gratis</div>
+              <div className="muted">Envío gratis por 30 días al registrarte</div>
+            </div>
+
+            <div className="discount-card promo" onClick={()=>navigate('/register')}>
+              <div className="promo-badge">🔥 Oferta Flash</div>
+              <div style={{fontSize:16,fontWeight:800,marginTop:8}}>Café Premium</div>
+              <div className="muted">-40% por tiempo limitado</div>
+            </div>
+
+            <div className="discount-card promo" onClick={()=>navigate('/register')}>
+              <div className="promo-badge">+Puntos</div>
+              <div style={{fontSize:16,fontWeight:800,marginTop:8}}>Programa de puntos</div>
+              <div className="muted">Duplica puntos en primeras 5 compras</div>
+            </div>
+
+            <div className="discount-card promo" onClick={()=>navigate('/register')}>
+              <div className="promo-badge">DEONE50</div>
+              <div style={{fontSize:16,fontWeight:800,marginTop:8}}>Pack Ahorro</div>
+              <div className="muted">Ahorra hasta 50.000 COP en combos</div>
+            </div>
           </div>
-          <div style={{marginTop:12}}><button className="cta-ghost" onClick={()=>navigate('/login')}>Ver todos los descuentos</button></div>
+
+          <div style={{marginTop:12}}>
+            <button className="cta-primary" onClick={()=>navigate('/register')}>Regístrate y aprovecha estas ofertas</button>
+          </div>
         </div>
       </div>
     </div>
