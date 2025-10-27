@@ -47,13 +47,19 @@ export default function OrderTracker(){
     <div className="content">
       <h2>Seguimiento de pedido</h2>
       <div style={{marginBottom:12}}>
-        <input placeholder="ID de pedido" value={orderId} onChange={e=>setOrderId(e.target.value)} />
-        <button onClick={fetchOrder} className="btn" style={{marginLeft:8}}>Buscar</button>
-        <button onClick={()=>{
-          // try to use last order stored locally and fetch it
-          const last = localStorage.getItem('lastOrderId');
-          if(last) { setOrderId(last); const local = tryLocalOrder(); if(local) setOrder(local); else fetchOrder(); }
-        }} className="pill" style={{marginLeft:8}}>Usar último pedido</button>
+        <button
+          className="btn"
+          onClick={async ()=>{
+            setError(null);
+            const last = localStorage.getItem('lastOrderId');
+            if(!last){ setError('No hay último pedido guardado'); return; }
+            setOrderId(last);
+            const local = tryLocalOrder();
+            if(local){ setOrder(local); return; }
+            try{ const data = await getOrder(last); setOrder(data); }
+            catch(err){ setError(err.message || 'Error al obtener el pedido'); }
+          }}
+        >Buscar último pedido</button>
       </div>
       {error && <Alert type="error" message={error} />}
       {order && (
